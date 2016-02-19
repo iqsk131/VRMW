@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{B728BA6F-BB4A-66B9-57A2-597CAD6A31B0}</ProjectGuid>
+    <ProjectGuid>{EE5A89C9-E388-488F-BAAF-8E689EA3C85A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
@@ -104,10 +104,10 @@
  <HintPath>D:/Programs/Editor/Data/UnityExtensions/Unity/TreeEditor/Editor/UnityEditor.TreeEditor.dll</HintPath>
  </Reference>
  <Reference Include="Qualcomm.Vuforia.UnityExtensions.Editor">
- <HintPath>D:/Unity/Test/Assets/Vuforia/Editor/Scripts/Qualcomm.Vuforia.UnityExtensions.Editor.dll</HintPath>
+ <HintPath>D:/Unity/github/VRMW/Assets/Vuforia/Editor/Scripts/Qualcomm.Vuforia.UnityExtensions.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Qualcomm.Vuforia.UnityExtensions">
- <HintPath>D:/Unity/Test/Assets/Vuforia/Scripts/Internal/Qualcomm.Vuforia.UnityExtensions.dll</HintPath>
+ <HintPath>D:/Unity/github/VRMW/Assets/Vuforia/Scripts/Internal/Qualcomm.Vuforia.UnityExtensions.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Graphs">
  <HintPath>D:/Programs/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
@@ -121,15 +121,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{6BCF1753-8618-A6C0-7F1D-4322E3AED478}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
+      <Project>{1DCB00AB-A512-9873-6DC2-1EA80496D6D1}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
     <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{A513BC8D-6A7D-D6C5-EEBE-D27CF600D276}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
+      <Project>{6F294977-9FE0-5847-C0DA-44BEE5E89BC1}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
     <ProjectReference Include="Assembly-UnityScript.unityproj">
-      <Project>{85DCD257-16EA-7505-1C7F-FCCF207EE221}</Project>      <Name>Assembly-UnityScript</Name>    </ProjectReference>
+      <Project>{1BD33EC0-8B28-E17A-16E7-828BC7957D49}</Project>      <Name>Assembly-UnityScript</Name>    </ProjectReference>
     <ProjectReference Include="Assembly-CSharp-Editor-firstpass.csproj">
-      <Project>{D1652EA4-7908-700D-1035-6803F3290E6C}</Project>      <Name>Assembly-CSharp-Editor-firstpass</Name>    </ProjectReference>
+      <Project>{A8699DAC-610E-9BA9-EED8-0D89ED6EBF22}</Project>      <Name>Assembly-CSharp-Editor-firstpass</Name>    </ProjectReference>
     <ProjectReference Include="Assembly-UnityScript-Editor-firstpass.unityproj">
-      <Project>{4E6E1F8E-3B1E-0221-C427-37C4EC270341}</Project>      <Name>Assembly-UnityScript-Editor-firstpass</Name>    </ProjectReference>
+      <Project>{D61B0499-5A18-F822-4B5D-FD4CDCE0125B}</Project>      <Name>Assembly-UnityScript-Editor-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

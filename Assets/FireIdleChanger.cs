@@ -20,6 +20,7 @@ public class FireIdleChanger : MonoBehaviour
 
 	public GameObject activeTimeBar;
 	public Canvas canvas;
+	public GameObject enemy;
 
 	private Animator anim;		
 	private bool isReady;
@@ -33,7 +34,7 @@ public class FireIdleChanger : MonoBehaviour
 		dialog= "Intial..";
 		isReady = false;
 		this.transform.FindChild ("Ready").GetComponent<Renderer>().enabled = false;
-		startTime = Time.time;
+		startTime = 0;
 		canvas.enabled = true;
 		activeTimeBar.SetActive(true);
 
@@ -49,25 +50,18 @@ public class FireIdleChanger : MonoBehaviour
 			}
 		};
 		VRMWdb.firebase.Child ("Player1").Child("StartTime").ValueUpdated += (object sender, ChangedEventArgs e) => {
-			startTime = e.DataSnapshot.FloatValue;
+			startTime = Time.time;
 		};
 
-		VRMWdb.firebase.Child ("Player1").Child ("StartTime").SetValue(startTime);
+		//VRMWdb.firebase.Child ("Player1").Child ("StartTime").SetValue(currentTime());
 	}
 
 	// Update is called once per frame
 	void  Update ()
 	{
 
-		activeTimeBar.SetActive(true);
 		if (isReady && Time.time-startTime>=activeTime) {
-			anim.Play ("Hikick");
-			AudioClip audioClip = Resources.Load("Blow1", typeof(AudioClip)) as AudioClip;
-			AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
-			isReady=false;
-			VRMWdb.firebase.Child ("Player1").Child ("State").SetValue ("idle");
-			startTime = Time.time;
-			VRMWdb.firebase.Child ("Player1").Child ("StartTime").SetValue((float) startTime);
+			StartCoroutine (startAction ());
 		}
 		ProgressRadialBehaviour bar = activeTimeBar.GetComponent<ProgressRadialBehaviour>();
 		if (Time.time - startTime >= activeTime) {
@@ -77,6 +71,32 @@ public class FireIdleChanger : MonoBehaviour
 		}
 		this.transform.FindChild ("Ready").GetComponent<Renderer>().enabled = isReady;
 	}
+	private IEnumerator startAction(){
+
+		isReady=false;
+
+		Vector3 newTarget = new Vector3 (
+			3*enemy.transform.position.x/5 + 2*transform.parent.position.x/5, 
+			3*enemy.transform.position.y/5 + 2*transform.parent.position.y/5,
+			3*enemy.transform.position.z/5 + 2*transform.parent.position.z/5);
+
+		transform.position = newTarget;
+
+		yield return new WaitForSeconds(0.5f);
+
+		anim.Play ("Hikick");
+		AudioClip audioClip = Resources.Load("Audio/SE/Blow1", typeof(AudioClip)) as AudioClip;
+		AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
+
+		yield return new WaitForSeconds(0.5f);
+
+		transform.position = transform.parent.position;
+
+
+		VRMWdb.firebase.Child ("Player1").Child ("State").SetValue ("idle");
+		startTime = Time.time;
+		VRMWdb.firebase.Child ("Player1").Child ("StartTime").SetValue(currentTime().ToString());
+	}
 
 
 	void OnGUI()
@@ -84,5 +104,7 @@ public class FireIdleChanger : MonoBehaviour
 		GUI.Label (new Rect (300, 100, 100, 100), dialog + ": " + (Time.time - startTime) + "/"+activeTime);
 	}
 
-
+	private double currentTime(){
+		return (System.DateTime.UtcNow.Subtract(new System.DateTime(1970, 1, 1))).TotalMilliseconds / 1000.0;
+	}
 }

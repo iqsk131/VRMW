@@ -66,7 +66,7 @@ namespace Vuforia
 		public void calcDistance(){
 			Vector3 focusPos = focusObject.transform.position;
 			Vector3 thisPos = this.transform.position;
-			distanceToReference=Mathf.Sqrt((focusPos.x-thisPos.x)*(focusPos.x-thisPos.x) + (focusPos.z-thisPos.z)*(focusPos.z-thisPos.z));
+			distanceToReference=Mathf.Sqrt((focusPos.x-thisPos.x)*(focusPos.x-thisPos.x) + (focusPos.y-thisPos.y)*(focusPos.y-thisPos.y)  + (focusPos.z-thisPos.z)*(focusPos.z-thisPos.z));
 		}
 
 		#region PUBLIC_METHODS
@@ -105,7 +105,7 @@ namespace Vuforia
 		void Update(){
 			if (isTrack == true) {
 				calcDistance ();
-				if (distanceToReference < 500) {
+				if (distanceToReference < 700) {
 					dialog = "trigger!!"; 
 					if (!isUpdate && p1State == "idle") {
 						isUpdate = true;

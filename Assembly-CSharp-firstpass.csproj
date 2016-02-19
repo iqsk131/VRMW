@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{6BCF1753-8618-A6C0-7F1D-4322E3AED478}</ProjectGuid>
+    <ProjectGuid>{1DCB00AB-A512-9873-6DC2-1EA80496D6D1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp-firstpass</AssemblyName>
@@ -96,7 +96,7 @@
  <HintPath>D:/Programs/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
  </Reference>
  <Reference Include="Qualcomm.Vuforia.UnityExtensions">
- <HintPath>D:/Unity/Test/Assets/Vuforia/Scripts/Internal/Qualcomm.Vuforia.UnityExtensions.dll</HintPath>
+ <HintPath>D:/Unity/github/VRMW/Assets/Vuforia/Scripts/Internal/Qualcomm.Vuforia.UnityExtensions.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

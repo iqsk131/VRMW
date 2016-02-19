@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{85DCD257-16EA-7505-1C7F-FCCF207EE221}</ProjectGuid>
+    <ProjectGuid>{1BD33EC0-8B28-E17A-16E7-828BC7957D49}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-UnityScript</AssemblyName>
@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\FightingUnityChan_FreeAsset\Standard Assets\Scripts\Camera Scripts\MouseOrbit.js" />
+     <Compile Include="Assets\firebase.js" />
      <None Include="Assets\FightingUnityChan_FreeAsset\FightingUnityChan_FreeAsset\Models\UnityChanShader\Shader\Unitychan_chara_eye.shader" />
      <None Include="Assets\StreamingAssets\QCAR\VRMW.xml" />
      <None Include="Assets\Cardboard\Legacy\Resources\SkyboxMesh.shader" />
@@ -81,12 +82,12 @@
  <HintPath>D:/Programs/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
  </Reference>
  <Reference Include="Qualcomm.Vuforia.UnityExtensions">
- <HintPath>D:/Unity/Test/Assets/Vuforia/Scripts/Internal/Qualcomm.Vuforia.UnityExtensions.dll</HintPath>
+ <HintPath>D:/Unity/github/VRMW/Assets/Vuforia/Scripts/Internal/Qualcomm.Vuforia.UnityExtensions.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{6BCF1753-8618-A6C0-7F1D-4322E3AED478}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
+      <Project>{1DCB00AB-A512-9873-6DC2-1EA80496D6D1}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

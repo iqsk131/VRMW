@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{D1652EA4-7908-700D-1035-6803F3290E6C}</ProjectGuid>
+    <ProjectGuid>{A8699DAC-610E-9BA9-EED8-0D89ED6EBF22}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp-Editor-firstpass</AssemblyName>
@@ -102,10 +102,10 @@
  <HintPath>D:/Programs/Editor/Data/UnityExtensions/Unity/TreeEditor/Editor/UnityEditor.TreeEditor.dll</HintPath>
  </Reference>
  <Reference Include="Qualcomm.Vuforia.UnityExtensions.Editor">
- <HintPath>D:/Unity/Test/Assets/Vuforia/Editor/Scripts/Qualcomm.Vuforia.UnityExtensions.Editor.dll</HintPath>
+ <HintPath>D:/Unity/github/VRMW/Assets/Vuforia/Editor/Scripts/Qualcomm.Vuforia.UnityExtensions.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Qualcomm.Vuforia.UnityExtensions">
- <HintPath>D:/Unity/Test/Assets/Vuforia/Scripts/Internal/Qualcomm.Vuforia.UnityExtensions.dll</HintPath>
+ <HintPath>D:/Unity/github/VRMW/Assets/Vuforia/Scripts/Internal/Qualcomm.Vuforia.UnityExtensions.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Graphs">
  <HintPath>D:/Programs/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
@@ -119,7 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{6BCF1753-8618-A6C0-7F1D-4322E3AED478}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
+      <Project>{1DCB00AB-A512-9873-6DC2-1EA80496D6D1}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

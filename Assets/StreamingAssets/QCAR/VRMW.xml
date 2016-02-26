@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
+  <Tracking>
+    <ImageTarget name="VRMW-logo" size="400.000000 393.000000" />
+    <ImageTarget name="img04" size="1730.000000 1941.000000" />
+    <ImageTarget name="img03" size="848.000000 1330.000000" />
+    <ImageTarget name="img02" size="867.000000 1350.000000" />
+    <ImageTarget name="img01" size="934.000000 1520.000000" />
+    <ImageTarget name="test01" size="600.000000 600.000000" />
+  </Tracking>
+</QCARConfig>

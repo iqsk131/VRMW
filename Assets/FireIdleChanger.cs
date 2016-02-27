@@ -36,7 +36,7 @@ public class FireIdleChanger : MonoBehaviour
 	void Start ()
 	{
 		firstInit = false;
-		anim = GetComponent<Animator> ();
+		anim = transform.FindChild("Model").GetComponentInChildren<Animator> ();
 		dialog= "Intial..";
 		isReady = false;
 		this.transform.FindChild ("Ready").GetComponent<Renderer>().enabled = false;
@@ -118,7 +118,7 @@ public class FireIdleChanger : MonoBehaviour
 			3*enemy.transform.position.y/5 + 2*transform.parent.position.y/5,
 			3*enemy.transform.position.z/5 + 2*transform.parent.position.z/5);
 
-		transform.position = newTarget;
+		transform.FindChild("Model").position = newTarget;
 
 		yield return new WaitForSeconds(0.5f);
 
@@ -128,7 +128,7 @@ public class FireIdleChanger : MonoBehaviour
 
 		yield return new WaitForSeconds(0.5f);
 
-		transform.position = transform.parent.position;
+		transform.FindChild("Model").position = transform.position;
 
 
 		VRMWdb.firebase.Child ("Player1").Child ("State").SetValue ("idle");

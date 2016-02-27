@@ -15,7 +15,7 @@ using ProgressBar;
 
 
 
-public class FireIdleChanger : MonoBehaviour
+public class EnemyBehavior : MonoBehaviour
 {
 
 	public GameObject activeTimeBar;
@@ -24,10 +24,8 @@ public class FireIdleChanger : MonoBehaviour
 	public GameObject enemy;
 
 	private Animator anim;		
-	private bool isReady;
 	private float activeTime,startTime;
-	private string dialog;
-	private bool firstInit;
+	private bool firstInit,isAction;
 	private int HP;
 	private int MaxHP;
 	private string playAnim;
@@ -37,40 +35,32 @@ public class FireIdleChanger : MonoBehaviour
 	{
 		firstInit = false;
 		anim = transform.FindChild("Model").GetComponentInChildren<Animator> ();
-		dialog= "Intial..";
-		isReady = false;
-		this.transform.FindChild ("Ready").GetComponent<Renderer>().enabled = false;
 		startTime = 0;
 		canvas.enabled = true;
 		activeTimeBar.SetActive(true);
 		playAnim = "";
+		isAction = false;
 
-		VRMWdb.firebase.Child("Player1").Child("ActiveTime").ValueUpdated += (object sender, ChangedEventArgs e) => {
+		VRMWdb.firebase.Child("Enemy").Child("ActiveTime").ValueUpdated += (object sender, ChangedEventArgs e) => {
 			activeTime = e.DataSnapshot.FloatValue;
 		};
 
-		VRMWdb.firebase.Child ("Player1").Child("State").ValueUpdated += (object sender, ChangedEventArgs e) => {
-			if(e.DataSnapshot.StringValue=="ready"){
-				isReady=true;
-				dialog="Change!!";
-			}
-		};
-		VRMWdb.firebase.Child ("Player1").Child("MaxHP").ValueUpdated += (object sender, ChangedEventArgs e) => {
-			MaxHP=(int)e.DataSnapshot.FloatValue;
-		};
-		VRMWdb.firebase.Child ("Player1").Child("HP").ValueUpdated += (object sender, ChangedEventArgs e) => {
-			if(firstInit){
-				if(HP>(int)e.DataSnapshot.FloatValue){
-					playAnim="Land";
-				}
+		VRMWdb.firebase.Child ("Enemy").Child("State").ValueUpdated += (object sender, ChangedEventArgs e) => {
+			if(e.DataSnapshot.StringValue=="action"){
+				isAction=true;
 			}
 			else{
-				firstInit=true;
+				isAction=false;
 			}
+		};
+		VRMWdb.firebase.Child ("Enemy").Child("MaxHP").ValueUpdated += (object sender, ChangedEventArgs e) => {
+			MaxHP=(int)e.DataSnapshot.FloatValue;
+		};
+		VRMWdb.firebase.Child ("Enemy").Child("HP").ValueUpdated += (object sender, ChangedEventArgs e) => {
 			HP=(int)e.DataSnapshot.FloatValue;
 		};
 
-		VRMWdb.firebase.Child ("Player1").Child("StartTime").ValueUpdated += (object sender, ChangedEventArgs e) => {
+		VRMWdb.firebase.Child ("Enemy").Child("StartTime").ValueUpdated += (object sender, ChangedEventArgs e) => {
 			if(!firstInit){
 				startTime = Time.time - ((float)currentTime() - e.DataSnapshot.FloatValue);
 			}
@@ -79,23 +69,31 @@ public class FireIdleChanger : MonoBehaviour
 			}
 		};
 
-		//VRMWdb.firebase.Child ("Player1").Child ("StartTime").SetValue(currentTime());
+		VRMWdb.firebase.Child ("Enemy").Child("Attacked").ValueUpdated += (object sender, ChangedEventArgs e) => {
+			if(e.DataSnapshot.Child("Damage").FloatValue!=0){
+				HP-=(int)e.DataSnapshot.Child("Damage").FloatValue;
+				VRMWdb.firebase.Child ("Enemy").Child("HP").SetValue(HP);
+				playAnim="DamageDown";
+				VRMWdb.firebase.Child ("Enemy").Child("Attacked").Child("Damage").SetValue(0f);
+			}
+		};
+
 	}
 
 	// Update is called once per frame
 	void  Update ()
 	{
-		if (playAnim != "") {
+		if (playAnim != "" && !isAction) {
 			anim.Play (playAnim);
-			if (playAnim == "Land") {
-				AudioClip audioClip = Resources.Load ("Audio/SE/052-Cannon01", typeof(AudioClip)) as AudioClip;
-				AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
+			if (playAnim == "DamageDown") {
+				anim.Play ("Headspring");
 			}
 			playAnim = "";
 		}
-		if (isReady && Time.time-startTime>=activeTime) {
+		if (!isAction && Time.time-startTime>=activeTime) {
 			StartCoroutine (startAction ());
 		}
+
 		ProgressBarBehaviour HPBarBehavior = HPBar.GetComponent<ProgressBarBehaviour> ();
 		HPBarBehavior.Value = (float)HP*100f/MaxHP;
 
@@ -105,18 +103,17 @@ public class FireIdleChanger : MonoBehaviour
 		} else {
 			bar.Value = (Time.time - startTime)*100 / activeTime;
 		}
-		this.transform.FindChild ("Ready").GetComponent<Renderer>().enabled = isReady;
 	}
 
 
 	private IEnumerator startAction(){
-
-		isReady=false;
+		
+		VRMWdb.firebase.Child ("Enemy").Child ("State").SetValue ("action");
 
 		Vector3 newTarget = new Vector3 (
-			3*enemy.transform.position.x/5 + 2*transform.parent.position.x/5, 
-			3*enemy.transform.position.y/5 + 2*transform.parent.position.y/5,
-			3*enemy.transform.position.z/5 + 2*transform.parent.position.z/5);
+			3*enemy.transform.FindChild("Model").position.x/5 + 2*transform.position.x/5, 
+			3*enemy.transform.FindChild("Model").position.y/5 + 2*transform.position.y/5,
+			3*enemy.transform.FindChild("Model").position.z/5 + 2*transform.position.z/5);
 
 		transform.FindChild("Model").position = newTarget;
 
@@ -126,20 +123,23 @@ public class FireIdleChanger : MonoBehaviour
 		AudioClip audioClip = Resources.Load("Audio/SE/Blow1", typeof(AudioClip)) as AudioClip;
 		AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
 
+
+		yield return new WaitForSeconds(0.1f);
+		VRMWdb.firebase.Child ("Player1").Child ("Attacked").Child ("Damage").SetValue (1f);
 		yield return new WaitForSeconds(0.5f);
 
 		transform.FindChild("Model").position = transform.position;
 
-
-		VRMWdb.firebase.Child ("Player1").Child ("State").SetValue ("idle");
+		VRMWdb.firebase.Child ("Enemy").Child ("State").SetValue ("idle");
+		//isAction = false;
 		startTime = Time.time;
-		VRMWdb.firebase.Child ("Player1").Child ("StartTime").SetValue(currentTime().ToString());
+		VRMWdb.firebase.Child ("Enemy").Child ("StartTime").SetValue(currentTime().ToString());
 	}
 
 
 	void OnGUI()
 	{
-		GUI.Label (new Rect (300, 100, 100, 100), dialog + ": " + (Time.time - startTime) + "/"+activeTime);
+		//GUI.Label (new Rect (300, 100, 100, 100), dialog + ": " + (Time.time - startTime) + "/"+activeTime);
 	}
 
 	private double currentTime(){

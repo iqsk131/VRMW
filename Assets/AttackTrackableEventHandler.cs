@@ -6,13 +6,15 @@ Confidential and Proprietary - Qualcomm Connected Experiences, Inc.
 
 using UnityEngine;
 using System.Collections.Generic;
+using System;
+
 
 namespace Vuforia
 {
 	/// <summary>
 	/// A custom handler that implements the ITrackableEventHandler interface.
 	/// </summary>
-	public class TriggerTrackableEventHandler : MonoBehaviour,
+	public class AttackTrackableEventHandler : MonoBehaviour,
 	ITrackableEventHandler
 	{
 		//public GameObject targetedObject;
@@ -42,19 +44,10 @@ namespace Vuforia
 			isTrack = false;
 			isUpdate = false;
 
-			//firebase = Firebase.CreateNew ("https://sweltering-heat-6741.firebaseio.com");
-			//dialog="Connection Complete!!";
-
-			/*firebase.AuthWithPassword ("iq.at.sk131@gmail.com", "iqatsk131", (AuthData auth) => {
-				dialog = "Auth success!!" + auth.Uid;
-			}, (FirebaseError e) => {
-				dialog = "Auth failure!!";
-			});*/
-			//focusObject.GetComponent<Renderer> ().enabled = false;
-			VRMWdb.firebase.Child("Player1").Child("State").ValueUpdated += (object sender, ChangedEventArgs e) => {
+			/*VRMWdb.firebase.Child("Player1").Child("State").ValueUpdated += (object sender, ChangedEventArgs e) => {
 				p1State = e.DataSnapshot.StringValue;
 				dialog ="Value Change!";
-			};
+			};*/
 			mTrackableBehaviour = GetComponent<TrackableBehaviour>();
 			if (mTrackableBehaviour)
 			{
@@ -103,6 +96,9 @@ namespace Vuforia
 
 
 		void Update(){
+			p1State = VRMWdb.getPlayerInfo (1, "State");
+			//dialog = p1State;
+
 			if (isTrack == true) {
 				calcDistance ();
 				if (distanceToReference < 700) {

@@ -5,30 +5,19 @@ Confidential and Proprietary - Qualcomm Connected Experiences, Inc.
 ==============================================================================*/
 
 using UnityEngine;
-using System.Collections.Generic;
-using System;
-
 
 namespace Vuforia
 {
 	/// <summary>
 	/// A custom handler that implements the ITrackableEventHandler interface.
 	/// </summary>
-	public class AttackTrackableEventHandler : MonoBehaviour,
+	public class StageHandler : MonoBehaviour,
 	ITrackableEventHandler
 	{
-		//public GameObject targetedObject;
-		public GameObject focusObject;
-
 		#region PRIVATE_MEMBER_VARIABLES
 
 		private TrackableBehaviour mTrackableBehaviour;
-		private string dialog;
-		//private IFirebase firebase;
-		private double distanceToReference;
-		private bool isTrack;
-		private bool isUpdate;
-		private string p1State;
+
 		#endregion // PRIVATE_MEMBER_VARIABLES
 
 
@@ -37,30 +26,18 @@ namespace Vuforia
 
 		void Start()
 		{
-			CameraDevice.Instance.SetFocusMode (CameraDevice.FocusMode.FOCUS_MODE_CONTINUOUSAUTO);
 
-			dialog="Initial...";
-			distanceToReference = 9999;
-			isTrack = false;
-			isUpdate = false;
-
-			/*VRMWdb.firebase.Child("Player1").Child("State").ValueUpdated += (object sender, ChangedEventArgs e) => {
-				p1State = e.DataSnapshot.StringValue;
-				dialog ="Value Change!";
-			};*/
+			//CameraDevice.Instance.SetFocusMode (CameraDevice.FocusMode.FOCUS_MODE_CONTINUOUSAUTO);
 			mTrackableBehaviour = GetComponent<TrackableBehaviour>();
 			if (mTrackableBehaviour)
 			{
 				mTrackableBehaviour.RegisterTrackableEventHandler(this);
 			}
 		}
+
 		#endregion // UNTIY_MONOBEHAVIOUR_METHODS
 
-		public void calcDistance(){
-			Vector3 focusPos = focusObject.transform.position;
-			Vector3 thisPos = this.transform.position;
-			distanceToReference=Mathf.Sqrt((focusPos.x-thisPos.x)*(focusPos.x-thisPos.x) + (focusPos.y-thisPos.y)*(focusPos.y-thisPos.y)  + (focusPos.z-thisPos.z)*(focusPos.z-thisPos.z));
-		}
+
 
 		#region PUBLIC_METHODS
 
@@ -76,48 +53,14 @@ namespace Vuforia
 				newStatus == TrackableBehaviour.Status.TRACKED ||
 				newStatus == TrackableBehaviour.Status.EXTENDED_TRACKED)
 			{
-				isTrack = true;
 				OnTrackingFound();
 			}
 			else
 			{
-				isUpdate = false;
-				isTrack = false;
-				dialog = "waiting for trigger...";
-				OnTrackingLost ();
+				OnTrackingLost();
 			}
 		}
 
-		public void OnGUI(){
-			Debug.Log ("Start GUI");
-			GUI.Label (new Rect (200, 100, 100, 100), dialog);
-			GUI.Label (new Rect (200, 200, 100, 100), "Distance: " + distanceToReference);
-		}
-
-
-		void Update(){
-			p1State = VRMWdb.getPlayerInfo (1, "State");
-			//dialog = p1State;
-
-			if (isTrack == true) {
-				calcDistance ();
-				if (distanceToReference < 700) {
-					dialog = "trigger!!"; 
-					if (!isUpdate && p1State == "idle") {
-						isUpdate = true;
-						OnTrackingLost ();
-						VRMWdb.firebase.Child ("Player1").Child ("State").SetValue ("ready");
-					}
-				} else {
-					isUpdate = false;
-					OnTrackingFound();
-					dialog = "place on the trigger..";
-				}
-			} else {
-				distanceToReference = 9999;
-			}
-				
-		}
 		#endregion // PUBLIC_METHODS
 
 

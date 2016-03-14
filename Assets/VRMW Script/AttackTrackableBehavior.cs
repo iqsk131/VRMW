@@ -23,7 +23,6 @@ namespace Vuforia
 		#region PRIVATE_MEMBER_VARIABLES
 
 		private TrackableBehaviour mTrackableBehaviour;
-		private string dialog;
 		//private IFirebase firebase;
 		private double distanceToReference;
 		private bool isTrack;
@@ -39,7 +38,6 @@ namespace Vuforia
 		{
 			//CameraDevice.Instance.SetFocusMode (CameraDevice.FocusMode.FOCUS_MODE_CONTINUOUSAUTO);
 
-			dialog="Initialize";
 
 			//Initialize Distance from this card to action scanner
 			distanceToReference = 9999;
@@ -96,8 +94,6 @@ namespace Vuforia
 				//Change Tracking state to false
 				isTrack = false;
 
-				dialog = "waiting for trigger...";
-
 				//Hide Tracking Model
 				OnTrackingLost ();
 			}
@@ -111,7 +107,10 @@ namespace Vuforia
 
 
 		void Update(){
-
+			//Don't Start update until VRMWdb is initiated
+			if (!VRMWdb.isInitiated)
+				return;
+			
 			//Get Player State
 			p1State = VRMWdb.getPlayerInfoString (1, "State");
 
@@ -123,7 +122,6 @@ namespace Vuforia
 
 				//If distance to action scanner less than 700, do trigger
 				if (distanceToReference < 700) {
-					dialog = "trigger!!"; 
 
 					//If the card is unused and Player is idle,...
 					if (!isUsed && p1State == "idle") {
@@ -142,7 +140,6 @@ namespace Vuforia
 					//Show Attack Model on the card
 					OnTrackingFound();
 
-					dialog = "place on the trigger..";
 				}
 			} else {
 				//If the action card are not track, change distance to 9999

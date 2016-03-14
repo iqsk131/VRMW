@@ -51,6 +51,11 @@ public class EnemyBehavior : MonoBehaviour
 
 	}
 
+	// Call when reactivate
+	public void reActivate(){
+		stillPlaying = false;
+	}
+
 	// Update is called once per frame
 	void  Update ()
 	{

@@ -22,12 +22,12 @@ public class Player1Behavior : MonoBehaviour
 	public GameObject HPBar;
 	public Canvas canvas;
 	public GameObject enemy;
+	public bool stillPlaying=false;
 
 	private Animator anim;	
 	private double globalStartTime=double.Parse(VRMWdb.getEnemyInfoString("StartTime"));
 	private float localStartTime;
 	private string playAnim = "", dialog="";
-	private bool stillPlaying=false;
 
 	// Use this for initialization
 	void Start ()
@@ -51,6 +51,11 @@ public class Player1Behavior : MonoBehaviour
 		playAnim = "";
 		stillPlaying = false;
 
+	}
+
+	// Call when reactivate
+	public void reActivate(){
+		stillPlaying = false;
 	}
 
 	// Update is called once per frame

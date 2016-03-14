@@ -45,6 +45,28 @@ public class VRMWdb : MonoBehaviour {
 
 	/////////////////////////////
 	///                       ///
+	///   Global Variables    ///
+	///                       ///
+	/////////////////////////////
+	public static string getStage(){
+		try{
+			return gameDB.Child ("Stage").StringValue;
+		}
+		catch(Exception e){
+			return "Error: " + e.ToString();
+		}
+	}
+	public static void setStage(string value){
+		try{
+			firebase.Child ("Stage").SetValue(value);
+		}
+		catch(Exception e){
+			Debug.Log("setStage Error: " + e.ToString());
+		}
+	}
+
+	/////////////////////////////
+	///                       ///
 	/// Player Get-Set Method ///
 	///                       ///
 	/////////////////////////////

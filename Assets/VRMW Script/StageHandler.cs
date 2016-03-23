@@ -55,7 +55,7 @@ namespace Vuforia
 
 				//If it is still Tracking, Enable all components in currentStage
 				if (isTrack)
-					OnTrackingLost ();
+					OnTrackingFound ();
 			}
 
 			//If the stage change...

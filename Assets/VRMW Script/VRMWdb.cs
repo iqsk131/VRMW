@@ -41,6 +41,9 @@ public class VRMWdb : MonoBehaviour {
 		}
 	}
 
+	public static double currentTime(){
+		return (System.DateTime.UtcNow.Subtract(new System.DateTime(1970, 1, 1))).TotalMilliseconds;
+	}
 
 
 	/////////////////////////////

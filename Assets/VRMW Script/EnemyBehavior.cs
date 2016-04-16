@@ -20,13 +20,20 @@ public class EnemyBehavior : MonoBehaviour
 
 	public GameObject activeTimeBar;
 	public GameObject HPBar;
+	public GameObject Damage1;
+	public GameObject Damage2;
+	public GameObject Damage3;
 	public Canvas canvas;
-	public GameObject enemy;
+	public GameObject enemy1;
+	public GameObject enemy2;
+	public GameObject enemy3;
 	public bool stillPlaying;
 
 	private float localStartTime;
 	private double globalStartTime=double.Parse(VRMWdb.getEnemyInfoString("StartTime"));
 	private string playAnim="";
+	private float latestShowDamage;
+	public GameObject targetEnemy;
 
 	// Use this for initialization
 	void Start ()
@@ -44,6 +51,7 @@ public class EnemyBehavior : MonoBehaviour
 		//Initial current action
 		playAnim = "";
 		stillPlaying = false;
+		latestShowDamage = Time.time - 2;
 
 	}
 
@@ -73,10 +81,46 @@ public class EnemyBehavior : MonoBehaviour
 		}
 
 		//Check if Enemey got damaged or not
-		if (VRMWdb.getEnemyInfoInt ("Attacked/Damage") != 0) {
-			VRMWdb.setEnemyInfo ("HP", VRMWdb.getEnemyInfoInt ("HP") - VRMWdb.getEnemyInfoInt ("Attacked/Damage"));
+		if (VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage") != 0
+			|| VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage") != 0
+			|| VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage") != 0) {
+
+			//Update DamageText
+			if (VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage") != 0) {
+				Damage1.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage1.transform.position) * Quaternion.Euler (0, 180, 0);
+				TextMesh DamageText = Damage1.GetComponent<TextMesh> ();
+				DamageText.text = "-" + VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage");
+				Damage1.SetActive (true);
+			}
+
+			if (VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage") != 0) {
+				Damage2.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage2.transform.position) * Quaternion.Euler (0, 180, 0);
+				TextMesh DamageText = Damage2.GetComponent<TextMesh> ();
+				DamageText.text = "-" + VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage");
+				Damage2.SetActive (true);
+			}
+
+			if (VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage") != 0) {
+				Damage3.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage3.transform.position) * Quaternion.Euler (0, 180, 0);
+				TextMesh DamageText = Damage3.GetComponent<TextMesh> ();
+				DamageText.text = "-" + VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage");
+				Damage3.SetActive (true);
+			}
+			latestShowDamage = Time.time;
+
+			VRMWdb.setEnemyInfo ("HP", VRMWdb.getEnemyInfoInt ("HP") 
+				- VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage") 
+				- VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage") 
+				- VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage"));
 			playAnim = "Damaged";
-			VRMWdb.setEnemyInfo ("Attacked/Damage", 0);
+			VRMWdb.setEnemyInfo ("Attacked/Player1/Damage", 0);
+			VRMWdb.setEnemyInfo ("Attacked/Player2/Damage", 0);
+			VRMWdb.setEnemyInfo ("Attacked/Player3/Damage", 0);
+		}
+		if (Time.time - latestShowDamage > 2) {
+			Damage1.SetActive (false);
+			Damage2.SetActive (false);
+			Damage3.SetActive (false);
 		}
 
 		//Check if animation end or not
@@ -99,7 +143,16 @@ public class EnemyBehavior : MonoBehaviour
 
 				if (playAnim == "Attack") {
 					stillPlaying = true;
-					transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().attack (enemy.transform.FindChild ("Model"),0);
+					int randomTarget = Random.Range (1, 4);
+					if (randomTarget == 1) {
+						targetEnemy = enemy1;
+					} else if (randomTarget == 2) {
+						targetEnemy = enemy2;
+					} else {
+						randomTarget = 3;
+						targetEnemy = enemy3;
+					}
+					transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().attack (targetEnemy.transform.FindChild ("Model"),0,randomTarget);
 				}
 
 			}
@@ -112,8 +165,9 @@ public class EnemyBehavior : MonoBehaviour
 		}
 
 		//Update HP Bar
-		ProgressBarBehaviour HPBarBehavior = HPBar.GetComponent<ProgressBarBehaviour> ();
-		HPBarBehavior.Value = (float)VRMWdb.getEnemyInfoInt("HP")*100f/VRMWdb.getEnemyInfoInt("MaxHP");
+		HPBar.transform.rotation = Quaternion.LookRotation(Camera.current.transform.position - HPBar.transform.position) * Quaternion.Euler(0, 180, 0);
+		TextMesh HPBarText = HPBar.GetComponent<TextMesh> ();
+		HPBarText.text = "" + VRMWdb.getEnemyInfoInt("HP");
 
 		//Update Active Time Circle
 		ProgressRadialBehaviour bar = activeTimeBar.GetComponent<ProgressRadialBehaviour>();

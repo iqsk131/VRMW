@@ -15,7 +15,7 @@ using ProgressBar;
 
 
 
-public class Player1Behavior : MonoBehaviour
+public class Player3Behavior : MonoBehaviour
 {
 
 	public GameObject activeTimeBar;
@@ -27,7 +27,7 @@ public class Player1Behavior : MonoBehaviour
 	private float latestShowDamage;
 	private double globalStartTime=double.Parse(VRMWdb.getEnemyInfoString("StartTime"));
 	private float localStartTime;
-	private string playAnim = "", dialog="";
+	private string playAnim = "";
 
 	// Use this for initialization
 	void Start ()
@@ -42,7 +42,7 @@ public class Player1Behavior : MonoBehaviour
 		HPBar.SetActive (true);
 
 		//Inital StartTime
-		globalStartTime=double.Parse(VRMWdb.getPlayerInfoString(1,"StartTime"));
+		globalStartTime=double.Parse(VRMWdb.getPlayerInfoString(3,"StartTime"));
 		localStartTime = Time.time - (float)(VRMWdb.currentTime() - globalStartTime)/1000;
 
 		//Initial current action
@@ -66,68 +66,66 @@ public class Player1Behavior : MonoBehaviour
 
 		//If globalStartTime is not initialized, initialize it
 		if (globalStartTime == 0) {
-			globalStartTime = double.Parse (VRMWdb.getPlayerInfoString (1, "StartTime"));
+			globalStartTime = double.Parse (VRMWdb.getPlayerInfoString(3, "StartTime"));
 			localStartTime = Time.time - (float)(VRMWdb.currentTime() - globalStartTime)/1000;
 		}
 
 		//Check if Active Time Bar Reset or not
-		if (double.Parse(VRMWdb.getPlayerInfoString (1,"StartTime")) != globalStartTime) {
-			dialog = double.Parse (VRMWdb.getPlayerInfoString (1, "StartTime")) + " and " + globalStartTime;
+		if (double.Parse(VRMWdb.getPlayerInfoString(3,"StartTime")) != globalStartTime) {
 			localStartTime = Time.time;
-			VRMWdb.setPlayerInfo (1,"StartTime", VRMWdb.currentTime ().ToString());
-			globalStartTime=double.Parse(VRMWdb.getPlayerInfoString (1,"StartTime"));
+			VRMWdb.setPlayerInfo (3,"StartTime", VRMWdb.currentTime ().ToString());
+			globalStartTime=double.Parse(VRMWdb.getPlayerInfoString(3,"StartTime"));
 		}
 
 		//Check if Player got damaged or not
-		if (VRMWdb.getPlayerInfoInt (1, "Attacked/Damage") != 0) {
+		if (VRMWdb.getPlayerInfoInt (3, "Attacked/Damage") != 0) {
+
 
 			Damage.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage.transform.position) * Quaternion.Euler (0, 180, 0);
 			TextMesh DamageText = Damage.GetComponent<TextMesh> ();
-			DamageText.text = "-" + VRMWdb.getPlayerInfoInt (1, "Attacked/Damage");
+			DamageText.text = "-" + VRMWdb.getPlayerInfoInt (3, "Attacked/Damage");
 			Damage.SetActive (true);
 			latestShowDamage = Time.time;
 
-			VRMWdb.setPlayerInfo (1,"HP", VRMWdb.getPlayerInfoInt (1,"HP") - VRMWdb.getPlayerInfoInt (1,"Attacked/Damage"));
+			VRMWdb.setPlayerInfo (3,"HP", VRMWdb.getPlayerInfoInt (3,"HP") - VRMWdb.getPlayerInfoInt (3,"Attacked/Damage"));
 			playAnim = "Damaged";
-			VRMWdb.setPlayerInfo (1,"Attacked/Damage", 0);
+			VRMWdb.setPlayerInfo (3,"Attacked/Damage", 0);
 
 		}
 		if (Time.time - latestShowDamage > 2) {
 			Damage.SetActive (false);
 		}
 
-
-
 		//Check if animation end or not
-		if (stillPlaying && (VRMWdb.getPlayerInfoString (1, "State") == "idle"||VRMWdb.getPlayerInfoString (1, "State") == "ready")) {
+		if (stillPlaying && (VRMWdb.getPlayerInfoString(3, "State") == "idle"||VRMWdb.getPlayerInfoString(3, "State") == "ready")) {
 			stillPlaying = false;
 			playAnim = "";
 		}
 
 		//Do some animations only if Player is idle or ready
 		//Also do when Player is stuck at action
-		if (VRMWdb.getPlayerInfoString(1,"State")=="idle" 
-			|| VRMWdb.getPlayerInfoString(1,"State")=="ready"  
-			|| (VRMWdb.getPlayerInfoString(1,"State")=="action" && !stillPlaying)) {
+		if (VRMWdb.getPlayerInfoString(3,"State")=="idle" 
+			|| VRMWdb.getPlayerInfoString(3,"State")=="ready"  
+			|| (VRMWdb.getPlayerInfoString(3,"State")=="action" && !stillPlaying)) {
 
 			//Play Animation if it has
 			if (playAnim!="") {
 
 				if (playAnim == "Damaged") {
 					stillPlaying = true;
-					transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().damaged(1);
+					transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().damaged(3);
 				}
 
 				if (playAnim == "Attack") {
 					stillPlaying = true;
-					transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().attack (enemy.transform.FindChild ("Model"),1,0);
+					transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().attack (enemy.transform.FindChild ("Model"),3,0);
 				}
 			}
 
 			//If Active time circle full, Player is ready, and Enemy are idle or ready, Attack Ememy
 			//Also attack when both Enemy and Player stuck at action state, giving priority to player.
-			if (Time.time - localStartTime >= VRMWdb.getPlayerInfoFloat(1,"ActiveTime")
-				&& (VRMWdb.getPlayerInfoString(1,"State")=="ready" || (VRMWdb.getPlayerInfoString(1,"State")=="action" && !stillPlaying))
+			if (Time.time - localStartTime >= VRMWdb.getPlayerInfoFloat(3,"ActiveTime")
+				&& (VRMWdb.getPlayerInfoString(3,"State")=="ready" || (VRMWdb.getPlayerInfoString(3,"State")=="action" && !stillPlaying))
 				&& (VRMWdb.getEnemyInfoString ("State") == "idle" 
 					|| (VRMWdb.getEnemyInfoString("State")=="action" && !enemy.GetComponent<EnemyBehavior>().stillPlaying)) ) {
 				playAnim="Attack";
@@ -140,18 +138,18 @@ public class Player1Behavior : MonoBehaviour
 		//Update HP Bar
 		HPBar.transform.rotation = Quaternion.LookRotation(Camera.current.transform.position - HPBar.transform.position) * Quaternion.Euler(0, 180, 0);
 		TextMesh HPBarText = HPBar.GetComponent<TextMesh> ();
-		HPBarText.text = "" + VRMWdb.getPlayerInfoInt(1,"HP");
+		HPBarText.text = "" + VRMWdb.getPlayerInfoInt(3,"HP");
 
 		//Update Active Time Circle
 		ProgressRadialBehaviour bar = activeTimeBar.GetComponent<ProgressRadialBehaviour>();
-		if (Time.time - localStartTime >= VRMWdb.getPlayerInfoFloat(1,"ActiveTime")) {
+		if (Time.time - localStartTime >= VRMWdb.getPlayerInfoFloat(3,"ActiveTime")) {
 			bar.Value = 100;
 		} else {
-			bar.Value = (Time.time - localStartTime)*100 / VRMWdb.getPlayerInfoFloat(1,"ActiveTime");
+			bar.Value = (Time.time - localStartTime)*100 / VRMWdb.getPlayerInfoFloat(3,"ActiveTime");
 		}
 
 		//Update Ready Symbol
-		if (VRMWdb.getPlayerInfoString (1, "State") == "ready") {
+		if (VRMWdb.getPlayerInfoString(3, "State") == "ready") {
 			this.transform.FindChild ("Ready").GetComponent<Renderer> ().enabled = true;
 		} else {
 			this.transform.FindChild ("Ready").GetComponent<Renderer> ().enabled = false;
@@ -161,9 +159,4 @@ public class Player1Behavior : MonoBehaviour
 	}
 
 
-	void OnGUI()
-	{
-		GUI.Label (new Rect (300, 100, 100, 100), dialog);
-	}
-		
 }

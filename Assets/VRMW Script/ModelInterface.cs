@@ -3,6 +3,6 @@ using System.Collections;
 
 public interface ModelInterface {
 
-	void attack (Transform target, int user);
+	void attack (Transform target, int user, int attackTarget);
 	void damaged (int user);
 }

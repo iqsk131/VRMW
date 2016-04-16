@@ -18,16 +18,17 @@ namespace Vuforia
 	ITrackableEventHandler
 	{
 		//public GameObject targetedObject;
-		public GameObject actionScanner;
+		public GameObject actionScanner1;
+		public GameObject actionScanner2;
+		public GameObject actionScanner3;
 
 		#region PRIVATE_MEMBER_VARIABLES
 
 		private TrackableBehaviour mTrackableBehaviour;
 		//private IFirebase firebase;
-		private double distanceToReference;
 		private bool isTrack;
 		private bool isUsed;
-		private string p1State;
+		private string p1State,p2State,p3State;
 		#endregion // PRIVATE_MEMBER_VARIABLES
 
 
@@ -38,9 +39,6 @@ namespace Vuforia
 		{
 			//CameraDevice.Instance.SetFocusMode (CameraDevice.FocusMode.FOCUS_MODE_CONTINUOUSAUTO);
 
-
-			//Initialize Distance from this card to action scanner
-			distanceToReference = 9999;
 
 			//Initialize Tracking and Used state
 			isTrack = false;
@@ -59,10 +57,20 @@ namespace Vuforia
 		/// <summary>
 		/// Calcualte Distance from this card to Action Scanner
 		/// </summary>
-		public void calcDistance(){
-			Vector3 focusPos = actionScanner.transform.position;
+		public float calcDistance1(){
+			Vector3 focusPos = actionScanner1.transform.position;
 			Vector3 thisPos = this.transform.position;
-			distanceToReference=Mathf.Sqrt((focusPos.x-thisPos.x)*(focusPos.x-thisPos.x) + (focusPos.y-thisPos.y)*(focusPos.y-thisPos.y)  + (focusPos.z-thisPos.z)*(focusPos.z-thisPos.z));
+			return Mathf.Sqrt((focusPos.x-thisPos.x)*(focusPos.x-thisPos.x) + (focusPos.y-thisPos.y)*(focusPos.y-thisPos.y)  + (focusPos.z-thisPos.z)*(focusPos.z-thisPos.z));
+		}
+		public float calcDistance2(){
+			Vector3 focusPos = actionScanner2.transform.position;
+			Vector3 thisPos = this.transform.position;
+			return Mathf.Sqrt((focusPos.x-thisPos.x)*(focusPos.x-thisPos.x) + (focusPos.y-thisPos.y)*(focusPos.y-thisPos.y)  + (focusPos.z-thisPos.z)*(focusPos.z-thisPos.z));
+		}
+		public float calcDistance3(){
+			Vector3 focusPos = actionScanner3.transform.position;
+			Vector3 thisPos = this.transform.position;
+			return Mathf.Sqrt((focusPos.x-thisPos.x)*(focusPos.x-thisPos.x) + (focusPos.y-thisPos.y)*(focusPos.y-thisPos.y)  + (focusPos.z-thisPos.z)*(focusPos.z-thisPos.z));
 		}
 
 		#region PUBLIC_METHODS
@@ -113,15 +121,14 @@ namespace Vuforia
 			
 			//Get Player State
 			p1State = VRMWdb.getPlayerInfoString (1, "State");
+			p2State = VRMWdb.getPlayerInfoString (2, "State");
+			p3State = VRMWdb.getPlayerInfoString (3, "State");
 
 			//If action card are tracking..
 			if (isTrack == true) {
 
-				//Calculate Distance to action scanner
-				calcDistance ();
-
 				//If distance to action scanner less than 700, do trigger
-				if (distanceToReference < 700) {
+				if (calcDistance1() < 700) {
 
 					//If the card is unused and Player is idle,...
 					if (!isUsed && p1State == "idle") {
@@ -131,6 +138,28 @@ namespace Vuforia
 						OnTrackingLost ();
 						//Change Player state to Ready
 						VRMWdb.setPlayerInfo(1,"State","ready");
+					}
+				} else if (calcDistance2() < 700) {
+
+					//If the card is unused and Player is idle,...
+					if (!isUsed && p2State == "idle") {
+						//Change card state to used
+						isUsed = true;
+						//Hide Attack Model on the card
+						OnTrackingLost ();
+						//Change Player state to Ready
+						VRMWdb.setPlayerInfo(2,"State","ready");
+					}
+				} else if (calcDistance3() < 700) {
+
+					//If the card is unused and Player is idle,...
+					if (!isUsed && p3State == "idle") {
+						//Change card state to used
+						isUsed = true;
+						//Hide Attack Model on the card
+						OnTrackingLost ();
+						//Change Player state to Ready
+						VRMWdb.setPlayerInfo(3,"State","ready");
 					}
 				} else {
 					//If distance is more than 700,
@@ -143,7 +172,6 @@ namespace Vuforia
 				}
 			} else {
 				//If the action card are not track, change distance to 9999
-				distanceToReference = 9999;
 			}
 				
 		}

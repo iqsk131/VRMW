@@ -3,11 +3,9 @@ using System.Collections;
 
 public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 
-	private int user;
 
-	public void attack(Transform target, int user){
-		this.user = user;
-		StartCoroutine(startAttack(target));
+	public void attack(Transform target, int user, int attackTarget){
+		StartCoroutine(startAttack(target,user,attackTarget));
 	}
 
 	public void damaged(int user){
@@ -34,7 +32,7 @@ public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 	}
 
 
-	private IEnumerator startAttack(Transform target){
+	private IEnumerator startAttack(Transform target,int user, int attackTarget){
 
 		//Change Player State to action
 		if (user > 0) {
@@ -65,10 +63,10 @@ public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 
 
 		if (user > 0) {
-			VRMWdb.setEnemyInfo ("Attacked/Damage", VRMWdb.getEnemyInfoInt ("Attacked/Damage") + 1);
+			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", 1);
 		} else {
 
-			VRMWdb.setPlayerInfo (1, "Attacked/Damage", VRMWdb.getEnemyInfoInt ("Attacked/Damage") + 1);
+			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", 1);
 		}
 
 		yield return new WaitForSeconds(0.5f);

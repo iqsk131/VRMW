@@ -14,21 +14,15 @@ namespace Vuforia
 	/// <summary>
 	/// A custom handler that implements the ITrackableEventHandler interface.
 	/// </summary>
-	public class AttackTrackableBehavior : MonoBehaviour,
+	public class GameStartTrackableBehavior : MonoBehaviour,
 	ITrackableEventHandler
 	{
-		//public GameObject targetedObject;
-		public GameObject actionScanner1;
-		public GameObject actionScanner2;
-		public GameObject actionScanner3;
+		public GameObject actionScanner;
 
 		#region PRIVATE_MEMBER_VARIABLES
 
 		private TrackableBehaviour mTrackableBehaviour;
-		//private IFirebase firebase;
 		private bool isTrack;
-		private bool isUsed;
-		private string p1State,p2State,p3State;
 		#endregion // PRIVATE_MEMBER_VARIABLES
 
 
@@ -42,7 +36,6 @@ namespace Vuforia
 
 			//Initialize Tracking and Used state
 			isTrack = false;
-			isUsed = false;
 
 			//Get track component
 			mTrackableBehaviour = GetComponent<TrackableBehaviour>();
@@ -57,18 +50,8 @@ namespace Vuforia
 		/// <summary>
 		/// Calcualte Distance from this card to Action Scanner
 		/// </summary>
-		public float calcDistance1(){
-			Vector3 focusPos = actionScanner1.transform.position;
-			Vector3 thisPos = this.transform.position;
-			return Mathf.Sqrt((focusPos.x-thisPos.x)*(focusPos.x-thisPos.x) + (focusPos.y-thisPos.y)*(focusPos.y-thisPos.y)  + (focusPos.z-thisPos.z)*(focusPos.z-thisPos.z));
-		}
-		public float calcDistance2(){
-			Vector3 focusPos = actionScanner2.transform.position;
-			Vector3 thisPos = this.transform.position;
-			return Mathf.Sqrt((focusPos.x-thisPos.x)*(focusPos.x-thisPos.x) + (focusPos.y-thisPos.y)*(focusPos.y-thisPos.y)  + (focusPos.z-thisPos.z)*(focusPos.z-thisPos.z));
-		}
-		public float calcDistance3(){
-			Vector3 focusPos = actionScanner3.transform.position;
+		public float calcDistance(){
+			Vector3 focusPos = actionScanner.transform.position;
 			Vector3 thisPos = this.transform.position;
 			return Mathf.Sqrt((focusPos.x-thisPos.x)*(focusPos.x-thisPos.x) + (focusPos.y-thisPos.y)*(focusPos.y-thisPos.y)  + (focusPos.z-thisPos.z)*(focusPos.z-thisPos.z));
 		}
@@ -96,9 +79,6 @@ namespace Vuforia
 			else
 			{
 
-				//Change Card Used state to false
-				isUsed = false;
-
 				//Change Tracking state to false
 				isTrack = false;
 
@@ -107,73 +87,51 @@ namespace Vuforia
 			}
 		}
 
-		public void OnGUI(){
-			//Debug.Log ("Start GUI");
-			//GUI.Label (new Rect (200, 100, 100, 100), dialog);
-			//GUI.Label (new Rect (200, 200, 100, 100), "Distance: " + distanceToReference);
-		}
-
 
 		void Update(){
 			//Don't Start update until VRMWdb is initiated
 			if (!VRMWdb.isInitiated)
 				return;
 
-			//Get Player State
-			p1State = VRMWdb.getPlayerInfoString (1, "State");
-			p2State = VRMWdb.getPlayerInfoString (2, "State");
-			p3State = VRMWdb.getPlayerInfoString (3, "State");
-
 			//If action card are tracking..
 			if (isTrack == true) {
 
 				//If distance to action scanner less than 700, do trigger
-				if (calcDistance1() < 700) {
+				if (calcDistance() < 700) {
+					//Hide Attack Model on the card
+					OnTrackingLost ();
 
-					//If the card is unused and Player is idle,...
-					if (!isUsed && p1State == "idle") {
-						//Change card state to used
-						isUsed = true;
-						//Hide Attack Model on the card
-						OnTrackingLost ();
-						//Change Player state to Ready
-						VRMWdb.setPlayerInfo(1,"State","ready");
-					}
-				} else if (calcDistance2() < 700) {
+					//Initial Battle Stage
+					VRMWdb.setPlayerInfo(1,"HP",VRMWdb.getPlayerInfoInt(1,"MaxHP"));
+					VRMWdb.setPlayerInfo(1,"Attacked/Damage",0);
+					VRMWdb.setPlayerInfo(1,"StartTime",VRMWdb.currentTime ().ToString ());
+					VRMWdb.setPlayerInfo(1,"State","idle");
+					VRMWdb.setPlayerInfo(2,"HP",VRMWdb.getPlayerInfoInt(2,"MaxHP"));
+					VRMWdb.setPlayerInfo(2,"Attacked/Damage",0);
+					VRMWdb.setPlayerInfo(2,"StartTime",VRMWdb.currentTime ().ToString ());
+					VRMWdb.setPlayerInfo(2,"State","idle");
+					VRMWdb.setPlayerInfo(3,"HP",VRMWdb.getPlayerInfoInt(3,"MaxHP"));
+					VRMWdb.setPlayerInfo(3,"Attacked/Damage",0);
+					VRMWdb.setPlayerInfo(3,"StartTime",VRMWdb.currentTime ().ToString ());
+					VRMWdb.setPlayerInfo(3,"State","idle");
+					VRMWdb.setEnemyInfo("HP",VRMWdb.getEnemyInfoInt("MaxHP"));
+					VRMWdb.setEnemyInfo("Attacked/Player1/Damage",0);
+					VRMWdb.setEnemyInfo("Attacked/Player2/Damage",0);
+					VRMWdb.setEnemyInfo("Attacked/Player3/Damage",0);
+					VRMWdb.setEnemyInfo("StartTime",VRMWdb.currentTime ().ToString ());
+					VRMWdb.setEnemyInfo("State","idle");
 
-					//If the card is unused and Player is idle,...
-					if (!isUsed && p2State == "idle") {
-						//Change card state to used
-						isUsed = true;
-						//Hide Attack Model on the card
-						OnTrackingLost ();
-						//Change Player state to Ready
-						VRMWdb.setPlayerInfo(2,"State","ready");
-					}
-				} else if (calcDistance3() < 700) {
-
-					//If the card is unused and Player is idle,...
-					if (!isUsed && p3State == "idle") {
-						//Change card state to used
-						isUsed = true;
-						//Hide Attack Model on the card
-						OnTrackingLost ();
-						//Change Player state to Ready
-						VRMWdb.setPlayerInfo(3,"State","ready");
-					}
+					//Change Stage to Battle
+					VRMWdb.setStage("Battle");
 				} else {
 					//If distance is more than 700,
 
-					//Change card state to unused
-					isUsed = false;
 					//Show Attack Model on the card
 					OnTrackingFound();
 
 				}
-			} else {
-				//If the action card are not track, change distance to 9999
 			}
-				
+
 		}
 		#endregion // PUBLIC_METHODS
 

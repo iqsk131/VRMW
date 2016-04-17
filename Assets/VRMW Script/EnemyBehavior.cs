@@ -33,6 +33,7 @@ public class EnemyBehavior : MonoBehaviour
 	private double globalStartTime=double.Parse(VRMWdb.getEnemyInfoString("StartTime"));
 	private string playAnim="";
 	private float latestShowDamage;
+	private int targetPlayer;
 	public GameObject targetEnemy;
 
 	// Use this for initialization
@@ -52,11 +53,12 @@ public class EnemyBehavior : MonoBehaviour
 		playAnim = "";
 		stillPlaying = false;
 		latestShowDamage = Time.time - 2;
+		targetPlayer = 1;
 
 	}
 
 	// Call when reactivate
-	public void reActivate(){
+	public void OnEnable(){
 		stillPlaying = false;
 	}
 
@@ -66,6 +68,17 @@ public class EnemyBehavior : MonoBehaviour
 		//Don't Start update until VRMWdb is initiated
 		if (!VRMWdb.isInitiated)
 			return;
+
+		if (VRMWdb.getEnemyInfoString ("State") == "dead" || VRMWdb.getEnemyInfoInt ("HP") <= 0) {
+			if (VRMWdb.getEnemyInfoString ( "State") != "dead")
+				VRMWdb.setEnemyInfo ("State", "dead");  
+			if (VRMWdb.getPlayerInfoString (1, "State") != "action"
+				&& VRMWdb.getPlayerInfoString (2, "State") != "action"
+				&& VRMWdb.getPlayerInfoString (3, "State") != "action") {
+				VRMWdb.setStage ("Initial");
+				return;
+			}
+		}
 
 		//If globalStartTime is not initialized, initialize it
 		if (globalStartTime == 0) {
@@ -108,10 +121,10 @@ public class EnemyBehavior : MonoBehaviour
 			}
 			latestShowDamage = Time.time;
 
-			VRMWdb.setEnemyInfo ("HP", VRMWdb.getEnemyInfoInt ("HP") 
+			VRMWdb.setEnemyInfo ("HP", Mathf.Max(VRMWdb.getEnemyInfoInt ("HP") 
 				- VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage") 
 				- VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage") 
-				- VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage"));
+				- VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage"),0));
 			playAnim = "Damaged";
 			VRMWdb.setEnemyInfo ("Attacked/Player1/Damage", 0);
 			VRMWdb.setEnemyInfo ("Attacked/Player2/Damage", 0);
@@ -143,23 +156,29 @@ public class EnemyBehavior : MonoBehaviour
 
 				if (playAnim == "Attack") {
 					stillPlaying = true;
-					int randomTarget = Random.Range (1, 4);
-					if (randomTarget == 1) {
+					targetPlayer = Random.Range (1, 4);
+					if (targetPlayer != 1 && targetPlayer != 2)targetPlayer = 3;
+					while(VRMWdb.getPlayerInfoString (targetPlayer, "State") == "dead"){
+						targetPlayer = targetPlayer %3 +1;
+					}
+					if (targetPlayer == 1) {
 						targetEnemy = enemy1;
-					} else if (randomTarget == 2) {
+					} else if (targetPlayer == 2) {
 						targetEnemy = enemy2;
 					} else {
-						randomTarget = 3;
+						targetPlayer = 3;
 						targetEnemy = enemy3;
 					}
-					transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().attack (targetEnemy.transform.FindChild ("Model"),0,randomTarget);
+					if( VRMWdb.getPlayerInfoString (1, "State") != "action" 
+						&& VRMWdb.getPlayerInfoString (2, "State") != "action" 
+						&& VRMWdb.getPlayerInfoString (3, "State") != "action")
+					transform.FindChild ("Model").GetComponentInChildren<ModelInterface>().attack(targetEnemy.transform.FindChild ("Model"),0,targetPlayer);
 				}
 
 			}
 
 			//If Active time circle full, and player are idle or ready, Attack player
-			if (Time.time - localStartTime >= VRMWdb.getEnemyInfoFloat("ActiveTime")
-				&& (VRMWdb.getPlayerInfoString (1, "State") == "idle" || VRMWdb.getPlayerInfoString (1, "State") == "ready")) {
+			if (Time.time - localStartTime >= VRMWdb.getEnemyInfoFloat("ActiveTime")){
 				playAnim="Attack";
 			}
 		}

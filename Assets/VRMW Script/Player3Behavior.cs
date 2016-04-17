@@ -53,7 +53,7 @@ public class Player3Behavior : MonoBehaviour
 	}
 
 	// Call when reactivate
-	public void reActivate(){
+	public void OnEnable(){
 		stillPlaying = false;
 	}
 
@@ -63,6 +63,22 @@ public class Player3Behavior : MonoBehaviour
 		//Don't Start update until VRMWdb is initiated
 		if (!VRMWdb.isInitiated)
 			return;
+
+		if (VRMWdb.getPlayerInfoString (3,"State") == "dead" || VRMWdb.getPlayerInfoInt (3,"HP") <= 0) {
+			if (VRMWdb.getPlayerInfoString (3, "State") != "dead")
+				VRMWdb.setPlayerInfo (3, "State", "dead");  
+			if (VRMWdb.getPlayerInfoString (1, "State") == "dead"
+				&& VRMWdb.getPlayerInfoString (2, "State") == "dead"
+				&& VRMWdb.getPlayerInfoString (3, "State") == "dead"){
+				if (VRMWdb.getEnemyInfoString ("State") != "action") {
+					VRMWdb.setStage ("Initial");
+					return;
+				}
+			} else {
+				this.gameObject.SetActive (false);
+				return;
+			}
+		}
 
 		//If globalStartTime is not initialized, initialize it
 		if (globalStartTime == 0) {
@@ -87,7 +103,7 @@ public class Player3Behavior : MonoBehaviour
 			Damage.SetActive (true);
 			latestShowDamage = Time.time;
 
-			VRMWdb.setPlayerInfo (3,"HP", VRMWdb.getPlayerInfoInt (3,"HP") - VRMWdb.getPlayerInfoInt (3,"Attacked/Damage"));
+			VRMWdb.setPlayerInfo (3,"HP", Mathf.Max(0, VRMWdb.getPlayerInfoInt (3,"HP") - VRMWdb.getPlayerInfoInt (3,"Attacked/Damage")));
 			playAnim = "Damaged";
 			VRMWdb.setPlayerInfo (3,"Attacked/Damage", 0);
 

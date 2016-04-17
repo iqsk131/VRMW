@@ -24,9 +24,15 @@ public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 		anim.Play ("Headspring");
 
 		if (user > 0) {
-			VRMWdb.setPlayerInfo (user, "State", currentState);
+			if(VRMWdb.getPlayerInfoInt(user,"HP")<=0)
+				VRMWdb.setPlayerInfo (user, "State", "dead");
+			else
+				VRMWdb.setPlayerInfo (user, "State", currentState);
 		} else {
-			VRMWdb.setEnemyInfo ("State", currentState);
+			if(VRMWdb.getEnemyInfoInt("HP")<=0)
+				VRMWdb.setEnemyInfo ("State", "dead");
+			else
+				VRMWdb.setEnemyInfo ("State", currentState);
 		}
 
 	}

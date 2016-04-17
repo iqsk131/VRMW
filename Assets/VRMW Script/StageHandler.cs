@@ -14,6 +14,8 @@ namespace Vuforia
 	public class StageHandler : MonoBehaviour,
 	ITrackableEventHandler
 	{
+		public GameObject targetCard;
+
 		#region PRIVATE_MEMBER_VARIABLES
 
 		private TrackableBehaviour mTrackableBehaviour;
@@ -52,6 +54,19 @@ namespace Vuforia
 				currentStage = VRMWdb.getStage ()+"Stage";
 				//Activate the currentStage
 				transform.FindChild (currentStage).gameObject.SetActive (true);
+				if (currentStage == "BattleStage") {
+					/*transform.FindChild ("BattleStage").FindChild ("Enemy").gameObject.SetActive (true);
+					transform.FindChild ("BattleStage").FindChild ("Player1").gameObject.SetActive (true);
+					transform.FindChild ("BattleStage").FindChild ("Player2").gameObject.SetActive (true);
+					transform.FindChild ("BattleStage").FindChild ("Player3").gameObject.SetActive (true);*/
+					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ActionCard"), true);
+					setChildTrackableBehaviorState (targetCard.transform.FindChild ("CharacterCard"), false);
+					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ConfirmCard"), false);
+				} else if (currentStage == "InitialStage") {
+					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ActionCard"), false);
+					setChildTrackableBehaviorState (targetCard.transform.FindChild ("CharacterCard"), true);
+					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ConfirmCard"), true);
+				}
 
 				//If it is still Tracking, Enable all components in currentStage
 				if (isTrack)
@@ -77,8 +92,17 @@ namespace Vuforia
 
 				//If the new stage is BattleStage, reactivate them
 				if (currentStage == "BattleStage") {
-					transform.FindChild ("BattleStage").FindChild ("Enemy").GetComponent<EnemyBehavior> ().reActivate();
-					transform.FindChild ("BattleStage").FindChild ("Player1").GetComponent<Player1Behavior> ().reActivate ();
+					transform.FindChild ("BattleStage").FindChild ("Enemy").gameObject.SetActive (true);
+					transform.FindChild ("BattleStage").FindChild ("Player1").gameObject.SetActive (true);
+					transform.FindChild ("BattleStage").FindChild ("Player2").gameObject.SetActive (true);
+					transform.FindChild ("BattleStage").FindChild ("Player3").gameObject.SetActive (true);
+					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ActionCard"), true);
+					setChildTrackableBehaviorState (targetCard.transform.FindChild ("CharacterCard"), false);
+					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ConfirmCard"), false);
+				} else if (currentStage == "InitialStage") {
+					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ActionCard"), false);
+					setChildTrackableBehaviorState (targetCard.transform.FindChild ("CharacterCard"), true);
+					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ConfirmCard"), true);
 				}
 
 				//If it is still Tracking, Enable all components in currentStage
@@ -86,11 +110,34 @@ namespace Vuforia
 					OnTrackingFound ();
 			}
 		}
-
-
 		#endregion // UNTIY_MONOBEHAVIOUR_METHODS
 
+		private void setChildTrackableBehaviorState(Transform card,bool state){
+			card.gameObject.SetActive (state);
+			/*for (int i = 0; i < card.childCount; i++) {
+				card.GetChild (i).gameObject.SetActive (state);
+				((MonoBehaviour)card.GetChild (i).GetComponent<ITrackableEventHandler> ()).enabled = state;
+				((MonoBehaviour)card.GetChild (i).GetComponent<ImageTargetBehaviour> ()).enabled = state;
+				((Renderer)card.GetChild (i).GetComponent<Renderer>()).enabled = state;
+			}*/
+			/*ITrackableEventHandler[] eventHandlerComponents = card.GetComponentsInChildren<ITrackableEventHandler>(true);
+			foreach (ITrackableEventHandler component in eventHandlerComponents)
+			{
+				((MonoBehaviour)component).enabled = state;
+			}
 
+			ImageTargetBehaviour[] targetBehaviourComponents = card.GetComponentsInChildren<ImageTargetBehaviour>(true);
+			foreach (ITrackableEventHandler component in targetBehaviourComponents)
+			{
+				((MonoBehaviour)component).enabled = state;
+			}
+
+			Renderer[] rendererComponents = card.GetComponentsInChildren<Renderer>(true);
+			foreach (Renderer component in rendererComponents)
+			{
+				component.enabled = state;
+			}*/
+		}
 
 		#region PUBLIC_METHODS
 

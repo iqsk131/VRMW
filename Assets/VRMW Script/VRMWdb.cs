@@ -9,13 +9,24 @@ public class VRMWdb : MonoBehaviour {
 	public static IDataSnapshot gameDB;
 	public static bool isInitiated;
 
+	
+	public static event Action<bool> OnStageChange = _ => {};
+
 	void Start ()
 	{
 		isInitiated = false;
 		firebase = Firebase.CreateNew ("https://sweltering-heat-6741.firebaseio.com");
 		firebase.ValueUpdated += (object sender, ChangedEventArgs e) => {
+			bool isStageChange = false;
+			if(gameDB!=null && gameDB.Child ("Stage").StringValue != e.DataSnapshot.Child ("Stage").StringValue){
+				Debug.Log ("Stage Change !!");
+				isStageChange=true;
+			}
 			gameDB = e.DataSnapshot;
 			isInitiated=true;
+			if(isStageChange){
+				OnStageChange(true);
+			}
 		};
 		firebase.Child ("Initialize").SetValue ("Trigger");
 

@@ -5,6 +5,7 @@ Confidential and Proprietary - Qualcomm Connected Experiences, Inc.
 ==============================================================================*/
 
 using UnityEngine;
+using System.Collections;
 
 namespace Vuforia
 {
@@ -36,29 +37,28 @@ namespace Vuforia
 			{
 				mTrackableBehaviour.RegisterTrackableEventHandler(this);
 			}
+			VRMWdb.OnStageChange += (bool st) => {
+				StartCoroutine(updateStage());
+			};
 		}
 
-		void Update(){
-			//Don't Start update until VRMWdb is initiated
-			if (!VRMWdb.isInitiated)
-				return;
-
+		private IEnumerator updateStage(){
 			//If the currentStage is not initiate...
 			if (currentStage == "") {
-
+				
 				//Deactivate All stage (currently, battle and initial)
 				transform.FindChild ("BattleStage").gameObject.SetActive (false);
 				transform.FindChild ("InitialStage").gameObject.SetActive (false);
-
+				
 				//Initialize currentStage with Stage in VRMWdb
-				currentStage = VRMWdb.getStage ()+"Stage";
+				currentStage = VRMWdb.getStage()+"Stage";
 				//Activate the currentStage
 				transform.FindChild (currentStage).gameObject.SetActive (true);
 				if (currentStage == "BattleStage") {
 					/*transform.FindChild ("BattleStage").FindChild ("Enemy").gameObject.SetActive (true);
-					transform.FindChild ("BattleStage").FindChild ("Player1").gameObject.SetActive (true);
-					transform.FindChild ("BattleStage").FindChild ("Player2").gameObject.SetActive (true);
-					transform.FindChild ("BattleStage").FindChild ("Player3").gameObject.SetActive (true);*/
+				transform.FindChild ("BattleStage").FindChild ("Player1").gameObject.SetActive (true);
+				transform.FindChild ("BattleStage").FindChild ("Player2").gameObject.SetActive (true);
+				transform.FindChild ("BattleStage").FindChild ("Player3").gameObject.SetActive (true);*/
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ActionCard"), true);
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("CharacterCard"), false);
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ConfirmCard"), false);
@@ -67,29 +67,29 @@ namespace Vuforia
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("CharacterCard"), true);
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ConfirmCard"), true);
 				}
-
+				
 				//If it is still Tracking, Enable all components in currentStage
 				if (isTrack)
 					OnTrackingFound ();
 			}
-
+			
 			//If the stage change...
-			if (currentStage != VRMWdb.getStage () + "Stage") {
+			if (currentStage != VRMWdb.getStage() + "Stage") {
 				
 				//If it is still Tracking, Disable all components in currentStage
 				if (isTrack)
 					OnTrackingLost ();
-
+				
 				//Deactivate the currentStage
 				transform.FindChild (currentStage).gameObject.SetActive (false);
-
-
+				
+				
 				//Update the currentStage
-				currentStage = VRMWdb.getStage ()+"Stage";
-
+				currentStage = VRMWdb.getStage()+"Stage";
+				
 				//Enable all components in new currentStage
 				transform.FindChild (currentStage).gameObject.SetActive (true);
-
+				
 				//If the new stage is BattleStage, reactivate them
 				if (currentStage == "BattleStage") {
 					transform.FindChild ("BattleStage").FindChild ("Enemy").gameObject.SetActive (true);
@@ -104,39 +104,18 @@ namespace Vuforia
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("CharacterCard"), true);
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ConfirmCard"), true);
 				}
-
+				
 				//If it is still Tracking, Enable all components in currentStage
 				if (isTrack)
 					OnTrackingFound ();
 			}
+			yield return 0;
 		}
+	
 		#endregion // UNTIY_MONOBEHAVIOUR_METHODS
 
 		private void setChildTrackableBehaviorState(Transform card,bool state){
 			card.gameObject.SetActive (state);
-			/*for (int i = 0; i < card.childCount; i++) {
-				card.GetChild (i).gameObject.SetActive (state);
-				((MonoBehaviour)card.GetChild (i).GetComponent<ITrackableEventHandler> ()).enabled = state;
-				((MonoBehaviour)card.GetChild (i).GetComponent<ImageTargetBehaviour> ()).enabled = state;
-				((Renderer)card.GetChild (i).GetComponent<Renderer>()).enabled = state;
-			}*/
-			/*ITrackableEventHandler[] eventHandlerComponents = card.GetComponentsInChildren<ITrackableEventHandler>(true);
-			foreach (ITrackableEventHandler component in eventHandlerComponents)
-			{
-				((MonoBehaviour)component).enabled = state;
-			}
-
-			ImageTargetBehaviour[] targetBehaviourComponents = card.GetComponentsInChildren<ImageTargetBehaviour>(true);
-			foreach (ITrackableEventHandler component in targetBehaviourComponents)
-			{
-				((MonoBehaviour)component).enabled = state;
-			}
-
-			Renderer[] rendererComponents = card.GetComponentsInChildren<Renderer>(true);
-			foreach (Renderer component in rendererComponents)
-			{
-				component.enabled = state;
-			}*/
 		}
 
 		#region PUBLIC_METHODS
@@ -196,7 +175,8 @@ namespace Vuforia
 			{
 				component.enabled = true;
 			}
-
+			
+			StartCoroutine(updateStage());
 			Debug.Log("Trackable " + mTrackableBehaviour.TrackableName + " found");
 		}
 

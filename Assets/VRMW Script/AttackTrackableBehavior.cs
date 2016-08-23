@@ -7,6 +7,7 @@ Confidential and Proprietary - Qualcomm Connected Experiences, Inc.
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Collections;
 
 
 namespace Vuforia
@@ -89,6 +90,7 @@ namespace Vuforia
 			{
 				//Change Tracking state to true
 				isTrack = true;
+				StartCoroutine(StartAttack());
 
 				//Show Attack Model
 				OnTrackingFound();
@@ -107,29 +109,21 @@ namespace Vuforia
 			}
 		}
 
-		public void OnGUI(){
-			//Debug.Log ("Start GUI");
-			//GUI.Label (new Rect (200, 100, 100, 100), dialog);
-			//GUI.Label (new Rect (200, 200, 100, 100), "Distance: " + distanceToReference);
-		}
 
-
-		void Update(){
-			//Don't Start update until VRMWdb is initiated
-			if (!VRMWdb.isInitiated)
-				return;
-
-			//Get Player State
-			p1State = VRMWdb.getPlayerInfoString (1, "State");
-			p2State = VRMWdb.getPlayerInfoString (2, "State");
-			p3State = VRMWdb.getPlayerInfoString (3, "State");
-
-			//If action card are tracking..
-			if (isTrack == true) {
-
+		private IEnumerator StartAttack(){
+			while(isTrack){
+				yield return new WaitForSeconds(0.1f);
+				if (!VRMWdb.isInitiated)
+					continue;
+				
+				//Get Player State
+				p1State = VRMWdb.getPlayerInfoString (1, "State");
+				p2State = VRMWdb.getPlayerInfoString (2, "State");
+				p3State = VRMWdb.getPlayerInfoString (3, "State");
+					
 				//If distance to action scanner less than 700, do trigger
 				if (calcDistance1() < 700) {
-
+					
 					//If the card is unused and Player is idle,...
 					if (!isUsed && p1State == "idle") {
 						//Change card state to used
@@ -140,7 +134,7 @@ namespace Vuforia
 						VRMWdb.setPlayerInfo(1,"State","ready");
 					}
 				} else if (calcDistance2() < 700) {
-
+					
 					//If the card is unused and Player is idle,...
 					if (!isUsed && p2State == "idle") {
 						//Change card state to used
@@ -151,7 +145,7 @@ namespace Vuforia
 						VRMWdb.setPlayerInfo(2,"State","ready");
 					}
 				} else if (calcDistance3() < 700) {
-
+					
 					//If the card is unused and Player is idle,...
 					if (!isUsed && p3State == "idle") {
 						//Change card state to used
@@ -163,18 +157,18 @@ namespace Vuforia
 					}
 				} else {
 					//If distance is more than 700,
-
+					
 					//Change card state to unused
 					isUsed = false;
 					//Show Attack Model on the card
 					OnTrackingFound();
-
+					
 				}
-			} else {
-				//If the action card are not track, change distance to 9999
+
 			}
-				
+			yield return 0;
 		}
+
 		#endregion // PUBLIC_METHODS
 
 

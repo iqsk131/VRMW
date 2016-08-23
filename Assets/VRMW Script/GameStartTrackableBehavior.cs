@@ -7,6 +7,7 @@ Confidential and Proprietary - Qualcomm Connected Experiences, Inc.
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Collections;
 
 
 namespace Vuforia
@@ -23,6 +24,7 @@ namespace Vuforia
 
 		private TrackableBehaviour mTrackableBehaviour;
 		private bool isTrack;
+		private bool isStartCoroutine=false;
 		#endregion // PRIVATE_MEMBER_VARIABLES
 
 
@@ -43,6 +45,7 @@ namespace Vuforia
 			{
 				mTrackableBehaviour.RegisterTrackableEventHandler(this);
 			}
+
 		}
 		#endregion // UNTIY_MONOBEHAVIOUR_METHODS
 
@@ -71,7 +74,8 @@ namespace Vuforia
 				newStatus == TrackableBehaviour.Status.EXTENDED_TRACKED)
 			{
 				//Change Tracking state to true
-				isTrack = true;
+				isTrack=true;
+				StartCoroutine(StartBattle());
 
 				//Show Attack Model
 				OnTrackingFound();
@@ -80,27 +84,34 @@ namespace Vuforia
 			{
 
 				//Change Tracking state to false
-				isTrack = false;
+				isTrack=false;
 
 				//Hide Tracking Model
 				OnTrackingLost ();
 			}
 		}
+	
+		#endregion // PUBLIC_METHODS
 
 
-		void Update(){
-			//Don't Start update until VRMWdb is initiated
-			if (!VRMWdb.isInitiated)
-				return;
 
-			//If action card are tracking..
-			if (isTrack == true) {
+		#region PRIVATE_METHODS
+
+
+		private IEnumerator StartBattle(){
+			while(isTrack){
+				yield return new WaitForSeconds(0.1f);
+
+				//Don't Start update until VRMWdb is initiated
+				if (!VRMWdb.isInitiated)
+					continue ;
 
 				//If distance to action scanner less than 700, do trigger
 				if (calcDistance() < 700) {
+
 					//Hide Attack Model on the card
 					OnTrackingLost ();
-
+					
 					//Initial Battle Stage
 					VRMWdb.setPlayerInfo(1,"HP",VRMWdb.getPlayerInfoInt(1,"MaxHP"));
 					VRMWdb.setPlayerInfo(1,"Attacked/Damage",0);
@@ -120,25 +131,20 @@ namespace Vuforia
 					VRMWdb.setEnemyInfo("Attacked/Player3/Damage",0);
 					VRMWdb.setEnemyInfo("StartTime",VRMWdb.currentTime ().ToString ());
 					VRMWdb.setEnemyInfo("State","idle");
-
+					
 					//Change Stage to Battle
 					VRMWdb.setStage("Battle");
 				} else {
 					//If distance is more than 700,
-
+					
 					//Show Attack Model on the card
 					OnTrackingFound();
-
+					
 				}
+
 			}
-
+			yield return 0;
 		}
-		#endregion // PUBLIC_METHODS
-
-
-
-		#region PRIVATE_METHODS
-
 
 		private void OnTrackingFound()
 		{

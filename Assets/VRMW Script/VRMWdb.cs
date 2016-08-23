@@ -11,22 +11,59 @@ public class VRMWdb : MonoBehaviour {
 
 	
 	public static event Action<bool> OnStageChange = _ => {};
+	public static event Action<bool> OnEnemyHPChange = _ => {};
+	public static event Action<bool> OnPlayer1HPChange = _ => {};
+	public static event Action<bool> OnPlayer2HPChange = _ => {};
+	public static event Action<bool> OnPlayer3HPChange = _ => {};
 
 	void Start ()
 	{
 		isInitiated = false;
 		firebase = Firebase.CreateNew ("https://sweltering-heat-6741.firebaseio.com");
 		firebase.ValueUpdated += (object sender, ChangedEventArgs e) => {
+
 			bool isStageChange = false;
 			if(gameDB!=null && gameDB.Child ("Stage").StringValue != e.DataSnapshot.Child ("Stage").StringValue){
-				Debug.Log ("Stage Change !!");
 				isStageChange=true;
 			}
+			bool isEnemyHPChange = false;
+			if(gameDB!=null && gameDB.Child ("Enemy/HP").StringValue != e.DataSnapshot.Child ("Enemy/HP").StringValue){
+				isEnemyHPChange=true;
+			}
+			bool isPlayer1HPChange = false;
+			if(gameDB!=null && gameDB.Child ("Player1/HP").StringValue != e.DataSnapshot.Child ("Player1/HP").StringValue){
+				isPlayer1HPChange=true;
+			}
+			bool isPlayer2HPChange = false;
+			if(gameDB!=null && gameDB.Child ("Player2/HP").StringValue != e.DataSnapshot.Child ("Player2/HP").StringValue){
+				isPlayer2HPChange=true;
+			}
+			bool isPlayer3HPChange = false;
+			if(gameDB!=null && gameDB.Child ("Player3/HP").StringValue != e.DataSnapshot.Child ("Player3/HP").StringValue){
+				isPlayer3HPChange=true;
+			}
+
 			gameDB = e.DataSnapshot;
 			isInitiated=true;
+
 			if(isStageChange){
 				OnStageChange(true);
 			}
+
+			if(isEnemyHPChange){
+				OnEnemyHPChange(true);
+			}
+
+			if(isPlayer1HPChange){
+				OnPlayer1HPChange(true);
+			}
+			if(isPlayer2HPChange){
+				OnPlayer2HPChange(true);
+			}
+			if(isPlayer3HPChange){
+				OnPlayer3HPChange(true);
+			}
+
 		};
 		firebase.Child ("Initialize").SetValue ("Trigger");
 

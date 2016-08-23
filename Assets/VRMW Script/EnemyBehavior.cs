@@ -144,7 +144,8 @@ public class EnemyBehavior : MonoBehaviour
 			if (VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage") != 0
 			    || VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage") != 0
 			    || VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage") != 0) {
-				
+
+
 				//Update DamageText
 				if (VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage") != 0) {
 					Damage1.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage1.transform.position) * Quaternion.Euler (0, 180, 0);
@@ -166,6 +167,7 @@ public class EnemyBehavior : MonoBehaviour
 					DamageText.text = "-" + VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage");
 					Damage3.SetActive (true);
 				}
+
 				latestShowDamage = Time.time;
 				
 				VRMWdb.setEnemyInfo ("HP", Mathf.Max(VRMWdb.getEnemyInfoInt ("HP") 
@@ -178,6 +180,17 @@ public class EnemyBehavior : MonoBehaviour
 				VRMWdb.setEnemyInfo ("Attacked/Player3/Damage", 0);
 			}
 			if (Time.time - latestShowDamage > 2) {
+				
+				int damageNum=0;
+				if(Damage1.gameObject.activeSelf)damageNum++;
+				if(Damage2.gameObject.activeSelf)damageNum++;
+				if(Damage3.gameObject.activeSelf)damageNum++;
+			
+				//Combo
+				if(damageNum>1){
+					AudioClip audioClip = Resources.Load("Audio/SE/118-Fire02", typeof(AudioClip)) as AudioClip;
+					AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
+				}
 				Damage1.SetActive (false);
 				Damage2.SetActive (false);
 				Damage3.SetActive (false);

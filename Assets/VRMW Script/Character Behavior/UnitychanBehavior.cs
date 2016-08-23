@@ -9,6 +9,10 @@ public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 	}
 
 	public void damaged(int user){
+		StartCoroutine(startDamaged(user));
+	}
+
+	public IEnumerator startDamaged(int user){
 		string currentState = "";
 		if (user > 0) {
 			currentState = VRMWdb.getPlayerInfoString (user, "State");
@@ -20,8 +24,26 @@ public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 		}
 
 		Animator anim = transform.GetComponent<Animator>();
-		anim.Play ("DamageDown");
-		anim.Play ("Headspring");
+		////Blink
+		Renderer[] rendererComponents = GetComponentsInChildren<Renderer>();
+		for(int i=0;i<5;i++){
+			//toggle renderer
+			foreach (Renderer component in rendererComponents)
+			{
+				component.enabled = !component.enabled;
+			}
+			//wait for a bit
+			yield return new WaitForSeconds(0.1f);
+		}
+		
+		//make sure renderer is enabled when we exit
+		foreach (Renderer component in rendererComponents)
+		{
+			component.enabled = true;
+		}
+		////////
+		//anim.Play ("DamageDown");
+		//anim.Play ("Headspring");
 
 		if (user > 0) {
 			if(VRMWdb.getPlayerInfoInt(user,"HP")<=0)
@@ -34,7 +56,7 @@ public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 			else
 				VRMWdb.setEnemyInfo ("State", currentState);
 		}
-
+		yield return 0;
 	}
 
 

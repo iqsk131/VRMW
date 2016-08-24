@@ -72,7 +72,6 @@ public class EnemyBehavior : MonoBehaviour
 				continue;
 			//Behavior Field
 			ProgressRadialBehaviour bar = activeTimeBar.GetComponent<ProgressRadialBehaviour>();
-			Debug.Log ("Bar: " + (VRMWdb.currentTime() - double.Parse(VRMWdb.getEnemyInfoString("StartTime"))));
 			if ((VRMWdb.currentTime() - double.Parse(VRMWdb.getEnemyInfoString("StartTime")))/1000.0 >= VRMWdb.getEnemyInfoFloat("ActiveTime")) {
 				bar.Value = 100;
 			} else {

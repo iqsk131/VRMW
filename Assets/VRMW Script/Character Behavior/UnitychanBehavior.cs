@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 
@@ -83,8 +84,11 @@ public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 
 		//Play Attack animation
 		anim.Play ("Hikick");
-		AudioClip audioClip = Resources.Load("Audio/SE/Blow1", typeof(AudioClip)) as AudioClip;
-		AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
+		yield return new WaitForSeconds(0.2f);
+		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/BluntAnim")) as GameObject;
+		an.transform.parent = target;
+		an.transform.position = target.position;
+		an.GetComponent<AnimationHandler>().Play();
 
 
 		yield return new WaitForSeconds(0.1f);

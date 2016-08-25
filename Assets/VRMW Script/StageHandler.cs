@@ -47,18 +47,16 @@ namespace Vuforia
 			if (currentStage == "") {
 				
 				//Deactivate All stage (currently, battle and initial)
-				transform.FindChild ("BattleStage").gameObject.SetActive (false);
-				transform.FindChild ("InitialStage").gameObject.SetActive (false);
+				if(transform.FindChild ("BattleStage")!=null)
+					transform.FindChild ("BattleStage").gameObject.SetActive (false);
+				if(transform.FindChild ("InitialStage")!=null)
+					transform.FindChild ("InitialStage").gameObject.SetActive (false);
 				
 				//Initialize currentStage with Stage in VRMWdb
 				currentStage = VRMWdb.getStage()+"Stage";
 				//Activate the currentStage
 				transform.FindChild (currentStage).gameObject.SetActive (true);
 				if (currentStage == "BattleStage") {
-					/*transform.FindChild ("BattleStage").FindChild ("Enemy").gameObject.SetActive (true);
-				transform.FindChild ("BattleStage").FindChild ("Player1").gameObject.SetActive (true);
-				transform.FindChild ("BattleStage").FindChild ("Player2").gameObject.SetActive (true);
-				transform.FindChild ("BattleStage").FindChild ("Player3").gameObject.SetActive (true);*/
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ActionCard"), true);
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("CharacterCard"), false);
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ConfirmCard"), false);
@@ -99,6 +97,24 @@ namespace Vuforia
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ActionCard"), true);
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("CharacterCard"), false);
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ConfirmCard"), false);
+
+					//Reset Position
+					for(int i=1;i<=3;i++){
+						transform.FindChild ("BattleStage").FindChild ("Player"+i).FindChild("Model").transform.position
+							= transform.FindChild ("BattleStage").FindChild ("Player"+i).transform.position;
+						transform.FindChild ("BattleStage").FindChild ("Player"+i).FindChild("Model").GetChild(0).transform.position
+							= transform.FindChild ("BattleStage").FindChild ("Player"+i).FindChild("Model").transform.position;
+					}
+					transform.FindChild ("BattleStage").FindChild ("Enemy").FindChild("Model").transform.position
+						= transform.FindChild ("BattleStage").FindChild ("Enemy").transform.position;
+					transform.FindChild ("BattleStage").FindChild("Enemy"). FindChild("Model").GetChild(0).transform.position
+						= transform.FindChild ("BattleStage").FindChild ("Enemy").FindChild("Model").transform.position;
+
+					//Remove Animation
+					AnimationHandler[] anims = this.transform.GetComponentsInChildren<AnimationHandler>(true);
+					foreach(AnimationHandler a in anims){
+						GameObject.Destroy(a.gameObject);
+					}
 				} else if (currentStage == "InitialStage") {
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ActionCard"), false);
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("CharacterCard"), true);

@@ -19,7 +19,6 @@ namespace Vuforia
 	ITrackableEventHandler
 	{
 		public GameObject actionScanner;
-		[SerializeField] private GameObject[] playerObject;
 
 		#region PRIVATE_MEMBER_VARIABLES
 
@@ -128,15 +127,6 @@ namespace Vuforia
 					VRMWdb.setEnemyInfo("Attacked/Player3/Damage",0);
 					VRMWdb.setEnemyInfo("StartTime",VRMWdb.currentTime ().ToString ());
 					VRMWdb.setEnemyInfo("State","idle");
-
-					foreach(GameObject o in playerObject){
-						o.transform.position = o.transform.parent.transform.position;
-						AnimationHandler[] anims = o.transform.GetComponentsInChildren<AnimationHandler>(true);
-						foreach(AnimationHandler a in anims){
-							GameObject.Destroy(a.gameObject);
-						}
-					}
-
 
 					//Change Stage to Battle
 					VRMWdb.setStage("Battle");

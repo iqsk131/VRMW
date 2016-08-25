@@ -14,6 +14,7 @@ public abstract class PlayerBehavior : MonoBehaviour {
 	public bool stillPlaying=false;
 	protected float latestShowDamage;
 	protected string playAnim = "";
+	protected Vector3 originalPosition;
 	
 
 	protected IEnumerator ActiveTime(){
@@ -68,7 +69,18 @@ public abstract class PlayerBehavior : MonoBehaviour {
 					yield break;
 				}
 			}
-			
+
+			//Check Position
+			if(VRMWdb.getPlayerInfoString(playerNum, "Position") == "Back"){
+				transform.FindChild ("Model").transform.position = this.transform.position;
+			}
+			else{
+				transform.FindChild ("Model").transform.position = new Vector3 (
+					enemy.transform.position.x/2 + this.transform.position.x/2, 
+					enemy.transform.position.y/2 + this.transform.position.y/2,
+					enemy.transform.position.z/2 + this.transform.position.z/2);
+			}
+
 			//Check if Player got damaged or not
 			if (VRMWdb.getPlayerInfoInt (playerNum, "Attacked/Damage") != 0) {
 				

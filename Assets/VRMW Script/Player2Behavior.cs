@@ -23,6 +23,9 @@ public class Player2Behavior : PlayerBehavior
 	{
 		playerNum=2;
 		
+		//Set Original Position
+		originalPosition = this.transform.position;
+		
 		//Hide Ready Symbol
 		this.transform.FindChild ("Ready").GetComponent<Renderer>().enabled = false;
 		

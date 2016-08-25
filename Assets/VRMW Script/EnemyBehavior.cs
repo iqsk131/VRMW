@@ -215,9 +215,17 @@ public class EnemyBehavior : MonoBehaviour
 					
 					if (playAnim == "Attack") {
 						stillPlaying = true;
+
+						//Front Player
+						bool AnyFront = false;
+						for(int i=1;i<=3;i++)
+							if(VRMWdb.getPlayerInfoString(i, "Position") != "Back" 
+							   && VRMWdb.getPlayerInfoString(i, "State") != "dead")AnyFront = true;
+
 						targetPlayer = Random.Range (1, 4);
 						if (targetPlayer != 1 && targetPlayer != 2)targetPlayer = 3;
-						while(VRMWdb.getPlayerInfoString (targetPlayer, "State") == "dead"){
+						while(VRMWdb.getPlayerInfoString (targetPlayer, "State") == "dead" 
+						      || (AnyFront && VRMWdb.getPlayerInfoString(targetPlayer, "Position") == "Back")){
 							targetPlayer = targetPlayer %3 +1;
 						}
 						if (targetPlayer == 1) {

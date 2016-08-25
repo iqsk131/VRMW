@@ -187,8 +187,10 @@ public class EnemyBehavior : MonoBehaviour
 			
 				//Combo
 				if(damageNum>1){
-					AudioClip audioClip = Resources.Load("Audio/SE/118-Fire02", typeof(AudioClip)) as AudioClip;
-					AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
+					GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/ExplodeAnim")) as GameObject;
+					an.transform.parent = this.transform;
+					an.transform.position = this.transform.position;
+					an.GetComponent<AnimationHandler>().Play();
 				}
 				Damage1.SetActive (false);
 				Damage2.SetActive (false);

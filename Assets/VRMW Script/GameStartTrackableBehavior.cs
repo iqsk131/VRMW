@@ -19,6 +19,7 @@ namespace Vuforia
 	ITrackableEventHandler
 	{
 		public GameObject actionScanner;
+		[SerializeField] private GameObject[] playerObject;
 
 		#region PRIVATE_MEMBER_VARIABLES
 
@@ -113,25 +114,30 @@ namespace Vuforia
 					OnTrackingLost ();
 					
 					//Initial Battle Stage
-					VRMWdb.setPlayerInfo(1,"HP",VRMWdb.getPlayerInfoInt(1,"MaxHP"));
-					VRMWdb.setPlayerInfo(1,"Attacked/Damage",0);
-					VRMWdb.setPlayerInfo(1,"StartTime",VRMWdb.currentTime ().ToString ());
-					VRMWdb.setPlayerInfo(1,"State","idle");
-					VRMWdb.setPlayerInfo(2,"HP",VRMWdb.getPlayerInfoInt(2,"MaxHP"));
-					VRMWdb.setPlayerInfo(2,"Attacked/Damage",0);
-					VRMWdb.setPlayerInfo(2,"StartTime",VRMWdb.currentTime ().ToString ());
-					VRMWdb.setPlayerInfo(2,"State","idle");
-					VRMWdb.setPlayerInfo(3,"HP",VRMWdb.getPlayerInfoInt(3,"MaxHP"));
-					VRMWdb.setPlayerInfo(3,"Attacked/Damage",0);
-					VRMWdb.setPlayerInfo(3,"StartTime",VRMWdb.currentTime ().ToString ());
-					VRMWdb.setPlayerInfo(3,"State","idle");
+					for(int i=1;i<=3;i++){
+						VRMWdb.setPlayerInfo(i,"HP",VRMWdb.getPlayerInfoInt(i,"MaxHP"));
+						VRMWdb.setPlayerInfo(i,"Attacked/Damage",0);
+						VRMWdb.setPlayerInfo(i,"StartTime",VRMWdb.currentTime ().ToString ());
+						VRMWdb.setPlayerInfo(i,"State","idle");
+						VRMWdb.setPlayerInfo(i,"Position","Back");
+					}
+
 					VRMWdb.setEnemyInfo("HP",VRMWdb.getEnemyInfoInt("MaxHP"));
 					VRMWdb.setEnemyInfo("Attacked/Player1/Damage",0);
 					VRMWdb.setEnemyInfo("Attacked/Player2/Damage",0);
 					VRMWdb.setEnemyInfo("Attacked/Player3/Damage",0);
 					VRMWdb.setEnemyInfo("StartTime",VRMWdb.currentTime ().ToString ());
 					VRMWdb.setEnemyInfo("State","idle");
-					
+
+					foreach(GameObject o in playerObject){
+						o.transform.position = o.transform.parent.transform.position;
+						AnimationHandler[] anims = o.transform.GetComponentsInChildren<AnimationHandler>(true);
+						foreach(AnimationHandler a in anims){
+							GameObject.Destroy(a.gameObject);
+						}
+					}
+
+
 					//Change Stage to Battle
 					VRMWdb.setStage("Battle");
 				} else {

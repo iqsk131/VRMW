@@ -11,6 +11,10 @@ public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 		StartCoroutine(startAttack(target,user,attackTarget));
 	}
 
+	public void skill(Transform target, int user, int attackTarget){
+		StartCoroutine(startSkill(target,user,attackTarget));
+	}
+
 	public void damaged(int user){
 		StartCoroutine(startDamaged(user));
 	}
@@ -215,4 +219,85 @@ public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 		isAction=false;
 	}
 
+
+	private IEnumerator startSkill(Transform target,int user, int attackTarget){
+		if(isAction)yield break;
+		isAction = true;
+		
+		//Change Player State to action
+		if (user > 0) {
+			VRMWdb.setPlayerInfo (user, "State", "action");
+			VRMWdb.setPlayerInfo (user, "ActionType", "");
+		} else {
+			VRMWdb.setEnemyInfo ("State", "action");
+			VRMWdb.setEnemyInfo ("ActionType", "");
+		}
+		
+		Animator anim = transform.GetComponent<Animator>();
+		
+		//Warp to Target
+		Vector3 newTarget = new Vector3 (
+			3*target.transform.position.x/5 + 2*transform.position.x/5, 
+			3*target.transform.position.y/5 + 2*transform.position.y/5,
+			3*target.transform.position.z/5 + 2*transform.position.z/5);
+		transform.position = newTarget;
+		
+		yield return new WaitForSeconds(0.5f);
+		
+		
+		//Play Attack animation
+		anim.Play ("Hikick");
+		yield return new WaitForSeconds(0.2f);
+		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/BluntAnim")) as GameObject;
+		an.transform.parent = target;
+		an.transform.position = target.position;
+		an.GetComponent<AnimationHandler>().Play();
+		
+		
+		yield return new WaitForSeconds(0.1f);
+		
+		
+		if (user > 0) {
+			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", 1);
+		} else {
+			
+			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", 1);
+		}
+		
+		yield return new WaitForSeconds(0.5f);
+		
+		
+		//Warp back
+		transform.position = transform.parent.position;
+
+		///Some Skill Effects
+
+		yield return new WaitForSeconds(0.5f);
+		
+		GameObject an2 = GameObject.Instantiate(Resources.Load("Prefabs/Animations/ExplodeAnim")) as GameObject;
+		an2.transform.parent = target.transform;
+		an2.transform.position = target.transform.position;
+		an2.GetComponent<AnimationHandler>().Play();
+
+		if (user > 0) {
+			VRMWdb.setEnemyInfo ("StartTime", (VRMWdb.currentTime() + 3000.0).ToString ());
+		} else {
+
+			VRMWdb.setPlayerInfo (attackTarget, "StartTime", (VRMWdb.currentTime() + 3000.0).ToString ());
+		}
+
+		/////////////////////
+
+		//Change Player to Idle after action
+		
+		if (user > 0) {
+			VRMWdb.setPlayerInfo (user, "State", "idle");
+			VRMWdb.setPlayerInfo (user, "StartTime", VRMWdb.currentTime ().ToString ());
+		} else {
+			VRMWdb.setEnemyInfo ("State", "idle");
+			VRMWdb.setEnemyInfo ("StartTime", VRMWdb.currentTime ().ToString ());
+		}
+		
+		isAction=false;
+	}
 }

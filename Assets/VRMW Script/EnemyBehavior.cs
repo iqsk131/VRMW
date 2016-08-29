@@ -82,8 +82,23 @@ public class EnemyBehavior : MonoBehaviour
 			if ((VRMWdb.currentTime() - double.Parse(VRMWdb.getEnemyInfoString("StartTime")))/1000.0 >= VRMWdb.getEnemyInfoFloat("ActiveTime")
 			    && !stillPlaying){
 				//TO-DO enemy behavior
-				//playAnim="Attack";
-				VRMWdb.setEnemyInfo ("ActionType", "Heal");
+
+				//Front Player
+				bool AnyFront = false;
+				for(int i=1;i<=3;i++)
+					if(VRMWdb.getPlayerInfoString(i, "Position") != "Back" 
+					   && VRMWdb.getPlayerInfoString(i, "State") != "dead")AnyFront = true;
+				
+				targetPlayer = Random.Range (1, 4);
+				if (targetPlayer != 1 && targetPlayer != 2)targetPlayer = 3;
+				while(VRMWdb.getPlayerInfoString (targetPlayer, "State") == "dead" 
+				      || (AnyFront && VRMWdb.getPlayerInfoString(targetPlayer, "Position") == "Back")){
+					targetPlayer = targetPlayer %3 +1;
+				}
+				
+				VRMWdb.setEnemyInfo ("Target", targetPlayer);
+
+				VRMWdb.setEnemyInfo ("ActionType", "Skill");
 			}
 			////////////////
 		}
@@ -270,18 +285,8 @@ public class EnemyBehavior : MonoBehaviour
 					if (VRMWdb.getEnemyInfoString("ActionType") == "Attack") {
 						stillPlaying = true;
 
-						//Front Player
-						bool AnyFront = false;
-						for(int i=1;i<=3;i++)
-							if(VRMWdb.getPlayerInfoString(i, "Position") != "Back" 
-							   && VRMWdb.getPlayerInfoString(i, "State") != "dead")AnyFront = true;
+						targetPlayer=VRMWdb.getEnemyInfoInt ("Target");
 
-						targetPlayer = Random.Range (1, 4);
-						if (targetPlayer != 1 && targetPlayer != 2)targetPlayer = 3;
-						while(VRMWdb.getPlayerInfoString (targetPlayer, "State") == "dead" 
-						      || (AnyFront && VRMWdb.getPlayerInfoString(targetPlayer, "Position") == "Back")){
-							targetPlayer = targetPlayer %3 +1;
-						}
 						if (targetPlayer == 1) {
 							targetEnemy = enemy1;
 						} else if (targetPlayer == 2) {
@@ -290,10 +295,33 @@ public class EnemyBehavior : MonoBehaviour
 							targetPlayer = 3;
 							targetEnemy = enemy3;
 						}
+
 						if( VRMWdb.getPlayerInfoString (1, "State") != "action" 
 						   && VRMWdb.getPlayerInfoString (2, "State") != "action" 
 						   && VRMWdb.getPlayerInfoString (3, "State") != "action"){
 							transform.FindChild ("Model").GetComponentInChildren<ModelInterface>().attack(targetEnemy.transform.FindChild ("Model"),0,targetPlayer);
+							VRMWdb.setEnemyInfo ("ActionType", "");
+						}
+					}
+
+					if (VRMWdb.getEnemyInfoString("ActionType") == "Skill") {
+						stillPlaying = true;
+						
+						targetPlayer=VRMWdb.getEnemyInfoInt ("Target");
+						
+						if (targetPlayer == 1) {
+							targetEnemy = enemy1;
+						} else if (targetPlayer == 2) {
+							targetEnemy = enemy2;
+						} else {
+							targetPlayer = 3;
+							targetEnemy = enemy3;
+						}
+						
+						if( VRMWdb.getPlayerInfoString (1, "State") != "action" 
+						   && VRMWdb.getPlayerInfoString (2, "State") != "action" 
+						   && VRMWdb.getPlayerInfoString (3, "State") != "action"){
+							transform.FindChild ("Model").GetComponentInChildren<ModelInterface>().skill(targetEnemy.transform.FindChild ("Model"),0,targetPlayer);
 							VRMWdb.setEnemyInfo ("ActionType", "");
 						}
 					}

@@ -43,6 +43,9 @@ namespace Vuforia
 		}
 
 		private IEnumerator updateStage(){
+
+			while(!VRMWdb.isInitiated)yield return new WaitForSeconds(1f);
+
 			//If the currentStage is not initiate...
 			if (currentStage == "") {
 				

@@ -79,10 +79,11 @@ public class EnemyBehavior : MonoBehaviour
 			}
 
 			//If Active time circle full, and player are idle or ready, Attack player
-			if ((VRMWdb.currentTime() - double.Parse(VRMWdb.getEnemyInfoString("StartTime")))/1000.0 >= VRMWdb.getEnemyInfoFloat("ActiveTime")){
+			if ((VRMWdb.currentTime() - double.Parse(VRMWdb.getEnemyInfoString("StartTime")))/1000.0 >= VRMWdb.getEnemyInfoFloat("ActiveTime")
+			    && !stillPlaying){
 				//TO-DO enemy behavior
 				//playAnim="Attack";
-				VRMWdb.setEnemyInfo ("ActionType", "Attack");
+				VRMWdb.setEnemyInfo ("ActionType", "Heal");
 			}
 			////////////////
 		}
@@ -126,22 +127,25 @@ public class EnemyBehavior : MonoBehaviour
 					yield break;
 				}
 			}
+
 			
-			//If globalStartTime is not initialized, initialize it
-			/*if (globalStartTime == 0) {
-				globalStartTime = double.Parse (VRMWdb.getEnemyInfoString ("StartTime"));
-				localStartTime = Time.time - (float)( VRMWdb.currentTime () - globalStartTime)/1000;
+			bool isBlock = false;
+
+			//Heal
+			if (VRMWdb.getEnemyInfoInt ("Attacked/Heal") != 0) {
+				Damage2.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage2.transform.position) * Quaternion.Euler (0, 180, 0);
+				TextMesh DamageText = Damage2.GetComponent<TextMesh> ();
+				DamageText.text = "+" + VRMWdb.getEnemyInfoInt ("Attacked/Heal");
+				Damage2.SetActive (true);
+				latestShowDamage = Time.time;
+				
+				VRMWdb.setEnemyInfo ("HP",Mathf.Min(VRMWdb.getEnemyInfoInt("MaxHP"), 
+				                                    VRMWdb.getEnemyInfoInt ("HP") + VRMWdb.getEnemyInfoInt ("Attacked/Heal")));
+				VRMWdb.setEnemyInfo ("Attacked/Heal", 0);
+				isBlock=true;
 			}
 			
-			//Check if Active Time Bar Reset or not
-			if (double.Parse(VRMWdb.getEnemyInfoString ("StartTime")) != globalStartTime) {
-				localStartTime = Time.time;
-				VRMWdb.setEnemyInfo ("StartTime",  VRMWdb.currentTime ().ToString());
-				globalStartTime=double.Parse(VRMWdb.getEnemyInfoString("StartTime"));
-			}*/
-			
 			//Check if Enemey got damaged or not
-			bool isBlock = false;
 			if (VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage") != 0
 			    || VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage") != 0
 			    || VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage") != 0) {
@@ -248,11 +252,19 @@ public class EnemyBehavior : MonoBehaviour
 					if (VRMWdb.getEnemyInfoString("ActionType") == "Damaged") {
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().damaged(0);
+						VRMWdb.setEnemyInfo ("ActionType", "");
 					}
 
 					if (VRMWdb.getEnemyInfoString("ActionType") == "Defend") {
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().defend(0);
+						VRMWdb.setEnemyInfo ("ActionType", "");
+					}
+
+					if (VRMWdb.getEnemyInfoString("ActionType") == "Heal") {
+						stillPlaying = true;
+						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().heal(0);
+						VRMWdb.setEnemyInfo ("ActionType", "");
 					}
 					
 					if (VRMWdb.getEnemyInfoString("ActionType") == "Attack") {
@@ -280,8 +292,10 @@ public class EnemyBehavior : MonoBehaviour
 						}
 						if( VRMWdb.getPlayerInfoString (1, "State") != "action" 
 						   && VRMWdb.getPlayerInfoString (2, "State") != "action" 
-						   && VRMWdb.getPlayerInfoString (3, "State") != "action")
+						   && VRMWdb.getPlayerInfoString (3, "State") != "action"){
 							transform.FindChild ("Model").GetComponentInChildren<ModelInterface>().attack(targetEnemy.transform.FindChild ("Model"),0,targetPlayer);
+							VRMWdb.setEnemyInfo ("ActionType", "");
+						}
 					}
 				}
 			}

@@ -5,6 +5,7 @@ using System;
 public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 
 	private bool defendState = false;
+	private bool isAction = false;
 
 	public void attack(Transform target, int user, int attackTarget){
 		StartCoroutine(startAttack(target,user,attackTarget));
@@ -18,11 +19,27 @@ public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 		StartCoroutine(startDefend(user));
 	}
 
+	public void heal(int user){
+		StartCoroutine(startHeal(user));
+	}
+
 	public bool getDefendState(){
 		return defendState;
 	}
 
 	public IEnumerator startDefend(int user){
+		if(isAction)yield break;
+		isAction = true;
+
+		//Change Player State to action
+		if (user > 0) {
+			VRMWdb.setPlayerInfo (user, "State", "action");
+			VRMWdb.setPlayerInfo (user, "ActionType", "");
+		} else {
+			VRMWdb.setEnemyInfo ("State", "action");
+			VRMWdb.setEnemyInfo ("ActionType", "");
+		}
+
 		defendState = true;
 		yield return new WaitForSeconds(0.2f);
 		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/ShieldAnim")) as GameObject;
@@ -33,20 +50,51 @@ public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 		an.GetComponent<ShieldAnim>().Play(5f);
 		if (user > 0) {
 			VRMWdb.setPlayerInfo (user, "State", "idle");
-			VRMWdb.setPlayerInfo (user, "ActionType", "");
 			VRMWdb.setPlayerInfo (user, "StartTime", VRMWdb.currentTime ().ToString ());
 		} else {
 			VRMWdb.setEnemyInfo ("State", "idle");
-			VRMWdb.setEnemyInfo ("ActionType", "");
 			VRMWdb.setEnemyInfo ("StartTime", VRMWdb.currentTime ().ToString ());
 		}
+		isAction=false;
 		yield return new WaitForSeconds(duration);
 		defendState = false;
-		Debug.Log ("End Defend");
 
 	}
 
+	public IEnumerator startHeal(int user){
+		if(isAction)yield break;
+		isAction = true;
+
+		//Change Player State to action
+		if (user > 0) {
+			VRMWdb.setPlayerInfo (user, "State", "action");
+			VRMWdb.setPlayerInfo (user, "ActionType", "");
+		} else {
+			VRMWdb.setEnemyInfo ("State", "action");
+			VRMWdb.setEnemyInfo ("ActionType", "");
+		}
+
+		yield return new WaitForSeconds(0.1f);
+		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/HealAnim")) as GameObject;
+		an.transform.parent = this.transform;
+		an.transform.position = this.transform.position;
+		an.GetComponent<AnimationHandler>().Play();
+		yield return new WaitForSeconds(0.1f);
+		if (user > 0) {
+			VRMWdb.setPlayerInfo (user, "State", "idle");
+			VRMWdb.setPlayerInfo (user, "StartTime", VRMWdb.currentTime ().ToString ());
+			VRMWdb.setPlayerInfo (user, "Attacked/Heal", 3);
+      	} else {
+			VRMWdb.setEnemyInfo ("State", "idle");
+			VRMWdb.setEnemyInfo ("StartTime", VRMWdb.currentTime ().ToString ());
+			VRMWdb.setEnemyInfo ("Attacked/Heal", 3);
+		}
+		isAction=false;
+	}
+
 	public IEnumerator startDamaged(int user){
+		if(isAction)yield break;
+		isAction = true;
 		string currentState = "";
 		string currentAction = "";
 		if (user > 0) {
@@ -98,16 +146,21 @@ public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 			}
 		}
 		yield return 0;
+		isAction=false;
 	}
 
 
 	private IEnumerator startAttack(Transform target,int user, int attackTarget){
+		if(isAction)yield break;
+		isAction = true;
 
 		//Change Player State to action
 		if (user > 0) {
 			VRMWdb.setPlayerInfo (user, "State", "action");
+			VRMWdb.setPlayerInfo (user, "ActionType", "");
 		} else {
 			VRMWdb.setEnemyInfo ("State", "action");
+			VRMWdb.setEnemyInfo ("ActionType", "");
 		}
 
 		Animator anim = transform.GetComponent<Animator>();
@@ -153,14 +206,13 @@ public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 
 		if (user > 0) {
 			VRMWdb.setPlayerInfo (user, "State", "idle");
-			VRMWdb.setPlayerInfo (user, "ActionType", "");
 			VRMWdb.setPlayerInfo (user, "StartTime", VRMWdb.currentTime ().ToString ());
 		} else {
 			VRMWdb.setEnemyInfo ("State", "idle");
-			VRMWdb.setEnemyInfo ("ActionType", "");
 			VRMWdb.setEnemyInfo ("StartTime", VRMWdb.currentTime ().ToString ());
 		}
 
+		isAction=false;
 	}
 
 }

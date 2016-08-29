@@ -81,6 +81,19 @@ public abstract class PlayerBehavior : MonoBehaviour {
 					enemy.transform.position.z/2 + this.transform.position.z/2);
 			}
 
+			//Heal
+			if (VRMWdb.getPlayerInfoInt (playerNum, "Attacked/Heal") != 0) {
+				Damage.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage.transform.position) * Quaternion.Euler (0, 180, 0);
+				TextMesh DamageText = Damage.GetComponent<TextMesh> ();
+				DamageText.text = "+" + VRMWdb.getPlayerInfoInt (playerNum, "Attacked/Heal");
+				Damage.SetActive (true);
+				latestShowDamage = Time.time;
+				
+				VRMWdb.setPlayerInfo (playerNum,"HP",Mathf.Min(VRMWdb.getPlayerInfoInt(playerNum,"MaxHP"), 
+				                                               VRMWdb.getPlayerInfoInt (playerNum,"HP") + VRMWdb.getPlayerInfoInt (playerNum,"Attacked/Heal")));
+				VRMWdb.setPlayerInfo (playerNum,"Attacked/Heal", 0);
+			}
+
 			//Check if Player got damaged or not
 			if (VRMWdb.getPlayerInfoInt (playerNum, "Attacked/Damage") != 0) {
 
@@ -133,16 +146,25 @@ public abstract class PlayerBehavior : MonoBehaviour {
 					if (playAnim == "Damaged") {
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().damaged(playerNum);
+						VRMWdb.setPlayerInfo (playerNum, "ActionType", "");
 					}
 					
 					if (playAnim == "Attack") {
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().attack (enemy.transform.FindChild ("Model"),playerNum,0);
+						VRMWdb.setPlayerInfo (playerNum, "ActionType", "");
 					}
 
 					if (playAnim == "Defend") {
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().defend(playerNum);
+						VRMWdb.setPlayerInfo (playerNum, "ActionType", "");
+					}
+
+					if (playAnim == "Heal") {
+						stillPlaying = true;
+						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().heal(playerNum);
+						VRMWdb.setPlayerInfo (playerNum, "ActionType", "");
 					}
 				}
 				

@@ -132,6 +132,7 @@ namespace Vuforia
 						OnTrackingLost ();
 						//Change Player state to Ready
 						VRMWdb.setPlayerInfo(1,"State","ready");
+						VRMWdb.setPlayerInfo(1,"ActionType","Attack");
 					}
 				} else if (calcDistance2() < 700) {
 					
@@ -143,6 +144,7 @@ namespace Vuforia
 						OnTrackingLost ();
 						//Change Player state to Ready
 						VRMWdb.setPlayerInfo(2,"State","ready");
+						VRMWdb.setPlayerInfo(2,"ActionType","Attack");
 					}
 				} else if (calcDistance3() < 700) {
 					
@@ -154,6 +156,7 @@ namespace Vuforia
 						OnTrackingLost ();
 						//Change Player state to Ready
 						VRMWdb.setPlayerInfo(3,"State","ready");
+						VRMWdb.setPlayerInfo(3,"ActionType","Attack");
 					}
 				} else {
 					//If distance is more than 700,

@@ -33,9 +33,11 @@ public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 		an.GetComponent<ShieldAnim>().Play(5f);
 		if (user > 0) {
 			VRMWdb.setPlayerInfo (user, "State", "idle");
+			VRMWdb.setPlayerInfo (user, "ActionType", "");
 			VRMWdb.setPlayerInfo (user, "StartTime", VRMWdb.currentTime ().ToString ());
 		} else {
 			VRMWdb.setEnemyInfo ("State", "idle");
+			VRMWdb.setEnemyInfo ("ActionType", "");
 			VRMWdb.setEnemyInfo ("StartTime", VRMWdb.currentTime ().ToString ());
 		}
 		yield return new WaitForSeconds(duration);
@@ -46,11 +48,14 @@ public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 
 	public IEnumerator startDamaged(int user){
 		string currentState = "";
+		string currentAction = "";
 		if (user > 0) {
 			currentState = VRMWdb.getPlayerInfoString (user, "State");
+			currentAction = VRMWdb.getPlayerInfoString (user, "ActionType");
 			VRMWdb.setPlayerInfo (user, "State", "action");
 		} else {
 			currentState = VRMWdb.getEnemyInfoString ("State");
+			currentAction = VRMWdb.getEnemyInfoString ("ActionType");
 			VRMWdb.setEnemyInfo ("State", "action");
 
 		}
@@ -80,13 +85,17 @@ public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 		if (user > 0) {
 			if(VRMWdb.getPlayerInfoInt(user,"HP")<=0)
 				VRMWdb.setPlayerInfo (user, "State", "dead");
-			else
+			else{
+				VRMWdb.setPlayerInfo (user, "ActionType", currentAction);
 				VRMWdb.setPlayerInfo (user, "State", currentState);
+			}
 		} else {
 			if(VRMWdb.getEnemyInfoInt("HP")<=0)
 				VRMWdb.setEnemyInfo ("State", "dead");
-			else
+			else{
 				VRMWdb.setEnemyInfo ("State", currentState);
+				VRMWdb.setEnemyInfo ("ActionType", currentAction);
+			}
 		}
 		yield return 0;
 	}
@@ -144,9 +153,11 @@ public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 
 		if (user > 0) {
 			VRMWdb.setPlayerInfo (user, "State", "idle");
+			VRMWdb.setPlayerInfo (user, "ActionType", "");
 			VRMWdb.setPlayerInfo (user, "StartTime", VRMWdb.currentTime ().ToString ());
 		} else {
 			VRMWdb.setEnemyInfo ("State", "idle");
+			VRMWdb.setEnemyInfo ("ActionType", "");
 			VRMWdb.setEnemyInfo ("StartTime", VRMWdb.currentTime ().ToString ());
 		}
 

@@ -83,17 +83,31 @@ public abstract class PlayerBehavior : MonoBehaviour {
 
 			//Check if Player got damaged or not
 			if (VRMWdb.getPlayerInfoInt (playerNum, "Attacked/Damage") != 0) {
-				
-				Damage.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage.transform.position) * Quaternion.Euler (0, 180, 0);
-				TextMesh DamageText = Damage.GetComponent<TextMesh> ();
-				DamageText.text = "-" + VRMWdb.getPlayerInfoInt (playerNum, "Attacked/Damage");
-				Damage.SetActive (true);
-				latestShowDamage = Time.time;
-				
-				VRMWdb.setPlayerInfo (playerNum,"HP",Mathf.Max(0, VRMWdb.getPlayerInfoInt (playerNum,"HP") - VRMWdb.getPlayerInfoInt (playerNum,"Attacked/Damage")));
-				playAnim = "Damaged";
-				VRMWdb.setPlayerInfo (playerNum,"Attacked/Damage", 0);
-				
+
+				if(transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().getDefendState()){
+					
+					Damage.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage.transform.position) * Quaternion.Euler (0, 180, 0);
+					TextMesh DamageText = Damage.GetComponent<TextMesh> ();
+					DamageText.text = "Block!";
+					Damage.SetActive (true);
+					latestShowDamage = Time.time;
+
+					AudioClip audioClip = Resources.Load("Audio/SE/040-Knock01", typeof(AudioClip)) as AudioClip;
+					AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
+					VRMWdb.setPlayerInfo (playerNum,"Attacked/Damage", 0);
+
+				}
+				else{
+					Damage.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage.transform.position) * Quaternion.Euler (0, 180, 0);
+					TextMesh DamageText = Damage.GetComponent<TextMesh> ();
+					DamageText.text = "-" + VRMWdb.getPlayerInfoInt (playerNum, "Attacked/Damage");
+					Damage.SetActive (true);
+					latestShowDamage = Time.time;
+					
+					VRMWdb.setPlayerInfo (playerNum,"HP",Mathf.Max(0, VRMWdb.getPlayerInfoInt (playerNum,"HP") - VRMWdb.getPlayerInfoInt (playerNum,"Attacked/Damage")));
+					playAnim = "Damaged";
+					VRMWdb.setPlayerInfo (playerNum,"Attacked/Damage", 0);
+				}
 			}
 			if (Time.time - latestShowDamage > 2) {
 				Damage.SetActive (false);
@@ -125,6 +139,11 @@ public abstract class PlayerBehavior : MonoBehaviour {
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().attack (enemy.transform.FindChild ("Model"),playerNum,0);
 					}
+
+					if (playAnim == "Defend") {
+						stillPlaying = true;
+						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().defend(playerNum);
+					}
 				}
 				
 				//If Active time circle full, Player is ready, and Enemy are idle or ready, Attack Ememy
@@ -133,11 +152,16 @@ public abstract class PlayerBehavior : MonoBehaviour {
 				    && (VRMWdb.getPlayerInfoString(playerNum,"State")=="ready" || (VRMWdb.getPlayerInfoString(playerNum,"State")=="action" && !stillPlaying))
 				    && (VRMWdb.getEnemyInfoString ("State") == "idle" 
 				    || (VRMWdb.getEnemyInfoString("State")=="action" && !enemy.GetComponent<EnemyBehavior>().stillPlaying)) ) {
-					playAnim="Attack";
+					playAnim=VRMWdb.getPlayerInfoString(playerNum,"ActionType");
 				}
 				
 			}
 			
+			if (VRMWdb.getPlayerInfoString (playerNum, "State") == "ready" 
+			    && VRMWdb.getPlayerInfoString (playerNum, "ActionType") == "") {
+				VRMWdb.setPlayerInfo(playerNum,"State","idle");
+			}
+
 			//Update Ready Symbol
 			if (VRMWdb.getPlayerInfoString (playerNum, "State") == "ready") {
 				this.transform.FindChild ("Ready").GetComponent<Renderer> ().enabled = true;

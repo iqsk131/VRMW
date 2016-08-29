@@ -82,7 +82,7 @@ public class EnemyBehavior : MonoBehaviour
 			if ((VRMWdb.currentTime() - double.Parse(VRMWdb.getEnemyInfoString("StartTime")))/1000.0 >= VRMWdb.getEnemyInfoFloat("ActiveTime")){
 				//TO-DO enemy behavior
 				//playAnim="Attack";
-				VRMWdb.setEnemyInfo ("ActionType", "Defend");
+				VRMWdb.setEnemyInfo ("ActionType", "Attack");
 			}
 			////////////////
 		}

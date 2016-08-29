@@ -7,7 +7,7 @@ public class ExplodeAnim : AnimationHandler {
 	[SerializeField] protected Sprite[] frames;
 	[SerializeField] protected Image image;
 
-	public override void Play(int times=1){
+	public override void Play(){
 		StartCoroutine(PlayAnim());
 	}
 

@@ -4,6 +4,7 @@ using System;
 
 public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 
+	private bool defendState = false;
 
 	public void attack(Transform target, int user, int attackTarget){
 		StartCoroutine(startAttack(target,user,attackTarget));
@@ -11,6 +12,36 @@ public class UnitychanBehavior : MonoBehaviour, ModelInterface  {
 
 	public void damaged(int user){
 		StartCoroutine(startDamaged(user));
+	}
+
+	public void defend(int user){
+		StartCoroutine(startDefend(user));
+	}
+
+	public bool getDefendState(){
+		return defendState;
+	}
+
+	public IEnumerator startDefend(int user){
+		defendState = true;
+		yield return new WaitForSeconds(0.2f);
+		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/ShieldAnim")) as GameObject;
+		an.transform.parent = this.transform;
+		an.transform.position = this.transform.position;
+		an.transform.rotation = this.transform.rotation;
+		float duration=5f;
+		an.GetComponent<ShieldAnim>().Play(5f);
+		if (user > 0) {
+			VRMWdb.setPlayerInfo (user, "State", "idle");
+			VRMWdb.setPlayerInfo (user, "StartTime", VRMWdb.currentTime ().ToString ());
+		} else {
+			VRMWdb.setEnemyInfo ("State", "idle");
+			VRMWdb.setEnemyInfo ("StartTime", VRMWdb.currentTime ().ToString ());
+		}
+		yield return new WaitForSeconds(duration);
+		defendState = false;
+		Debug.Log ("End Defend");
+
 	}
 
 	public IEnumerator startDamaged(int user){

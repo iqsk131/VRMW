@@ -214,4 +214,40 @@ public class VRMWdb : MonoBehaviour {
 			Debug.Log("setPlayerInfo Error: " + e.ToString());
 		}
 	}
+
+	//////////////////////////////
+	///                        ///
+	/// MonsterInfo Get-Method ///
+	///                        ///
+	//////////////////////////////
+	public static string getMonsterInfoString(int id, string field, bool isBoss=false){
+		string mid = "id0" + id;
+		if(isBoss) mid = "b"+mid;
+		try{
+			return gameDB.Child ("MonsterInfo").Child(mid).Child(field).StringValue;
+		}
+		catch(Exception e){
+			return "Error: " + e.ToString();
+		}
+	}
+	public static int getMonsterInfoInt(int id, string field, bool isBoss=false){
+		string mid = "id0" + id;
+		if(isBoss) mid = "b"+mid;
+		try{
+			return (int) gameDB.Child ("MonsterInfo").Child(mid).Child(field).FloatValue;
+		}
+		catch(Exception e){
+			return 0;
+		}
+	}
+	public static float getMonsterInfoFloat(int id, string field, bool isBoss=false){
+		string mid = "id0" + id;
+		if(isBoss) mid = "b"+mid;
+		try{
+			return gameDB.Child ("MonsterInfo").Child(mid).Child(field).FloatValue;
+		}
+		catch(Exception e){
+			return 0f;
+		}
+	}
 }

@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
   <Tracking>
-    <ImageTarget name="VRMW-logo" size="400.000000 393.000000" />
+    <ImageTarget name="VRMW_Action_Switch" size="170.000000 255.000000" />
+    <ImageTarget name="VRMW_Action_Defense" size="877.000000 1315.500000" />
+    <ImageTarget name="VRMW_Action_ATK" size="877.000000 1315.500000" />
+    <ImageTarget name="VRMW_Action_MATK" size="877.000000 1315.500000" />
+    <ImageTarget name="VRMW_Action_Potion" size="877.000000 1315.500000" />
+    <ImageTarget name="VRMW-logo" size="400.000000 387.992493" />
+    <ImageTarget name="VRMW_Confirm" size="877.000000 1240.000000" />
     <ImageTarget name="img04" size="1730.000000 1941.000000" />
     <ImageTarget name="img03" size="848.000000 1330.000000" />
     <ImageTarget name="img02" size="867.000000 1350.000000" />

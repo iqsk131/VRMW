@@ -166,6 +166,12 @@ public abstract class PlayerBehavior : MonoBehaviour {
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().heal(playerNum);
 						VRMWdb.setPlayerInfo (playerNum, "ActionType", "");
 					}
+
+					if (playAnim == "Skill") {
+						stillPlaying = true;
+						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().skill (enemy.transform.FindChild ("Model"),playerNum,0);
+						VRMWdb.setPlayerInfo (playerNum, "ActionType", "");
+					}
 				}
 				
 				//If Active time circle full, Player is ready, and Enemy are idle or ready, Attack Ememy

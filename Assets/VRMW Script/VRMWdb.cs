@@ -164,6 +164,32 @@ public class VRMWdb : MonoBehaviour {
 			Debug.Log("setPlayerInfo Error: " + e.ToString());
 		}
 	}
+	public static string getPlayerMonsterInfoString(int player,string field){
+		try{
+			return getMonsterInfoString((int)gameDB.Child ("Player"+player).Child("ID").FloatValue,field);
+		}
+		catch(Exception e){
+			return "Error: " + e.ToString();
+		}
+	}
+	
+	public static int getPlayerMonsterInfoInt(int player,string field){
+		try{
+			return getMonsterInfoInt((int)gameDB.Child ("Player"+player).Child("ID").FloatValue,field);
+		}
+		catch{
+			return 0;
+		}
+	}
+	
+	public static float getPlayerMonsterInfoFloat(int player,string field){
+		try{
+			return getMonsterInfoFloat((int)gameDB.Child ("Player"+player).Child("ID").FloatValue,field);
+		}
+		catch{
+			return 0;
+		}
+	}
 
 
 	////////////////////////////
@@ -212,6 +238,33 @@ public class VRMWdb : MonoBehaviour {
 		}
 		catch(Exception e){
 			Debug.Log("setPlayerInfo Error: " + e.ToString());
+		}
+	}
+
+	public static string getEnemyMonsterInfoString(string field){
+		try{
+			return getMonsterInfoString((int)gameDB.Child ("Enemy").Child(field).FloatValue,field,true);
+		}
+		catch(Exception e){
+			return "Error: " + e.ToString();
+		}
+	}
+	
+	public static int getEnemyMonsterInfoInt(string field){
+		try{
+			return getMonsterInfoInt((int)gameDB.Child ("Enemy").Child(field).FloatValue,field,true);
+		}
+		catch{
+			return 0;
+		}
+	}
+	
+	public static float getEnemyMonsterInfoFloat(string field){
+		try{
+			return getMonsterInfoFloat((int)gameDB.Child ("Enemy").Child(field).FloatValue,field,true);
+		}
+		catch{
+			return 0;
 		}
 	}
 

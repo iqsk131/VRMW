@@ -64,6 +64,13 @@ namespace Vuforia
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("CharacterCard"), false);
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ConfirmCard"), false);
 
+					//Instantiate Player
+					for(int i=1;i<=3;i++){
+						int playerId = VRMWdb.getPlayerInfoInt(i,"ID");
+						GameObject playerChar = GameObject.Instantiate(Resources.Load("Prefabs/Characters/"+VRMWdb.getMonsterInfoString(playerId,"PrefabsName"))) as GameObject;
+						playerChar.transform.SetParent(transform.FindChild ("BattleStage").FindChild ("Player"+i).FindChild("Model"),false);
+					}
+
 					//Instantiate Boss
 					int bossId = VRMWdb.getEnemyInfoInt("BID");
 					GameObject bassChar = GameObject.Instantiate(Resources.Load("Prefabs/Characters/"+VRMWdb.getMonsterInfoString(bossId,"PrefabsName",true))) as GameObject;
@@ -123,6 +130,20 @@ namespace Vuforia
 					foreach(AnimationHandler a in anims){
 						GameObject.Destroy(a.gameObject);
 					}
+
+					
+					//Instantiate Player
+					for(int i=1;i<=3;i++){
+						int playerId = VRMWdb.getPlayerInfoInt(i,"ID");
+						GameObject playerChar = GameObject.Instantiate(Resources.Load("Prefabs/Characters/"+VRMWdb.getMonsterInfoString(playerId,"PrefabsName"))) as GameObject;
+						playerChar.transform.SetParent(transform.FindChild ("BattleStage").FindChild ("Player"+i).FindChild("Model"),false);
+					}
+					
+					//Instantiate Boss
+					int bossId = VRMWdb.getEnemyInfoInt("BID");
+					GameObject bassChar = GameObject.Instantiate(Resources.Load("Prefabs/Characters/"+VRMWdb.getMonsterInfoString(bossId,"PrefabsName",true))) as GameObject;
+					bassChar.transform.SetParent(transform.FindChild ("BattleStage").FindChild ("Enemy").FindChild("Model"),false);
+
 				} else if (currentStage == "InitialStage") {
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ActionCard"), false);
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("CharacterCard"), true);

@@ -258,13 +258,13 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 		yield return new WaitForSeconds(0.1f);
 
 		if (user > 0) {
-			VRMWdb.setPlayerInfo (1, "StartTime", (VRMWdb.getPlayerInfoFloat(1,"StartTime") - 3000.0).ToString ());
-			VRMWdb.setPlayerInfo (2, "StartTime", (VRMWdb.getPlayerInfoFloat(2,"StartTime") - 3000.0).ToString ());
-			VRMWdb.setPlayerInfo (3, "StartTime", (VRMWdb.getPlayerInfoFloat(3,"StartTime") - 3000.0).ToString ());
+			VRMWdb.setPlayerInfo (1, "StartTime", (Double.Parse(VRMWdb.getPlayerInfoString(1,"StartTime")) - 3000.0).ToString ());
+			VRMWdb.setPlayerInfo (2, "StartTime", (Double.Parse(VRMWdb.getPlayerInfoString(2,"StartTime")) - 3000.0).ToString ());
+			VRMWdb.setPlayerInfo (3, "StartTime", (Double.Parse(VRMWdb.getPlayerInfoString(3,"StartTime")) - 3000.0).ToString ());
 		} else {
-			VRMWdb.setPlayerInfo (1, "StartTime", (VRMWdb.getPlayerInfoFloat(1,"StartTime") + 3000.0).ToString ());
-			VRMWdb.setPlayerInfo (2, "StartTime", (VRMWdb.getPlayerInfoFloat(2,"StartTime") + 3000.0).ToString ());
-			VRMWdb.setPlayerInfo (3, "StartTime", (VRMWdb.getPlayerInfoFloat(3,"StartTime") + 3000.0).ToString ());
+			VRMWdb.setPlayerInfo (1, "StartTime", (Double.Parse(VRMWdb.getPlayerInfoString(1,"StartTime")) + 3000.0).ToString ());
+			VRMWdb.setPlayerInfo (2, "StartTime", (Double.Parse(VRMWdb.getPlayerInfoString(2,"StartTime")) + 3000.0).ToString ());
+			VRMWdb.setPlayerInfo (3, "StartTime", (Double.Parse(VRMWdb.getPlayerInfoString(3,"StartTime")) + 3000.0).ToString ());
 		}
 
 		/////////////////////
@@ -273,10 +273,10 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 		
 		if (user > 0) {
 			VRMWdb.setPlayerInfo (user, "State", "idle");
-			VRMWdb.setPlayerInfo (user, "StartTime", VRMWdb.currentTime ().ToString ());
+			VRMWdb.setPlayerInfo (user, "StartTime", (VRMWdb.currentTime () - 3000.0).ToString ());
 		} else {
 			VRMWdb.setEnemyInfo ("State", "idle");
-			VRMWdb.setEnemyInfo ("StartTime", VRMWdb.currentTime ().ToString ());
+			VRMWdb.setEnemyInfo ("StartTime", (VRMWdb.currentTime () - 3000.0).ToString ());
 		}
 		
 		isAction=false;

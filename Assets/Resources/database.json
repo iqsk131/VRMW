@@ -1,0 +1,149 @@
+{
+  "Enemy" : {
+    "ActionType" : "",
+    "ActiveTime" : 12.0,
+    "Attacked" : {
+      "Heal" : 0.0,
+      "Player1" : {
+        "Damage" : 0.0
+      },
+      "Player2" : {
+        "Damage" : 0.0
+      },
+      "Player3" : {
+        "Damage" : 0.0
+      }
+    },
+    "BID" : 1,
+    "HP" : 20.0,
+    "MaxHP" : 200.0,
+    "StartTime" : "1472915307526.9",
+    "State" : "idle",
+    "Target" : 1.0
+  },
+  "Initialize" : "Trigger",
+  "MonsterInfo" : {
+    "bid01" : {
+      "ActiveTime" : 12,
+      "Atk" : 120,
+      "Def" : 200,
+      "HP" : 200,
+      "PrefabsName" : "KnightBoss",
+      "Skill" : 100
+    },
+    "bid02" : {
+      "ActiveTime" : 8,
+      "Atk" : 150,
+      "Def" : 100,
+      "HP" : 100,
+      "PrefabsName" : "WitchBoss",
+      "Skill" : 150
+    },
+    "bid03" : {
+      "ActiveTime" : 10,
+      "Atk" : 150,
+      "Def" : 120,
+      "HP" : 150,
+      "PrefabsName" : "SlimeBoss",
+      "Skill" : 200
+    },
+    "bid04" : {
+      "ActiveTime" : 18,
+      "Atk" : 200,
+      "Def" : 150,
+      "HP" : 180,
+      "PrefabsName" : "DragonBoss",
+      "Skill" : 200
+    },
+    "bid05" : {
+      "ActiveTime" : 15,
+      "Atk" : 180,
+      "Def" : 150,
+      "HP" : 250,
+      "PrefabsName" : "MummyBoss",
+      "Skill" : 100
+    },
+    "id01" : {
+      "ActiveTime" : 12,
+      "Atk" : 120,
+      "Def" : 200,
+      "HP" : 200,
+      "PrefabsName" : "Knight",
+      "Skill" : 100
+    },
+    "id02" : {
+      "ActiveTime" : 8,
+      "Atk" : 150,
+      "Def" : 100,
+      "HP" : 100,
+      "PrefabsName" : "Witch",
+      "Skill" : 150
+    },
+    "id03" : {
+      "ActiveTime" : 10,
+      "Atk" : 150,
+      "Def" : 120,
+      "HP" : 150,
+      "PrefabsName" : "Slime",
+      "Skill" : 200
+    },
+    "id04" : {
+      "ActiveTime" : 18,
+      "Atk" : 200,
+      "Def" : 150,
+      "HP" : 180,
+      "PrefabsName" : "Dragon",
+      "Skill" : 200
+    },
+    "id05" : {
+      "ActiveTime" : 15,
+      "Atk" : 180,
+      "Def" : 150,
+      "HP" : 250,
+      "PrefabsName" : "Mummy",
+      "Skill" : 100
+    }
+  },
+  "Player1" : {
+    "ActionType" : "",
+    "ActiveTime" : 12.0,
+    "Attacked" : {
+      "Damage" : 0.0,
+      "Heal" : 0.0
+    },
+    "HP" : 9.0,
+    "ID" : 1,
+    "MaxHP" : 200.0,
+    "Position" : "Back",
+    "StartTime" : "1472915310522.25",
+    "State" : "idle"
+  },
+  "Player2" : {
+    "ActionType" : "",
+    "ActiveTime" : 8.0,
+    "Attacked" : {
+      "Damage" : 0.0,
+      "Heal" : 0.0
+    },
+    "HP" : 50.0,
+    "ID" : 2,
+    "MaxHP" : 100.0,
+    "Position" : "Back",
+    "StartTime" : "1472915293373.83",
+    "State" : "idle"
+  },
+  "Player3" : {
+    "ActionType" : "",
+    "ActiveTime" : 10,
+    "Attacked" : {
+      "Damage" : 0.0
+    },
+    "HP" : 10.0,
+    "ID" : 3,
+    "MaxHP" : 150.0,
+    "Position" : "Back",
+    "StartTime" : "1472915293385.82",
+    "State" : "idle"
+  },
+  "Stage" : "Battle"
+}

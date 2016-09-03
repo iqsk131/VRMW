@@ -169,12 +169,11 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 
 		Animator anim = transform.GetComponent<Animator>();
 
-		//Warp to Target
-		Vector3 newTarget = new Vector3 (
-			3*target.transform.position.x/5 + 2*transform.position.x/5, 
-			3*target.transform.position.y/5 + 2*transform.position.y/5,
-			3*target.transform.position.z/5 + 2*transform.position.z/5);
-		transform.position = newTarget;
+
+		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/CastAnim")) as GameObject;
+		an.transform.parent = this.transform;
+		an.transform.position = this.transform.position;
+		an.GetComponent<AnimationHandler>().Play();
 
 		yield return new WaitForSeconds(0.5f);
 
@@ -182,10 +181,10 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 		//Play Attack animation
 		anim.Play ("Witch_Attack");
 		yield return new WaitForSeconds(0.2f);
-		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/BluntAnim")) as GameObject;
-		an.transform.parent = target;
-		an.transform.position = target.position;
-		an.GetComponent<AnimationHandler>().Play();
+		GameObject an2 = GameObject.Instantiate(Resources.Load("Prefabs/Animations/ThunderAnim")) as GameObject;
+		an2.transform.parent = target;
+		an2.transform.position = target.position;
+		an2.GetComponent<AnimationHandler>().Play();
 
 
 		yield return new WaitForSeconds(0.1f);
@@ -197,12 +196,6 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 
 			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", 1);
 		}
-
-		yield return new WaitForSeconds(0.5f);
-
-
-		//Warp back
-		transform.position = transform.parent.position;
 
 		//Change Player to Idle after action
 
@@ -232,56 +225,46 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 		}
 		
 		Animator anim = transform.GetComponent<Animator>();
-		
-		//Warp to Target
-		Vector3 newTarget = new Vector3 (
-			3*target.transform.position.x/5 + 2*transform.position.x/5, 
-			3*target.transform.position.y/5 + 2*transform.position.y/5,
-			3*target.transform.position.z/5 + 2*transform.position.z/5);
-		transform.position = newTarget;
-		
+
+		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/CastAnim")) as GameObject;
+		an.transform.parent = this.transform;
+		an.transform.position = this.transform.position;
+		an.GetComponent<AnimationHandler>().Play();
+
 		yield return new WaitForSeconds(0.5f);
 		
 		
 		//Play Attack animation
-		anim.Play ("Witch_Attack");
-		yield return new WaitForSeconds(0.2f);
-		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/BluntAnim")) as GameObject;
-		an.transform.parent = target;
-		an.transform.position = target.position;
-		an.GetComponent<AnimationHandler>().Play();
+		if(user>0){
+			for(int i=1;i<=3;i++){
+				if(VRMWdb.getPlayerInfoString(i,"State")=="dead")continue;
+				Transform pTarget = GameObject.Find("Player"+i).transform.FindChild("Model").transform.GetChild(0).transform;
+				GameObject anp = GameObject.Instantiate(Resources.Load("Prefabs/Animations/SpeedUpAnim")) as GameObject;
+				anp.transform.parent = pTarget;
+				anp.transform.position = pTarget.position;
+				anp.GetComponent<AnimationHandler>().Play();
+			}
+		}
+		else{
+			anim.Play ("Witch_Attack");
+			yield return new WaitForSeconds(0.2f);
+			GameObject an2 = GameObject.Instantiate(Resources.Load("Prefabs/Animations/SpeedUpAnim")) as GameObject;
+			an2.transform.parent = this.transform;
+			an2.transform.position = this.transform.position;
+			an2.GetComponent<AnimationHandler>().Play();
+		}
 		
 		
 		yield return new WaitForSeconds(0.1f);
-		
-		
-		if (user > 0) {
-			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", 1);
-		} else {
-			
-			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", 1);
-		}
-		
-		yield return new WaitForSeconds(0.5f);
-		
-		
-		//Warp back
-		transform.position = transform.parent.position;
-
-		///Some Skill Effects
-
-		yield return new WaitForSeconds(0.5f);
-		
-		GameObject an2 = GameObject.Instantiate(Resources.Load("Prefabs/Animations/ExplodeAnim")) as GameObject;
-		an2.transform.parent = target.transform;
-		an2.transform.position = target.transform.position;
-		an2.GetComponent<AnimationHandler>().Play();
 
 		if (user > 0) {
-			VRMWdb.setEnemyInfo ("StartTime", (VRMWdb.currentTime() + 3000.0).ToString ());
+			VRMWdb.setPlayerInfo (1, "StartTime", (VRMWdb.getPlayerInfoFloat(1,"StartTime") - 3000.0).ToString ());
+			VRMWdb.setPlayerInfo (2, "StartTime", (VRMWdb.getPlayerInfoFloat(2,"StartTime") - 3000.0).ToString ());
+			VRMWdb.setPlayerInfo (3, "StartTime", (VRMWdb.getPlayerInfoFloat(3,"StartTime") - 3000.0).ToString ());
 		} else {
-
-			VRMWdb.setPlayerInfo (attackTarget, "StartTime", (VRMWdb.currentTime() + 3000.0).ToString ());
+			VRMWdb.setPlayerInfo (1, "StartTime", (VRMWdb.getPlayerInfoFloat(1,"StartTime") + 3000.0).ToString ());
+			VRMWdb.setPlayerInfo (2, "StartTime", (VRMWdb.getPlayerInfoFloat(2,"StartTime") + 3000.0).ToString ());
+			VRMWdb.setPlayerInfo (3, "StartTime", (VRMWdb.getPlayerInfoFloat(3,"StartTime") + 3000.0).ToString ());
 		}
 
 		/////////////////////

@@ -192,9 +192,9 @@ public abstract class PlayerBehavior : MonoBehaviour {
 
 			//Update Ready Symbol
 			if (VRMWdb.getPlayerInfoString (playerNum, "State") == "ready") {
-				this.transform.FindChild ("Ready").GetComponent<Renderer> ().enabled = true;
+				this.transform.FindChild ("Ready").gameObject.SetActive(true);//GetComponent<Renderer> ().enabled = true;
 			} else {
-				this.transform.FindChild ("Ready").GetComponent<Renderer> ().enabled = false;
+				this.transform.FindChild ("Ready").gameObject.SetActive(false);//GetComponent<Renderer> ().enabled = false;
 			}
 			////////////////
 		}

@@ -170,19 +170,12 @@ public class DragonBehavior : MonoBehaviour, ModelInterface  {
 		Animator anim = transform.GetComponent<Animator>();
 
 		//Warp to Target
-		Vector3 newTarget = new Vector3 (
-			3*target.transform.position.x/5 + 2*transform.position.x/5, 
-			3*target.transform.position.y/5 + 2*transform.position.y/5,
-			3*target.transform.position.z/5 + 2*transform.position.z/5);
-		transform.position = newTarget;
-
-		yield return new WaitForSeconds(0.5f);
-
-
-		//Play Attack animation
 		anim.Play ("Dragon_Attack");
-		yield return new WaitForSeconds(0.2f);
-		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/BluntAnim")) as GameObject;
+		AudioClip audioClip = Resources.Load("Audio/SE/085-Monster07", typeof(AudioClip)) as AudioClip;
+		AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
+
+		yield return new WaitForSeconds(1f);
+		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/FireAnim")) as GameObject;
 		an.transform.parent = target;
 		an.transform.position = target.position;
 		an.GetComponent<AnimationHandler>().Play();
@@ -197,13 +190,6 @@ public class DragonBehavior : MonoBehaviour, ModelInterface  {
 
 			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", 1);
 		}
-
-		yield return new WaitForSeconds(0.5f);
-
-
-		//Warp back
-		transform.position = transform.parent.position;
-
 
 		//Change Player to Idle after action
 
@@ -233,60 +219,28 @@ public class DragonBehavior : MonoBehaviour, ModelInterface  {
 		}
 		
 		Animator anim = transform.GetComponent<Animator>();
-		
+
 		//Warp to Target
-		Vector3 newTarget = new Vector3 (
-			3*target.transform.position.x/5 + 2*transform.position.x/5, 
-			3*target.transform.position.y/5 + 2*transform.position.y/5,
-			3*target.transform.position.z/5 + 2*transform.position.z/5);
-		transform.position = newTarget;
-		
-		yield return new WaitForSeconds(0.5f);
-		
-		
-		//Play Attack animation
 		anim.Play ("Dragon_Attack");
-		yield return new WaitForSeconds(0.2f);
-		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/BluntAnim")) as GameObject;
+		AudioClip audioClip = Resources.Load("Audio/SE/085-Monster07", typeof(AudioClip)) as AudioClip;
+		AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
+
+		yield return new WaitForSeconds(1f);
+		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/SuperExplodeAnim")) as GameObject;
 		an.transform.parent = target;
 		an.transform.position = target.position;
 		an.GetComponent<AnimationHandler>().Play();
-		
-		
+
+
 		yield return new WaitForSeconds(0.1f);
-		
-		
+
+
 		if (user > 0) {
 			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", 1);
 		} else {
-			
+
 			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", 1);
 		}
-		
-		yield return new WaitForSeconds(0.5f);
-		
-		
-		//Warp back
-		transform.position = transform.parent.position;
-
-		///Some Skill Effects
-
-		yield return new WaitForSeconds(0.5f);
-
-		GameObject an2 = GameObject.Instantiate(Resources.Load("Prefabs/Animations/ExplodeAnim")) as GameObject;
-		an2.transform.parent = target.transform;
-		an2.transform.position = target.transform.position;
-		an2.GetComponent<AnimationHandler>().Play();
-
-		if (user > 0) {
-			VRMWdb.setEnemyInfo ("StartTime", (VRMWdb.currentTime() + 3000.0).ToString ());
-		} else {
-
-			VRMWdb.setPlayerInfo (attackTarget, "StartTime", (VRMWdb.currentTime() + 3000.0).ToString ());
-		}
-
-		/////////////////////
-
 		//Change Player to Idle after action
 		
 		if (user > 0) {

@@ -182,7 +182,7 @@ public class KnightBehavior : MonoBehaviour, ModelInterface  {
 		//Play Attack animation
 		anim.Play("Attack");
 		yield return new WaitForSeconds(0.2f);
-		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/BluntAnim")) as GameObject;
+		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/SlashAnim")) as GameObject;
 		an.transform.parent = target;
 		an.transform.position = target.position;
 		an.GetComponent<AnimationHandler>().Play();
@@ -247,7 +247,7 @@ public class KnightBehavior : MonoBehaviour, ModelInterface  {
 		//Play Attack animation
 		anim.Play("Attack");
 		yield return new WaitForSeconds(0.2f);
-		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/BluntAnim")) as GameObject;
+		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/SuperSlashAnim")) as GameObject;
 		an.transform.parent = target;
 		an.transform.position = target.position;
 		an.GetComponent<AnimationHandler>().Play();
@@ -269,15 +269,6 @@ public class KnightBehavior : MonoBehaviour, ModelInterface  {
 		//Warp back
 		transform.position = transform.parent.position;
 		anim.Play("Wait");
-
-		///Some Skill Effects
-
-		yield return new WaitForSeconds(0.5f);
-
-		GameObject an2 = GameObject.Instantiate(Resources.Load("Prefabs/Animations/ExplodeAnim")) as GameObject;
-		an2.transform.parent = target.transform;
-		an2.transform.position = target.transform.position;
-		an2.GetComponent<AnimationHandler>().Play();
 
 		if (user > 0) {
 			VRMWdb.setEnemyInfo ("StartTime", (VRMWdb.currentTime() + 3000.0).ToString ());

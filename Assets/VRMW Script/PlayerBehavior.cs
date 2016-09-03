@@ -24,6 +24,9 @@ public abstract class PlayerBehavior : MonoBehaviour {
 				continue;
 			//Behavior Field
 
+			//Rotate HP
+			HPBar.transform.rotation = Quaternion.LookRotation(Camera.current.transform.position - HPBar.transform.position) * Quaternion.Euler(0, 180, 0);
+
 			//Update Active Time Circle
 			ProgressRadialBehaviour bar = activeTimeBar.GetComponent<ProgressRadialBehaviour>();
 			if ((VRMWdb.currentTime() - double.Parse(VRMWdb.getPlayerInfoString(playerNum,"StartTime")))/1000.0 >= VRMWdb.getPlayerInfoFloat(playerNum,"ActiveTime")) {
@@ -41,7 +44,6 @@ public abstract class PlayerBehavior : MonoBehaviour {
 		if (!VRMWdb.isInitiated)
 			yield break;
 		
-		HPBar.transform.rotation = Quaternion.LookRotation(Camera.current.transform.position - HPBar.transform.position) * Quaternion.Euler(0, 180, 0);
 		TextMesh HPBarText = HPBar.GetComponent<TextMesh> ();
 		HPBarText.text = "" + VRMWdb.getPlayerInfoInt(playerNum,"HP");
 		

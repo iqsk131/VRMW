@@ -71,6 +71,9 @@ public class EnemyBehavior : MonoBehaviour
 			if (!VRMWdb.isInitiated)
 				continue;
 			//Behavior Field
+
+			HPBar.transform.rotation = Quaternion.LookRotation(Camera.current.transform.position - HPBar.transform.position) * Quaternion.Euler(0, 180, 0);
+
 			ProgressRadialBehaviour bar = activeTimeBar.GetComponent<ProgressRadialBehaviour>();
 			if ((VRMWdb.currentTime() - double.Parse(VRMWdb.getEnemyInfoString("StartTime")))/1000.0 >= VRMWdb.getEnemyInfoFloat("ActiveTime")) {
 				bar.Value = 100;
@@ -98,7 +101,13 @@ public class EnemyBehavior : MonoBehaviour
 				
 				VRMWdb.setEnemyInfo ("Target", targetPlayer);
 
-				VRMWdb.setEnemyInfo ("ActionType", "Skill");
+				int randomAction = Random.Range (0, 10);
+				if(randomAction<5)
+					VRMWdb.setEnemyInfo ("ActionType", "Attack");
+				else if(randomAction<8)
+					VRMWdb.setEnemyInfo ("ActionType", "Defend");
+				else
+					VRMWdb.setEnemyInfo ("ActionType", "Skill");
 			}
 			////////////////
 		}
@@ -109,7 +118,6 @@ public class EnemyBehavior : MonoBehaviour
 		
 		if (!VRMWdb.isInitiated)
 			yield break;
-		HPBar.transform.rotation = Quaternion.LookRotation(Camera.current.transform.position - HPBar.transform.position) * Quaternion.Euler(0, 180, 0);
 		TextMesh HPBarText = HPBar.GetComponent<TextMesh> ();
 		HPBarText.text = "" + VRMWdb.getEnemyInfoInt("HP");
 

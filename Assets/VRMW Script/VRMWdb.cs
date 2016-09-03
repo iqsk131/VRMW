@@ -112,7 +112,6 @@ public class VRMWdb : MonoBehaviour {
 			firebase.Child ("Stage").SetValue(value);
 		}
 		catch(Exception e){
-			Debug.Log("setStage Error: " + e.ToString());
 		}
 	}
 
@@ -153,7 +152,6 @@ public class VRMWdb : MonoBehaviour {
 			firebase.Child ("Player"+player).Child(field).SetValue(value);
 		}
 		catch(Exception e){
-			Debug.Log("setPlayerInfo Error: " + e.ToString());
 		}
 	}
 	public static void setPlayerInfo(int player,string field, float value){
@@ -161,7 +159,6 @@ public class VRMWdb : MonoBehaviour {
 			firebase.Child ("Player"+player).Child(field).SetValue(value);
 		}
 		catch(Exception e){
-			Debug.Log("setPlayerInfo Error: " + e.ToString());
 		}
 	}
 	public static string getPlayerMonsterInfoString(int player,string field){
@@ -229,7 +226,6 @@ public class VRMWdb : MonoBehaviour {
 			firebase.Child ("Enemy").Child(field).SetValue(value);
 		}
 		catch(Exception e){
-			Debug.Log("setPlayerInfo Error: " + e.ToString());
 		}
 	}
 	public static void setEnemyInfo(string field, float value){
@@ -237,13 +233,12 @@ public class VRMWdb : MonoBehaviour {
 			firebase.Child ("Enemy").Child(field).SetValue(value);
 		}
 		catch(Exception e){
-			Debug.Log("setPlayerInfo Error: " + e.ToString());
 		}
 	}
 
 	public static string getEnemyMonsterInfoString(string field){
 		try{
-			return getMonsterInfoString((int)gameDB.Child ("Enemy").Child(field).FloatValue,field,true);
+			return getMonsterInfoString((int)gameDB.Child ("Enemy").Child("BID").FloatValue,field,true);
 		}
 		catch(Exception e){
 			return "Error: " + e.ToString();
@@ -252,7 +247,7 @@ public class VRMWdb : MonoBehaviour {
 	
 	public static int getEnemyMonsterInfoInt(string field){
 		try{
-			return getMonsterInfoInt((int)gameDB.Child ("Enemy").Child(field).FloatValue,field,true);
+			return getMonsterInfoInt((int)gameDB.Child ("Enemy").Child("BID").FloatValue,field,true);
 		}
 		catch{
 			return 0;
@@ -261,7 +256,7 @@ public class VRMWdb : MonoBehaviour {
 	
 	public static float getEnemyMonsterInfoFloat(string field){
 		try{
-			return getMonsterInfoFloat((int)gameDB.Child ("Enemy").Child(field).FloatValue,field,true);
+			return getMonsterInfoFloat((int)gameDB.Child ("Enemy").Child("BID").FloatValue,field,true);
 		}
 		catch{
 			return 0;

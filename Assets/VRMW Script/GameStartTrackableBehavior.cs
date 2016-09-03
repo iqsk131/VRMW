@@ -114,13 +114,22 @@ namespace Vuforia
 					
 					//Initial Battle Stage
 					for(int i=1;i<=3;i++){
-						VRMWdb.setPlayerInfo(i,"HP",VRMWdb.getPlayerInfoInt(i,"MaxHP"));
-						VRMWdb.setPlayerInfo(i,"Attacked/Damage",0);
-						VRMWdb.setPlayerInfo(i,"StartTime",VRMWdb.currentTime ().ToString ());
-						VRMWdb.setPlayerInfo(i,"State","idle");
-						VRMWdb.setPlayerInfo(i,"Position","Back");
+						if(VRMWdb.getPlayerInfoInt(i,"ID")==-1){
+							VRMWdb.setPlayerInfo(i,"State","dead");
+						}
+						else{
+							VRMWdb.setPlayerInfo(i,"MaxHP",VRMWdb.getPlayerMonsterInfoInt(i,"HP"));
+							VRMWdb.setPlayerInfo(i,"ActiveTime",VRMWdb.getPlayerMonsterInfoInt(i,"ActiveTime"));
+							VRMWdb.setPlayerInfo(i,"HP",VRMWdb.getPlayerInfoInt(i,"MaxHP"));
+							VRMWdb.setPlayerInfo(i,"Attacked/Damage",0);
+							VRMWdb.setPlayerInfo(i,"StartTime",VRMWdb.currentTime ().ToString ());
+							VRMWdb.setPlayerInfo(i,"State","idle");
+							VRMWdb.setPlayerInfo(i,"Position","Back");
+						}
 					}
 
+					VRMWdb.setEnemyInfo("MaxHP",VRMWdb.getEnemyMonsterInfoInt("HP"));
+					VRMWdb.setEnemyInfo("ActiveTime",VRMWdb.getEnemyMonsterInfoInt("ActiveTime"));
 					VRMWdb.setEnemyInfo("HP",VRMWdb.getEnemyInfoInt("MaxHP"));
 					VRMWdb.setEnemyInfo("Attacked/Player1/Damage",0);
 					VRMWdb.setEnemyInfo("Attacked/Player2/Damage",0);
@@ -159,7 +168,6 @@ namespace Vuforia
 				component.enabled = true;
 			}
 
-			Debug.Log("Trackable " + mTrackableBehaviour.TrackableName + " found");
 		}
 
 
@@ -179,8 +187,6 @@ namespace Vuforia
 			{
 				component.enabled = false;
 			}
-
-			Debug.Log("Trackable " + mTrackableBehaviour.TrackableName + " lost");
 		}
 
 		#endregion // PRIVATE_METHODS

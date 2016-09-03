@@ -67,12 +67,9 @@ namespace Vuforia
 						if(playerId>0){
 							GameObject playerChar = GameObject.Instantiate(Resources.Load("Prefabs/Characters/"+VRMWdb.getMonsterInfoString(playerId,"PrefabsName"))) as GameObject;
 							playerChar.transform.SetParent(transform.FindChild ("BattleStage").FindChild ("Player"+i).FindChild("Model"),false);
-							VRMWdb.setPlayerInfo(i,"MaxHP",VRMWdb.getMonsterInfoInt(playerId,"HP"));
-							VRMWdb.setPlayerInfo(i,"ActiveTime",VRMWdb.getMonsterInfoInt(playerId,"ActiveTime"));
 						}
 						else{
 							transform.FindChild ("BattleStage").FindChild ("Player"+i).gameObject.SetActive(false);
-							VRMWdb.setPlayerInfo(i,"State","dead");
 						}
 					}
 
@@ -80,8 +77,6 @@ namespace Vuforia
 					int bossId = VRMWdb.getEnemyInfoInt("BID");
 					GameObject bassChar = GameObject.Instantiate(Resources.Load("Prefabs/Characters/"+VRMWdb.getMonsterInfoString(bossId,"PrefabsName",true))) as GameObject;
 					bassChar.transform.SetParent(transform.FindChild ("BattleStage").FindChild ("Enemy").FindChild("Model"),false);
-					VRMWdb.setEnemyInfo("MaxHP",VRMWdb.getMonsterInfoInt(bossId,"HP",true));
-					VRMWdb.setEnemyInfo("ActiveTime",VRMWdb.getMonsterInfoInt(bossId,"ActiveTime",true));
 
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ActionCard"), true);
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("CharacterCard"), false);
@@ -116,46 +111,24 @@ namespace Vuforia
 				
 				//If the new stage is BattleStage, reactivate them
 				if (currentStage == "BattleStage") {
-
-					//Reset Position
-					/* No Need, Since they have to Instantiate new one
-					for(int i=1;i<=3;i++){
-						transform.FindChild ("BattleStage").FindChild ("Player"+i).FindChild("Model").transform.position
-							= transform.FindChild ("BattleStage").FindChild ("Player"+i).transform.position;
-						transform.FindChild ("BattleStage").FindChild ("Player"+i).FindChild("Model").GetChild(0).transform.position
-							= transform.FindChild ("BattleStage").FindChild ("Player"+i).FindChild("Model").transform.position;
-					}
-					transform.FindChild ("BattleStage").FindChild ("Enemy").FindChild("Model").transform.position
-						= transform.FindChild ("BattleStage").FindChild ("Enemy").transform.position;
-					transform.FindChild ("BattleStage").FindChild("Enemy"). FindChild("Model").GetChild(0).transform.position
-						= transform.FindChild ("BattleStage").FindChild ("Enemy").FindChild("Model").transform.position;
-					*/
-
-					//Remove Model
-					ModelInterface[] models = this.transform.GetComponentsInChildren<ModelInterface>(true);
-					foreach(AnimationHandler m in models){
-						GameObject.Destroy(m.gameObject);
-					}
-
-					//Remove Animation
-					AnimationHandler[] anims = this.transform.GetComponentsInChildren<AnimationHandler>(true);
+					AnimationHandler[] anims = this.transform.FindChild ("BattleStage").GetComponentsInChildren<AnimationHandler>(true);
 					foreach(AnimationHandler a in anims){
 						GameObject.Destroy(a.gameObject);
 					}
-
+					Debug.Log("M3");
 					//Instantiate Player
 					for(int i=1;i<=3;i++){
+						//Remove Old Moldel
+						if(transform.FindChild ("BattleStage").FindChild ("Player"+i).FindChild("Model").childCount>0){
+							GameObject.Destroy(transform.FindChild ("BattleStage").FindChild ("Player"+i).FindChild("Model").GetChild(0).gameObject);
+						}
 						int playerId = VRMWdb.getPlayerInfoInt(i,"ID");
 						if(playerId>0){
-							Debug.Log ("Instantiate Plater "+ i);
 							GameObject playerChar = GameObject.Instantiate(Resources.Load("Prefabs/Characters/"+VRMWdb.getMonsterInfoString(playerId,"PrefabsName"))) as GameObject;
 							playerChar.transform.SetParent(transform.FindChild ("BattleStage").FindChild ("Player"+i).FindChild("Model"),false);
-							VRMWdb.setPlayerInfo(i,"MaxHP",VRMWdb.getMonsterInfoInt(playerId,"HP"));
-							VRMWdb.setPlayerInfo(i,"ActiveTime",VRMWdb.getMonsterInfoInt(playerId,"ActiveTime"));
 						}
 						else{
 							transform.FindChild ("BattleStage").FindChild ("Player"+i).gameObject.SetActive(false);
-							VRMWdb.setPlayerInfo(i,"State","dead");
 						}
 					}
 
@@ -163,8 +136,6 @@ namespace Vuforia
 					int bossId = VRMWdb.getEnemyInfoInt("BID");
 					GameObject bassChar = GameObject.Instantiate(Resources.Load("Prefabs/Characters/"+VRMWdb.getMonsterInfoString(bossId,"PrefabsName",true))) as GameObject;
 					bassChar.transform.SetParent(transform.FindChild ("BattleStage").FindChild ("Enemy").FindChild("Model"),false);
-					VRMWdb.setEnemyInfo("MaxHP",VRMWdb.getMonsterInfoInt(bossId,"HP",true));
-					VRMWdb.setEnemyInfo("ActiveTime",VRMWdb.getMonsterInfoInt(bossId,"ActiveTime",true));
 					
 					transform.FindChild ("BattleStage").FindChild ("Enemy").gameObject.SetActive (true);
 					transform.FindChild ("BattleStage").FindChild ("Player1").gameObject.SetActive (true);
@@ -252,7 +223,6 @@ namespace Vuforia
 			}
 			
 			StartCoroutine(updateStage());
-			Debug.Log("Trackable " + mTrackableBehaviour.TrackableName + " found");
 		}
 
 
@@ -278,7 +248,6 @@ namespace Vuforia
 				component.enabled = false;
 			}
 
-			Debug.Log("Trackable " + mTrackableBehaviour.TrackableName + " lost");
 		}
 
 		#endregion // PRIVATE_METHODS

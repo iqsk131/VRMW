@@ -247,7 +247,7 @@ public class SlimeBehavior : MonoBehaviour, ModelInterface  {
 		//Play Attack animation
 		anim.Play("Attack");
 		yield return new WaitForSeconds(0.2f);
-		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/BluntAnim")) as GameObject;
+		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/BiteAnim")) as GameObject;
 		an.transform.parent = target;
 		an.transform.position = target.position;
 		an.GetComponent<AnimationHandler>().Play();
@@ -274,16 +274,14 @@ public class SlimeBehavior : MonoBehaviour, ModelInterface  {
 
 		yield return new WaitForSeconds(0.5f);
 
-		GameObject an2 = GameObject.Instantiate(Resources.Load("Prefabs/Animations/ExplodeAnim")) as GameObject;
-		an2.transform.parent = target.transform;
-		an2.transform.position = target.transform.position;
-		an2.GetComponent<AnimationHandler>().Play();
-
 		if (user > 0) {
-			VRMWdb.setEnemyInfo ("StartTime", (VRMWdb.currentTime() + 3000.0).ToString ());
+			AudioClip audioClip = Resources.Load("Audio/SE/005-System05", typeof(AudioClip)) as AudioClip;
+			AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
+			VRMWdb.setPlayerInfo (1, "Attacked/Heal", 1);
+			VRMWdb.setPlayerInfo (2, "Attacked/Heal", 1);
+			VRMWdb.setPlayerInfo (3, "Attacked/Heal", 1);
 		} else {
-
-			VRMWdb.setPlayerInfo (attackTarget, "StartTime", (VRMWdb.currentTime() + 3000.0).ToString ());
+			VRMWdb.setEnemyInfo ("Attacked/Heal", 1);
 		}
 
 		/////////////////////

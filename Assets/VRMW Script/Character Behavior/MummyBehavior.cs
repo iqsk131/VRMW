@@ -181,7 +181,7 @@ public class MummyBehavior : MonoBehaviour, ModelInterface  {
 
 		//Play Attack animation
 		anim.Play ("lowKick");
-		yield return new WaitForSeconds(0.2f);
+		yield return new WaitForSeconds(0.5f);
 		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/BluntAnim")) as GameObject;
 		an.transform.parent = target;
 		an.transform.position = target.position;
@@ -235,56 +235,24 @@ public class MummyBehavior : MonoBehaviour, ModelInterface  {
 		Animator anim = transform.GetComponent<Animator>();
 		
 		//Warp to Target
-		Vector3 newTarget = new Vector3 (
-			3*target.transform.position.x/5 + 2*transform.position.x/5, 
-			3*target.transform.position.y/5 + 2*transform.position.y/5,
-			3*target.transform.position.z/5 + 2*transform.position.z/5);
-		transform.position = newTarget;
-		
-		yield return new WaitForSeconds(0.5f);
-		
-		
-		//Play Attack animation
-		anim.Play ("lowKick");
-		yield return new WaitForSeconds(0.2f);
-		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/BluntAnim")) as GameObject;
-		an.transform.parent = target;
-		an.transform.position = target.position;
+		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/CastAnim")) as GameObject;
+		an.transform.parent = this.transform;
+		an.transform.position = this.transform.position;
 		an.GetComponent<AnimationHandler>().Play();
 		
-		
-		yield return new WaitForSeconds(0.1f);
-		
-		
-		if (user > 0) {
-			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", 1);
-		} else {
-			
-			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", 1);
-		}
-		
 		yield return new WaitForSeconds(0.5f);
 		
 		
-		//Warp back
-		transform.position = transform.parent.position;
-
-		///Some Skill Effects
-
-		yield return new WaitForSeconds(0.5f);
-
-		GameObject an2 = GameObject.Instantiate(Resources.Load("Prefabs/Animations/ExplodeAnim")) as GameObject;
-		an2.transform.parent = target.transform;
-		an2.transform.position = target.transform.position;
-		an2.GetComponent<AnimationHandler>().Play();
-
-		if (user > 0) {
-			VRMWdb.setEnemyInfo ("StartTime", (VRMWdb.currentTime() + 3000.0).ToString ());
-		} else {
-
-			VRMWdb.setPlayerInfo (attackTarget, "StartTime", (VRMWdb.currentTime() + 3000.0).ToString ());
+		if(user>0){
+			isAction=false;
+			for(int i=1;i<=3;i++){
+				if(VRMWdb.getPlayerInfoString(i,"State")=="dead")continue;
+				GameObject.Find("Player"+i).GetComponentInChildren<ModelInterface>().defend(i);
+			}
 		}
-
+		else{
+			defend(user);
+		}
 		/////////////////////
 
 		//Change Player to Idle after action

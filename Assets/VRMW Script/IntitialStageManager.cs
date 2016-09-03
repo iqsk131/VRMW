@@ -21,11 +21,11 @@ public class IntitialStageManager : MonoBehaviour {
 			}
 			if(isAnyChar){
 				GameStartScanner.SetActive(true);
-				Guide.text = "Confirm to Start\n------------------->";
+				Guide.text = "Confirm to Start\n-------------->";
 			}
 			else {
 				GameStartScanner.SetActive(false);
-				Guide.text = "Please Select Characters";
+				Guide.text = "";
 			}
 		}
 	}

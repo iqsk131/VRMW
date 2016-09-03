@@ -115,7 +115,6 @@ namespace Vuforia
 					foreach(AnimationHandler a in anims){
 						GameObject.Destroy(a.gameObject);
 					}
-					Debug.Log("M3");
 					//Instantiate Player
 					for(int i=1;i<=3;i++){
 						//Remove Old Moldel

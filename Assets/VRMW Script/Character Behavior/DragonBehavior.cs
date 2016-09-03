@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-public class WitchBehavior : MonoBehaviour, ModelInterface  {
+public class DragonBehavior : MonoBehaviour, ModelInterface  {
 
 	private bool defendState = false;
 	private bool isAction = false;
@@ -180,7 +180,7 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 
 
 		//Play Attack animation
-		anim.Play ("Witch_Attack");
+		anim.Play ("Dragon_Attack");
 		yield return new WaitForSeconds(0.2f);
 		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/BluntAnim")) as GameObject;
 		an.transform.parent = target;
@@ -203,6 +203,7 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 
 		//Warp back
 		transform.position = transform.parent.position;
+
 
 		//Change Player to Idle after action
 
@@ -244,7 +245,7 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 		
 		
 		//Play Attack animation
-		anim.Play ("Witch_Attack");
+		anim.Play ("Dragon_Attack");
 		yield return new WaitForSeconds(0.2f);
 		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/BluntAnim")) as GameObject;
 		an.transform.parent = target;
@@ -271,7 +272,7 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 		///Some Skill Effects
 
 		yield return new WaitForSeconds(0.5f);
-		
+
 		GameObject an2 = GameObject.Instantiate(Resources.Load("Prefabs/Animations/ExplodeAnim")) as GameObject;
 		an2.transform.parent = target.transform;
 		an2.transform.position = target.transform.position;

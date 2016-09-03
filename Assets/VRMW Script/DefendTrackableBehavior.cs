@@ -164,7 +164,7 @@ namespace Vuforia
 					//Change card state to unused
 					isUsed = false;
 					//Show Attack Model on the card
-					OnTrackingFound();
+					if(isTrack)OnTrackingFound();
 					
 				}
 
@@ -187,11 +187,7 @@ namespace Vuforia
 			// Enable rendering:
 			foreach (Renderer component in rendererComponents)
 			{
-				if (component.name == "ImageTarget Inside") {
-
-				} else {
-					component.enabled = true;
-				}
+				component.enabled = true;
 			}
 
 			// Enable colliders:

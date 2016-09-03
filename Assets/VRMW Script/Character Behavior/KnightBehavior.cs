@@ -232,7 +232,7 @@ public class KnightBehavior : MonoBehaviour, ModelInterface  {
 			VRMWdb.setEnemyInfo ("ActionType", "");
 		}
 
-		Animator anim = transform.GetComponent<Animator>();
+		Animation anim = transform.GetComponent<Animation>();
 
 		//Warp to Target
 		Vector3 newTarget = new Vector3 (

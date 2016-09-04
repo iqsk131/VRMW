@@ -191,10 +191,13 @@ public class SlimeBehavior : MonoBehaviour, ModelInterface  {
 
 
 		if (user > 0) {
-			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", 1);
+			int atk=VRMWdb.getPlayerMonsterInfoInt(user,"Atk");
+			atk= (int)(atk * UnityEngine.Random.Range(80, 120)/100.0);
+			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", atk);
 		} else {
-
-			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", 1);
+			int atk=VRMWdb.getEnemyMonsterInfoInt("Atk");
+			atk= (int)(atk * UnityEngine.Random.Range(80, 120)/100.0);
+			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", atk);
 		}
 
 		yield return new WaitForSeconds(0.5f);
@@ -254,13 +257,17 @@ public class SlimeBehavior : MonoBehaviour, ModelInterface  {
 
 		yield return new WaitForSeconds(0.1f);
 
-
+		int atk;
 		if (user > 0) {
-			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", 1);
+			atk=VRMWdb.getPlayerMonsterInfoInt(user,"Skill");
+			atk= (int)(atk * UnityEngine.Random.Range(80, 120)/100.0);
+			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", atk);
 		} else {
-
-			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", 1);
+			atk=VRMWdb.getEnemyMonsterInfoInt("Skill");
+			atk= (int)(atk * UnityEngine.Random.Range(80, 120)/100.0);
+			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", atk);
 		}
+		int healPoint = (int)(atk*0.3) + 10;
 
 		yield return new WaitForSeconds(0.5f);
 
@@ -273,14 +280,14 @@ public class SlimeBehavior : MonoBehaviour, ModelInterface  {
 
 		yield return new WaitForSeconds(0.5f);
 
+		AudioClip audioClip = Resources.Load("Audio/SE/005-System05", typeof(AudioClip)) as AudioClip;
+		AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
 		if (user > 0) {
-			AudioClip audioClip = Resources.Load("Audio/SE/005-System05", typeof(AudioClip)) as AudioClip;
-			AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
-			VRMWdb.setPlayerInfo (1, "Attacked/Heal", 1);
-			VRMWdb.setPlayerInfo (2, "Attacked/Heal", 1);
-			VRMWdb.setPlayerInfo (3, "Attacked/Heal", 1);
+			VRMWdb.setPlayerInfo (1, "Attacked/Heal", healPoint);
+			VRMWdb.setPlayerInfo (2, "Attacked/Heal", healPoint);
+			VRMWdb.setPlayerInfo (3, "Attacked/Heal", healPoint);
 		} else {
-			VRMWdb.setEnemyInfo ("Attacked/Heal", 1);
+			VRMWdb.setEnemyInfo ("Attacked/Heal", healPoint);
 		}
 
 		/////////////////////

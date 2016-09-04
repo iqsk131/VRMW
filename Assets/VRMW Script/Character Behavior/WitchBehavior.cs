@@ -19,7 +19,11 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 		StartCoroutine(startDamaged(user));
 	}
 
-	public void defend(int user,float duration = 5f){
+	public void defend(int user){
+		StartCoroutine(startDefend(user,3f));
+	}
+
+	public void defend(int user,float duration){
 		StartCoroutine(startDefend(user,duration));
 	}
 

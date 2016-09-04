@@ -267,7 +267,7 @@ public class SlimeBehavior : MonoBehaviour, ModelInterface  {
 			atk= (int)(atk * UnityEngine.Random.Range(80, 120)/100.0);
 			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", atk);
 		}
-		int healPoint = (int)(atk*0.3) + 10;
+		int healPoint = (int)(atk*0.1) + 10;
 
 		yield return new WaitForSeconds(0.5f);
 

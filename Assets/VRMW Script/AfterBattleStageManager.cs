@@ -17,6 +17,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 	}
 
 	IEnumerator ScoreCalculation(){
+		Score.text = "Wait for Result..";
+
+		yield return new WaitForSeconds(5f);
+
 		while (!VRMWdb.isInitiated)yield return new WaitForSeconds(0.001f);
 
 		string tmpText="";
@@ -29,10 +33,6 @@ public class AfterBattleStageManager : MonoBehaviour {
 		}
 		if(EnemyModel.transform.childCount>0)
 			GameObject.Destroy(EnemyModel.transform.GetChild(0));
-
-		Score.text = "Wait for Result..";
-
-		yield return new WaitForSeconds(5f);
 
 		// Show Win - Lose
 		if(VRMWdb.getEnemyInfoString("State")=="dead"){
@@ -71,9 +71,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 		totalScore+=score;
 		for(int i=0;i<=score;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
-			Score.text = tmpText + "<color=yellow>" + Math.Min(score,i) + "</color>";
+			Score.text = tmpText + "<color=yellow>" + i + "</color>";
 			yield return new WaitForSeconds(0.001f);
 		}
+		Score.text = tmpText + "<color=yellow>" + score + "</color>";
 		yield return new WaitForSeconds(1f);
 
 		Score.text += "\nDamage\t";
@@ -82,9 +83,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 		totalScore+=score;
 		for(int i=0;i<=score;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
-			Score.text = tmpText + "<color=yellow>" + Math.Min(score,i) + "</color>";
+			Score.text = tmpText + "<color=yellow>" + i + "</color>";
 			yield return new WaitForSeconds(0.001f);
 		}
+		Score.text = tmpText + "<color=yellow>" + score + "</color>";
 		yield return new WaitForSeconds(1f);
 
 		Score.text += "\nCombo\t";
@@ -93,9 +95,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 		totalScore+=score;
 		for(int i=0;i<=score;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
-			Score.text = tmpText + "<color=yellow>" + Math.Min(score,i) + "</color>";
+			Score.text = tmpText + "<color=yellow>" + i + "</color>";
 			yield return new WaitForSeconds(0.001f);
 		}
+		Score.text = tmpText + "<color=yellow>" + score + "</color>";
 		yield return new WaitForSeconds(1f);
 
 		Score.text += "\nHero\t";
@@ -104,9 +107,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 		totalScore+=score;
 		for(int i=0;i<=score;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
-			Score.text = tmpText + "<color=yellow>" + Math.Min(score,i) + "</color>";
+			Score.text = tmpText + "<color=yellow>" + i + "</color>";
 			yield return new WaitForSeconds(0.001f);
 		}
+		Score.text = tmpText + "<color=yellow>" + score + "</color>";
 		yield return new WaitForSeconds(1f);
 
 		Score.text += "\nCombo\t";
@@ -115,9 +119,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 		totalScore+=score;
 		for(int i=0;i<=score;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
-			Score.text = tmpText + "<color=yellow>" + Math.Min(score,i) + "</color>";
+			Score.text = tmpText + "<color=yellow>" + i + "</color>";
 			yield return new WaitForSeconds(0.001f);
 		}
+		Score.text = tmpText + "<color=yellow>" + score + "</color>";
 		yield return new WaitForSeconds(1f);
 
 		Score.text += "\nPerfect Guard\t";
@@ -126,9 +131,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 		totalScore+=score;
 		for(int i=0;i<=score;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
-			Score.text = tmpText + "<color=yellow>" + Math.Min(score,i) + "</color>";
+			Score.text = tmpText + "<color=yellow>" + i + "</color>";
 			yield return new WaitForSeconds(0.001f);
 		}
+		Score.text = tmpText + "<color=yellow>" + score + "</color>";
 		yield return new WaitForSeconds(1f);
 
 		Score.text += "\nHigh Damage\t";
@@ -137,9 +143,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 		totalScore+=score;
 		for(int i=0;i<=score;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
-			Score.text = tmpText + "<color=yellow>" + Math.Min(score,i) + "</color>";
+			Score.text = tmpText + "<color=yellow>" + i + "</color>";
 			yield return new WaitForSeconds(0.001f);
 		}
+		Score.text = tmpText + "<color=yellow>" + score + "</color>";
 		yield return new WaitForSeconds(1f);
 
 		Score.text += "\nAid\t";
@@ -148,9 +155,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 		totalScore+=score;
 		for(int i=0;i<=score;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
-			Score.text = tmpText + "<color=yellow>" + Math.Min(score,i) + "</color>";
+			Score.text = tmpText + "<color=yellow>" + i + "</color>";
 			yield return new WaitForSeconds(0.001f);
 		}
+		Score.text = tmpText + "<color=yellow>" + score + "</color>";
 		yield return new WaitForSeconds(1f);
 
 		//Zone Panelty
@@ -161,9 +169,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 		totalScore-=score;
 		for(int i=0;i<=score;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
-			Score.text = tmpText + "<color=red>-" + Math.Min(score,i) + "</color>";
+			Score.text = tmpText + "<color=red>-" + i + "</color>";
 			yield return new WaitForSeconds(0.001f);
 		}
+		Score.text = tmpText + "<color=red>-" + score + "</color>";
 		yield return new WaitForSeconds(1f);
 
 		Score.text += "\nDamage Receive\t";
@@ -172,9 +181,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 		totalScore-=score;
 		for(int i=0;i<=score;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
-			Score.text = tmpText + "<color=red>-" + Math.Min(score,i) + "</color>";
+			Score.text = tmpText + "<color=red>-" + i + "</color>";
 			yield return new WaitForSeconds(0.001f);
 		}
+		Score.text = tmpText + "<color=red>-" + score + "</color>";
 		yield return new WaitForSeconds(1f);
 
 
@@ -187,9 +197,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 		tmpText = Score.text;
 		for(int i=0;i<=totalScore;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
-			Score.text = tmpText + "<color=yellow>" + Math.Min(totalScore,i) + "</color>";
+			Score.text = tmpText + "<color=yellow>" + i + "</color>";
 			yield return new WaitForSeconds(0.001f);
 		}
+		Score.text = tmpText + "<color=yellow>" + totalScore + "</color>";
 		yield return new WaitForSeconds(3f);
 
 		if(totalScore>VRMWdb.getScore("HighScore")){

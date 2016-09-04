@@ -19,8 +19,8 @@ public class MummyBehavior : MonoBehaviour, ModelInterface  {
 		StartCoroutine(startDamaged(user));
 	}
 
-	public void defend(int user){
-		StartCoroutine(startDefend(user));
+	public void defend(int user,float duration = 5f){
+		StartCoroutine(startDefend(user,duration));
 	}
 
 	public void heal(int user){
@@ -31,7 +31,7 @@ public class MummyBehavior : MonoBehaviour, ModelInterface  {
 		return defendState;
 	}
 
-	public IEnumerator startDefend(int user){
+	public IEnumerator startDefend(int user,float duration){
 		if(isAction)yield break;
 		isAction = true;
 
@@ -50,8 +50,7 @@ public class MummyBehavior : MonoBehaviour, ModelInterface  {
 		an.transform.parent = this.transform;
 		an.transform.position = this.transform.position;
 		an.transform.rotation = this.transform.rotation;
-		float duration=5f;
-		an.GetComponent<ShieldAnim>().Play(5f);
+		an.GetComponent<ShieldAnim>().Play(duration);
 		if (user > 0) {
 			VRMWdb.setPlayerInfo (user, "State", "idle");
 			VRMWdb.setPlayerInfo (user, "StartTime", VRMWdb.currentTime ().ToString ());

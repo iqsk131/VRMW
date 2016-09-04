@@ -90,10 +90,14 @@ public class KnightBehavior : MonoBehaviour, ModelInterface  {
 		if (user > 0) {
 			VRMWdb.setPlayerInfo (user, "State", "idle");
 			VRMWdb.setPlayerInfo (user, "StartTime", VRMWdb.currentTime ().ToString ());
-			VRMWdb.setPlayerInfo (user, "Attacked/Heal", 3);
+			int healPoint = VRMWdb.getPlayerInfoInt(user,"MaxHP");
+			healPoint = (int)(healPoint * UnityEngine.Random.Range(10, 20)/100.0);
+			VRMWdb.setPlayerInfo (user, "Attacked/Heal", healPoint);
 		} else {
 			VRMWdb.setEnemyInfo ("State", "idle");
 			VRMWdb.setEnemyInfo ("StartTime", VRMWdb.currentTime ().ToString ());
+			int healPoint = VRMWdb.getEnemyInfoInt("MaxHP");
+			healPoint = (int)(healPoint * UnityEngine.Random.Range(10, 20)/100.0);
 			VRMWdb.setEnemyInfo ("Attacked/Heal", 3);
 		}
 		isAction=false;

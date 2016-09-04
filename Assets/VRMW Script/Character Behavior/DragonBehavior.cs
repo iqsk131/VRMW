@@ -182,12 +182,14 @@ public class DragonBehavior : MonoBehaviour, ModelInterface  {
 
 		yield return new WaitForSeconds(0.1f);
 
-
 		if (user > 0) {
-			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", 1);
+			int atk=VRMWdb.getPlayerMonsterInfoInt(user,"Atk");
+			atk= (int)(atk * UnityEngine.Random.Range(80, 120)/100.0);
+			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", atk);
 		} else {
-
-			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", 1);
+			int atk=VRMWdb.getEnemyMonsterInfoInt("Atk");
+			atk= (int)(atk * UnityEngine.Random.Range(80, 120)/100.0);
+			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", atk);
 		}
 
 		//Change Player to Idle after action
@@ -235,10 +237,20 @@ public class DragonBehavior : MonoBehaviour, ModelInterface  {
 
 
 		if (user > 0) {
-			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", 1);
+			int atk=VRMWdb.getPlayerMonsterInfoInt(user,"Skill");
+			atk= (int)(atk * UnityEngine.Random.Range(80, 120)/100.0);
+			atk+= (int)Math.Min(VRMWdb.getPlayerInfoInt(1,"ActiveTime")*5.0,(VRMWdb.currentTime() - double.Parse(VRMWdb.getPlayerInfoString(1,"StartTime")))/200.0);
+			atk+= (int)Math.Min(VRMWdb.getPlayerInfoInt(2,"ActiveTime")*5.0,(VRMWdb.currentTime() - double.Parse(VRMWdb.getPlayerInfoString(2,"StartTime")))/200.0);
+			atk+= (int)Math.Min(VRMWdb.getPlayerInfoInt(3,"ActiveTime")*5.0,(VRMWdb.currentTime() - double.Parse(VRMWdb.getPlayerInfoString(3,"StartTime")))/200.0);
+			VRMWdb.setPlayerInfo (1, "StartTime", VRMWdb.currentTime ().ToString ());
+			VRMWdb.setPlayerInfo (2, "StartTime", VRMWdb.currentTime ().ToString ());
+			VRMWdb.setPlayerInfo (3, "StartTime", VRMWdb.currentTime ().ToString ());
+			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", atk);
 		} else {
-
-			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", 1);
+			int atk=VRMWdb.getEnemyMonsterInfoInt("Skill");
+			atk= (int)(atk * UnityEngine.Random.Range(80, 120)/100.0);
+			atk = atk + (VRMWdb.getEnemyInfoInt("ActiveTime")*5);
+			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", atk);
 		}
 		//Change Player to Idle after action
 		

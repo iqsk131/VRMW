@@ -113,13 +113,19 @@ public abstract class PlayerBehavior : MonoBehaviour {
 
 				}
 				else{
+					int baseAtk=VRMWdb.getPlayerInfoInt (playerNum,"Attacked/Damage");
+					int baseDef=VRMWdb.getPlayerMonsterInfoInt (playerNum,"Def");
+					baseDef = (int)(baseDef * Random.Range(80, 120)/100.0);
+					int damage= VRMWdb.CalcDamage(baseAtk,baseDef);
+
 					Damage.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage.transform.position) * Quaternion.Euler (0, 180, 0);
 					TextMesh DamageText = Damage.GetComponent<TextMesh> ();
-					DamageText.text = "-" + VRMWdb.getPlayerInfoInt (playerNum, "Attacked/Damage");
+					DamageText.text = "-" + damage;
 					Damage.SetActive (true);
 					latestShowDamage = Time.time;
-					
-					VRMWdb.setPlayerInfo (playerNum,"HP",Mathf.Max(0, VRMWdb.getPlayerInfoInt (playerNum,"HP") - VRMWdb.getPlayerInfoInt (playerNum,"Attacked/Damage")));
+
+
+					VRMWdb.setPlayerInfo (playerNum,"HP",Mathf.Max(0, VRMWdb.getPlayerInfoInt (playerNum,"HP") - damage));
 					playAnim = "Damaged";
 					VRMWdb.setPlayerInfo (playerNum,"Attacked/Damage", 0);
 				}

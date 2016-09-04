@@ -93,6 +93,10 @@ public class VRMWdb : MonoBehaviour {
 		return (System.DateTime.UtcNow.Subtract(new System.DateTime(1970, 1, 1))).TotalMilliseconds;
 	}
 
+	public static int CalcDamage(int attack, int defend){
+		return attack*(80-(defend+200)/8)/100;
+	}
+
 
 	/////////////////////////////
 	///                       ///

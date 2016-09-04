@@ -205,34 +205,37 @@ public class EnemyBehavior : MonoBehaviour
 					isBlock=true;
 				}
 				else{
+					int baseDef=VRMWdb.getEnemyMonsterInfoInt("Def");
+					baseDef = (int)(baseDef * Random.Range(80, 120)/100.0);
 					//Update DamageText
 					if (VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage") != 0) {
 						Damage1.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage1.transform.position) * Quaternion.Euler (0, 180, 0);
 						TextMesh DamageText = Damage1.GetComponent<TextMesh> ();
-						DamageText.text = "-" + VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage");
+						DamageText.text = "-" +  VRMWdb.CalcDamage(VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage"),baseDef);
 						Damage1.SetActive (true);
 					}
 					
 					if (VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage") != 0) {
 						Damage2.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage2.transform.position) * Quaternion.Euler (0, 180, 0);
 						TextMesh DamageText = Damage2.GetComponent<TextMesh> ();
-						DamageText.text = "-" + VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage");
+						DamageText.text = "-" +  VRMWdb.CalcDamage(VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage"),baseDef);
 						Damage2.SetActive (true);
 					}
 					
 					if (VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage") != 0) {
 						Damage3.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage3.transform.position) * Quaternion.Euler (0, 180, 0);
 						TextMesh DamageText = Damage3.GetComponent<TextMesh> ();
-						DamageText.text = "-" + VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage");
+						DamageText.text = "-" +  VRMWdb.CalcDamage(VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage"),baseDef);
 						Damage3.SetActive (true);
 					}
 
 					latestShowDamage = Time.time;
-					
-					VRMWdb.setEnemyInfo ("HP", Mathf.Max(VRMWdb.getEnemyInfoInt ("HP") 
-					                                     - VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage") 
-					                                     - VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage") 
-					                                     - VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage"),0));
+
+
+					int baseAtk=VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage")+VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage")+VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage");
+					int damage= VRMWdb.CalcDamage(baseAtk,baseDef);
+
+					VRMWdb.setEnemyInfo ("HP", Mathf.Max(VRMWdb.getEnemyInfoInt ("HP") - damage,0));
 					
 					VRMWdb.setEnemyInfo ("ActionType", "Damaged");
 					VRMWdb.setEnemyInfo ("Attacked/Player1/Damage", 0);
@@ -242,7 +245,7 @@ public class EnemyBehavior : MonoBehaviour
 			}
 			if (Time.time - latestShowDamage > 2) {
 				
-				int damageNum=0;
+				/*int damageNum=0;
 				if(Damage1.gameObject.activeSelf && !isBlock)damageNum++;
 				if(Damage2.gameObject.activeSelf && !isBlock)damageNum++;
 				if(Damage3.gameObject.activeSelf && !isBlock)damageNum++;
@@ -253,7 +256,7 @@ public class EnemyBehavior : MonoBehaviour
 					an.transform.parent = this.transform;
 					an.transform.position = this.transform.position;
 					an.GetComponent<AnimationHandler>().Play();
-				}
+				}*/
 				Damage1.SetActive (false);
 				Damage2.SetActive (false);
 				Damage3.SetActive (false);

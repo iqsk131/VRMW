@@ -200,6 +200,27 @@ public class KnightBehavior : MonoBehaviour, ModelInterface  {
 		if (user > 0) {
 			int atk=VRMWdb.getPlayerMonsterInfoInt(user,"Atk");
 			atk= (int)(atk * UnityEngine.Random.Range(80, 120)/100.0);
+
+			//Combo
+			bool isAnyAction=false;
+			for(int i=1;i<=3;i++){
+				if(i!=user && VRMWdb.getPlayerInfoString(i,"State")=="action")isAnyAction=true;
+			}
+			if(isAnyAction){
+				VRMWdb.setCombo(user,true,atk);
+				//Play Combo animation
+				anim.Play("Attack");
+				yield return new WaitForSeconds(0.2f);
+				GameObject an2 = GameObject.Instantiate(Resources.Load("Prefabs/Animations/SuperSlashAnim")) as GameObject;
+				an2.transform.parent = target;
+				an2.transform.position = target.position;
+				an2.GetComponent<AnimationHandler>().Play();
+				yield return new WaitForSeconds(0.1f);
+				//Extra Atk
+				atk= (int)(atk * UnityEngine.Random.Range(150, 200)/100.0);
+				VRMWdb.setCombo(user,false,atk); 
+			}
+			
 			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", atk);
 		} else {
 			int atk=VRMWdb.getEnemyMonsterInfoInt("Atk");
@@ -268,6 +289,27 @@ public class KnightBehavior : MonoBehaviour, ModelInterface  {
 		if (user > 0) {
 			int atk=VRMWdb.getPlayerMonsterInfoInt(user,"Skill");
 			atk= (int)(atk * UnityEngine.Random.Range(80, 120)/100.0);
+
+			//Combo
+			bool isAnyAction=false;
+			for(int i=1;i<=3;i++){
+				if(i!=user && VRMWdb.getPlayerInfoString(i,"State")=="action")isAnyAction=true;
+			}
+			if(isAnyAction){
+				VRMWdb.setCombo(user,true,atk);
+				//Play Combo animation
+				anim.Play("Attack");
+				yield return new WaitForSeconds(0.2f);
+				GameObject an2 = GameObject.Instantiate(Resources.Load("Prefabs/Animations/ExplodeAnim")) as GameObject;
+				an2.transform.parent = target;
+				an2.transform.position = target.position;
+				an2.GetComponent<AnimationHandler>().Play();
+				yield return new WaitForSeconds(0.1f);
+				//Extra Atk
+				atk= (int)(atk * UnityEngine.Random.Range(150, 200)/100.0);
+				VRMWdb.setCombo(user,false,atk);
+			}
+
 			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", atk);
 		} else {
 			int atk=VRMWdb.getEnemyMonsterInfoInt("Skill");

@@ -200,6 +200,32 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 		if (user > 0) {
 			int atk=VRMWdb.getPlayerMonsterInfoInt(user,"Atk");
 			atk= (int)(atk * UnityEngine.Random.Range(80, 120)/100.0);
+
+			//Combo
+			bool isAnyAction=false;
+			for(int i=1;i<=3;i++){
+				if(i!=user && VRMWdb.getPlayerInfoString(i,"State")=="action")isAnyAction=true;
+			}
+			if(isAnyAction){
+				VRMWdb.setCombo(user,true,atk);
+				//Play Combo animation
+				anim.Play("Attack");
+				yield return new WaitForSeconds(0.2f);
+				GameObject an3 = GameObject.Instantiate(Resources.Load("Prefabs/Animations/ThunderAnim")) as GameObject;
+				an3.transform.parent = target;
+				an3.transform.position = target.position;
+				an3.GetComponent<AnimationHandler>().Play();
+				yield return new WaitForSeconds(0.1f);
+				an3 = GameObject.Instantiate(Resources.Load("Prefabs/Animations/ThunderAnim")) as GameObject;
+				an3.transform.parent = target;
+				an3.transform.position = target.position;
+				an3.GetComponent<AnimationHandler>().Play();
+				yield return new WaitForSeconds(0.1f);
+				//Extra Atk
+				atk= (int)(atk * UnityEngine.Random.Range(150, 200)/100.0);
+				VRMWdb.setCombo(user,false,atk);
+			}
+
 			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", atk);
 		} else {
 			int atk=VRMWdb.getEnemyMonsterInfoInt("Atk");

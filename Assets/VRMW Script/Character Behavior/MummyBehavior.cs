@@ -292,6 +292,8 @@ public class MummyBehavior : MonoBehaviour, ModelInterface  {
 				if(VRMWdb.getPlayerInfoString(i,"State")=="dead")continue;
 				GameObject.Find("Player"+i).GetComponentInChildren<ModelInterface>().defend(i,defendTime);
 			}
+
+			VRMWdb.addScore("PerfectGuard",1);
 		}
 		else{
 			float defendTime=VRMWdb.getEnemyMonsterInfoInt("Skill");

@@ -91,7 +91,7 @@ public class EnemyBehavior : MonoBehaviour
 				for(int i=1;i<=3;i++)
 					if(VRMWdb.getPlayerInfoString(i, "Position") != "Back" 
 					   && VRMWdb.getPlayerInfoString(i, "State") != "dead")AnyFront = true;
-				
+
 				targetPlayer = Random.Range (1, 4);
 				if (targetPlayer != 1 && targetPlayer != 2)targetPlayer = 3;
 				while(VRMWdb.getPlayerInfoString (targetPlayer, "State") == "dead" 
@@ -102,12 +102,18 @@ public class EnemyBehavior : MonoBehaviour
 				VRMWdb.setEnemyInfo ("Target", targetPlayer);
 
 				int randomAction = Random.Range (0, 10);
-				if(randomAction<5)
+				if(randomAction<5){
+					if(AnyFront)
+						VRMWdb.addScore("Hero",1);
 					VRMWdb.setEnemyInfo ("ActionType", "Attack");
+				}
 				else if(randomAction<8)
 					VRMWdb.setEnemyInfo ("ActionType", "Defend");
-				else
+				else{
 					VRMWdb.setEnemyInfo ("ActionType", "Skill");
+					if(AnyFront)
+						VRMWdb.addScore("Hero",1);
+				}
 			}
 			////////////////
 		}
@@ -135,7 +141,7 @@ public class EnemyBehavior : MonoBehaviour
 			if (VRMWdb.getPlayerInfoString (1, "State") == "dead"
 			    && VRMWdb.getPlayerInfoString (2, "State") == "dead"
 			    && VRMWdb.getPlayerInfoString (3, "State") == "dead") {
-				VRMWdb.setStage ("Initial");
+				VRMWdb.setStage ("AfterBattle");
 				yield break;
 			}
 
@@ -146,7 +152,7 @@ public class EnemyBehavior : MonoBehaviour
 				if (VRMWdb.getPlayerInfoString (1, "State") != "action"
 				    && VRMWdb.getPlayerInfoString (2, "State") != "action"
 				    && VRMWdb.getPlayerInfoString (3, "State") != "action") {
-					VRMWdb.setStage ("Initial");
+					VRMWdb.setStage ("AfterBattle");
 					yield break;
 				}
 			}
@@ -235,6 +241,9 @@ public class EnemyBehavior : MonoBehaviour
 					int baseAtk=VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage")+VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage")+VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage");
 					int damage= VRMWdb.CalcDamage(baseAtk,baseDef);
 
+					if(damage>80)VRMWdb.addScore("HighDamage",damage-80);
+					VRMWdb.addScore("Damage",damage);
+
 					VRMWdb.setEnemyInfo ("HP", Mathf.Max(VRMWdb.getEnemyInfoInt ("HP") - damage,0));
 					
 					VRMWdb.setEnemyInfo ("ActionType", "Damaged");
@@ -268,6 +277,7 @@ public class EnemyBehavior : MonoBehaviour
 						}
 					}
 					if(damageNum>1 && before<after){
+						VRMWdb.addScore("Combo",damageNum);
 						Damage2.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage2.transform.position) * Quaternion.Euler (0, 180, 0);
 						TextMesh DamageText = Damage2.GetComponent<TextMesh> ();
 						DamageText.text = "<color=red><size=128>Combo</size></color>\n       <color=orange><size=128>"+(int)(after*100/before)+"%</size></color>";

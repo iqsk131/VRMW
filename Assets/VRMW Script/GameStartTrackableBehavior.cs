@@ -111,7 +111,17 @@ namespace Vuforia
 
 					//Hide Attack Model on the card
 					OnTrackingLost ();
-					
+
+					//Reset Score
+					VRMWdb.setScore("ActionUsed",0);
+					VRMWdb.setScore("Aid",0);
+					VRMWdb.setScore("Combo",0);
+					VRMWdb.setScore("DamageReceive",0);
+					VRMWdb.setScore("Damage",0);
+					VRMWdb.setScore("Hero",0);
+					VRMWdb.setScore("HighDamage",0);
+					VRMWdb.setScore("PerfectGuard",0);
+
 					//Initial Battle Stage
 					for(int i=1;i<=3;i++){
 						if(VRMWdb.getPlayerInfoInt(i,"ID")==-1){

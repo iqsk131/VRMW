@@ -142,6 +142,31 @@ public class VRMWdb : MonoBehaviour {
 		}
 	}
 
+	public static int getScore(string field){
+		try{
+			return (int)gameDB.Child ("Score/"+field).FloatValue;
+		}
+		catch(Exception e){
+			return 0;
+		}
+	}
+
+	public static void setScore(string field, int value){
+		try{
+			firebase.Child ("Score/"+field).SetValue(value);
+		}
+		catch(Exception e){
+		}
+	}
+
+	public static void addScore(string field, int value){
+		try{
+			firebase.Child ("Score/"+field).SetValue(getScore(field)+value);
+		}
+		catch(Exception e){
+		}
+	}
+
 	/////////////////////////////
 	///                       ///
 	/// Player Get-Set Method ///

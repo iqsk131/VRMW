@@ -54,6 +54,8 @@ namespace Vuforia
 					transform.FindChild ("BattleStage").gameObject.SetActive (false);
 				if(transform.FindChild ("InitialStage")!=null)
 					transform.FindChild ("InitialStage").gameObject.SetActive (false);
+				if(transform.FindChild ("AfterBattleStage")!=null)
+					transform.FindChild ("AfterBattleStage").gameObject.SetActive (false);
 				
 				//Initialize currentStage with Stage in VRMWdb
 				currentStage = VRMWdb.getStage()+"Stage";
@@ -85,6 +87,10 @@ namespace Vuforia
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ActionCard"), false);
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("CharacterCard"), true);
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ConfirmCard"), true);
+				} else if (currentStage == "AfterBattleStage") {
+					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ActionCard"), false);
+					setChildTrackableBehaviorState (targetCard.transform.FindChild ("CharacterCard"), false);
+					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ConfirmCard"), false);
 				}
 				
 				//If it is still Tracking, Enable all components in currentStage
@@ -149,6 +155,10 @@ namespace Vuforia
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ConfirmCard"), false);
 
 				} else if (currentStage == "InitialStage") {
+					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ActionCard"), false);
+					setChildTrackableBehaviorState (targetCard.transform.FindChild ("CharacterCard"), true);
+					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ConfirmCard"), true);
+				} else if (currentStage == "AfterBattleStage") {
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ActionCard"), false);
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("CharacterCard"), true);
 					setChildTrackableBehaviorState (targetCard.transform.FindChild ("ConfirmCard"), true);

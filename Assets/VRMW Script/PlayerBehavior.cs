@@ -63,7 +63,7 @@ public abstract class PlayerBehavior : MonoBehaviour {
 				    && VRMWdb.getPlayerInfoString (2, "State") == "dead"
 				    && VRMWdb.getPlayerInfoString (3, "State") == "dead"){
 					if (VRMWdb.getEnemyInfoString ("State") != "action") {
-						VRMWdb.setStage ("Initial");
+						VRMWdb.setStage ("AfterBattle");
 						yield break;
 					}
 				} else {
@@ -94,6 +94,7 @@ public abstract class PlayerBehavior : MonoBehaviour {
 				VRMWdb.setPlayerInfo (playerNum,"HP",Mathf.Min(VRMWdb.getPlayerInfoInt(playerNum,"MaxHP"), 
 				                                               VRMWdb.getPlayerInfoInt (playerNum,"HP") + VRMWdb.getPlayerInfoInt (playerNum,"Attacked/Heal")));
 				VRMWdb.setPlayerInfo (playerNum,"Attacked/Heal", 0);
+				VRMWdb.addScore("Aid",1);
 			}
 
 			//Check if Player got damaged or not
@@ -108,6 +109,7 @@ public abstract class PlayerBehavior : MonoBehaviour {
 					latestShowDamage = Time.time;
 
 					AudioClip audioClip = Resources.Load("Audio/SE/040-Knock01", typeof(AudioClip)) as AudioClip;
+					VRMWdb.addScore("PerfectGuard",5);
 					AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
 					VRMWdb.setPlayerInfo (playerNum,"Attacked/Damage", 0);
 
@@ -124,7 +126,7 @@ public abstract class PlayerBehavior : MonoBehaviour {
 					Damage.SetActive (true);
 					latestShowDamage = Time.time;
 
-
+					VRMWdb.addScore("DamageReceive",damage);
 					VRMWdb.setPlayerInfo (playerNum,"HP",Mathf.Max(0, VRMWdb.getPlayerInfoInt (playerNum,"HP") - damage));
 					playAnim = "Damaged";
 					VRMWdb.setPlayerInfo (playerNum,"Attacked/Damage", 0);
@@ -158,24 +160,28 @@ public abstract class PlayerBehavior : MonoBehaviour {
 					}
 					
 					if (playAnim == "Attack") {
+						VRMWdb.addScore("ActionUsed",1);
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().attack (enemy.transform.FindChild ("Model"),playerNum,0);
 						VRMWdb.setPlayerInfo (playerNum, "ActionType", "");
 					}
 
 					if (playAnim == "Defend") {
+						VRMWdb.addScore("ActionUsed",1);
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().defend(playerNum);
 						VRMWdb.setPlayerInfo (playerNum, "ActionType", "");
 					}
 
 					if (playAnim == "Heal") {
+						VRMWdb.addScore("ActionUsed",2);
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().heal(playerNum);
 						VRMWdb.setPlayerInfo (playerNum, "ActionType", "");
 					}
 
 					if (playAnim == "Skill") {
+						VRMWdb.addScore("ActionUsed",2);
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().skill (enemy.transform.FindChild ("Model"),playerNum,0);
 						VRMWdb.setPlayerInfo (playerNum, "ActionType", "");

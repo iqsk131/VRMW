@@ -343,6 +343,7 @@ public class SlimeBehavior : MonoBehaviour, ModelInterface  {
 		AudioClip audioClip = Resources.Load("Audio/SE/005-System05", typeof(AudioClip)) as AudioClip;
 		AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
 		if (user > 0) {
+			VRMWdb.addScore("Aid",3);
 			VRMWdb.setPlayerInfo (1, "Attacked/Heal", healPoint);
 			VRMWdb.setPlayerInfo (2, "Attacked/Heal", healPoint);
 			VRMWdb.setPlayerInfo (3, "Attacked/Heal", healPoint);

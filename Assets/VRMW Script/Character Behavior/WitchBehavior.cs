@@ -190,10 +190,13 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 
 
 		if (user > 0) {
-			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", 1);
+			int atk=VRMWdb.getPlayerMonsterInfoInt(user,"Atk");
+			atk= (int)(atk * UnityEngine.Random.Range(80, 120)/100.0);
+			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", atk);
 		} else {
-
-			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", 1);
+			int atk=VRMWdb.getEnemyMonsterInfoInt("Atk");
+			atk= (int)(atk * UnityEngine.Random.Range(80, 120)/100.0);
+			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", atk);
 		}
 
 		//Change Player to Idle after action
@@ -257,13 +260,19 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 		yield return new WaitForSeconds(0.1f);
 
 		if (user > 0) {
-			VRMWdb.setPlayerInfo (1, "StartTime", (Double.Parse(VRMWdb.getPlayerInfoString(1,"StartTime")) - 3000.0).ToString ());
-			VRMWdb.setPlayerInfo (2, "StartTime", (Double.Parse(VRMWdb.getPlayerInfoString(2,"StartTime")) - 3000.0).ToString ());
-			VRMWdb.setPlayerInfo (3, "StartTime", (Double.Parse(VRMWdb.getPlayerInfoString(3,"StartTime")) - 3000.0).ToString ());
+			double speedUpTime=VRMWdb.getPlayerMonsterInfoInt(user,"Skill");
+			speedUpTime= speedUpTime * UnityEngine.Random.Range(80, 120)/100.0;
+			speedUpTime = speedUpTime*20 + 1000;
+			VRMWdb.setPlayerInfo (1, "StartTime", (Double.Parse(VRMWdb.getPlayerInfoString(1,"StartTime")) - speedUpTime).ToString ());
+			VRMWdb.setPlayerInfo (2, "StartTime", (Double.Parse(VRMWdb.getPlayerInfoString(2,"StartTime")) - speedUpTime).ToString ());
+			VRMWdb.setPlayerInfo (3, "StartTime", (Double.Parse(VRMWdb.getPlayerInfoString(3,"StartTime")) - speedUpTime).ToString ());
 		} else {
-			VRMWdb.setPlayerInfo (1, "StartTime", (Double.Parse(VRMWdb.getPlayerInfoString(1,"StartTime")) + 3000.0).ToString ());
-			VRMWdb.setPlayerInfo (2, "StartTime", (Double.Parse(VRMWdb.getPlayerInfoString(2,"StartTime")) + 3000.0).ToString ());
-			VRMWdb.setPlayerInfo (3, "StartTime", (Double.Parse(VRMWdb.getPlayerInfoString(3,"StartTime")) + 3000.0).ToString ());
+			double speedUpTime=VRMWdb.getPlayerMonsterInfoInt(user,"Skill");
+			speedUpTime= speedUpTime * UnityEngine.Random.Range(80, 120)/100.0;
+			speedUpTime = speedUpTime*20 + 1000;
+			VRMWdb.setPlayerInfo (1, "StartTime", (Double.Parse(VRMWdb.getPlayerInfoString(1,"StartTime")) + speedUpTime).ToString ());
+			VRMWdb.setPlayerInfo (2, "StartTime", (Double.Parse(VRMWdb.getPlayerInfoString(2,"StartTime")) + speedUpTime).ToString ());
+			VRMWdb.setPlayerInfo (3, "StartTime", (Double.Parse(VRMWdb.getPlayerInfoString(3,"StartTime")) + speedUpTime).ToString ());
 		}
 
 		/////////////////////

@@ -94,7 +94,7 @@ public class VRMWdb : MonoBehaviour {
 	}
 
 	public static int CalcDamage(int attack, int defend){
-		return attack*(80-(defend+200)/8)/100;
+		return attack*(60-(defend+200)/8)/100;
 	}
 
 

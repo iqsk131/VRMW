@@ -119,6 +119,29 @@ public class VRMWdb : MonoBehaviour {
 		}
 	}
 
+	public static int getCombo(int user,bool isBefore){
+		try{
+			if(isBefore)
+				return (int)gameDB.Child ("Combo/Player"+user+"/before").FloatValue;
+			else
+				return (int)gameDB.Child ("Combo/Player"+user+"/after").FloatValue;
+		}
+		catch(Exception e){
+			return 0;
+		}
+	}
+
+	public static void setCombo(int user,bool isBefore, int value){
+		try{
+			if(isBefore)
+				firebase.Child ("Combo/Player"+user+"/before").SetValue(value);
+			else
+				firebase.Child ("Combo/Player"+user+"/after").SetValue(value);
+		}
+		catch(Exception e){
+		}
+	}
+
 	/////////////////////////////
 	///                       ///
 	/// Player Get-Set Method ///

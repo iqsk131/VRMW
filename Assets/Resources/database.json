@@ -1,7 +1,21 @@
 {
+  "Combo" : {
+    "Player1" : {
+      "after" : 0.0,
+      "before" : 0.0
+    },
+    "Player2" : {
+      "after" : 0.0,
+      "before" : 0.0
+    },
+    "Player3" : {
+      "after" : 0,
+      "before" : 0
+    }
+  },
   "Enemy" : {
     "ActionType" : "",
-    "ActiveTime" : 12.0,
+    "ActiveTime" : 18.0,
     "Attacked" : {
       "Heal" : 0.0,
       "Player1" : {
@@ -14,10 +28,10 @@
         "Damage" : 0.0
       }
     },
-    "BID" : 1,
-    "HP" : 20.0,
-    "MaxHP" : 200.0,
-    "StartTime" : "1472915307526.9",
+    "BID" : 3.0,
+    "HP" : 764.0,
+    "MaxHP" : 180.0,
+    "StartTime" : "1472996749537.07",
     "State" : "idle",
     "Target" : 1.0
   },
@@ -106,44 +120,45 @@
   },
   "Player1" : {
     "ActionType" : "",
+    "ActiveTime" : 18.0,
+    "Attacked" : {
+      "Damage" : 0.0,
+      "Heal" : 0.0
+    },
+    "HP" : 200,
+    "ID" : -1.0,
+    "MaxHP" : 180.0,
+    "Position" : "Back",
+    "StartTime" : "1472996566629.46",
+    "State" : "idle"
+  },
+  "Player2" : {
+    "ActionType" : "",
+    "ActiveTime" : 18.0,
+    "Attacked" : {
+      "Damage" : 0.0,
+      "Heal" : 0.0
+    },
+    "HP" : 121.0,
+    "ID" : -1.0,
+    "MaxHP" : 180.0,
+    "Position" : "Back",
+    "StartTime" : "1472996566139.3",
+    "State" : "idle"
+  },
+  "Player3" : {
+    "ActionType" : "",
     "ActiveTime" : 12.0,
     "Attacked" : {
       "Damage" : 0.0,
       "Heal" : 0.0
     },
-    "HP" : 9.0,
-    "ID" : 1,
+    "HP" : 984.0,
+    "ID" : -1.0,
     "MaxHP" : 200.0,
     "Position" : "Back",
-    "StartTime" : "1472915310522.25",
+    "StartTime" : "1472996516293.95",
     "State" : "idle"
   },
-  "Player2" : {
-    "ActionType" : "",
-    "ActiveTime" : 8.0,
-    "Attacked" : {
-      "Damage" : 0.0,
-      "Heal" : 0.0
-    },
-    "HP" : 50.0,
-    "ID" : 2,
-    "MaxHP" : 100.0,
-    "Position" : "Back",
-    "StartTime" : "1472915293373.83",
-    "State" : "idle"
-  },
-  "Player3" : {
-    "ActionType" : "",
-    "ActiveTime" : 10,
-    "Attacked" : {
-      "Damage" : 0.0
-    },
-    "HP" : 10.0,
-    "ID" : 3,
-    "MaxHP" : 150.0,
-    "Position" : "Back",
-    "StartTime" : "1472915293385.82",
-    "State" : "idle"
-  },
-  "Stage" : "Battle"
+  "Stage" : "Initial"
 }

@@ -128,6 +128,11 @@ namespace Vuforia
 						}
 					}
 
+					if(VRMWdb.getEnemyInfoInt("BID")==-1){
+						int bossID = UnityEngine.Random.Range(3,5);
+						VRMWdb.setEnemyInfo("BID",bossID);
+					}
+
 					VRMWdb.setEnemyInfo("MaxHP",VRMWdb.getEnemyMonsterInfoInt("HP"));
 					VRMWdb.setEnemyInfo("ActiveTime",VRMWdb.getEnemyMonsterInfoInt("ActiveTime"));
 					VRMWdb.setEnemyInfo("HP",VRMWdb.getEnemyInfoInt("MaxHP"));

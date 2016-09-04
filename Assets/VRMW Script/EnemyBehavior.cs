@@ -246,37 +246,40 @@ public class EnemyBehavior : MonoBehaviour
 			if (Time.time - latestShowDamage > 2) {
 				
 				int damageNum=0;
-				if(Damage1.gameObject.activeSelf && !isBlock)damageNum++;
-				if(Damage2.gameObject.activeSelf && !isBlock)damageNum++;
-				if(Damage3.gameObject.activeSelf && !isBlock)damageNum++;
+				if(Damage1.gameObject.activeSelf)damageNum++;
+				if(Damage2.gameObject.activeSelf)damageNum++;
+				if(Damage3.gameObject.activeSelf)damageNum++;
 
 				Damage1.SetActive (false);
 				Damage2.SetActive (false);
 				Damage3.SetActive (false);
+
 				//Combo
-				int before = 0;
-				int after = 0;
-				for(int i = 1;i<=3;i++){
-					if(VRMWdb.getCombo(i,true)<VRMWdb.getCombo(i,false)){
-						if(VRMWdb.getCombo(i,true)==0)
-							before += VRMWdb.getPlayerMonsterInfoInt(i,"Atk");
-						else
-							before += VRMWdb.getCombo(i,true);
-						after += VRMWdb.getCombo(i,false);
+				if(!isBlock){
+					int before = 0;
+					int after = 0;
+					for(int i = 1;i<=3;i++){
+						if(VRMWdb.getCombo(i,true)<VRMWdb.getCombo(i,false)){
+							if(VRMWdb.getCombo(i,true)==0)
+								before += VRMWdb.getPlayerMonsterInfoInt(i,"Atk");
+							else
+								before += VRMWdb.getCombo(i,true);
+							after += VRMWdb.getCombo(i,false);
+						}
 					}
-				}
-				if(damageNum>1 && before<after){
-					Damage2.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage2.transform.position) * Quaternion.Euler (0, 180, 0);
-					TextMesh DamageText = Damage2.GetComponent<TextMesh> ();
-					DamageText.text = "<color=red><size=128>Combo</size></color>\n       <color=orange><size=128>"+(int)(after*100/before)+"%</size></color>";
-					Damage2.SetActive (true);
-					AudioClip audioClip = Resources.Load("Audio/SE/056-Right02", typeof(AudioClip)) as AudioClip;
-					AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
-					latestShowDamage = Time.time;
-				}
-				for(int i = 1;i<=3;i++){
-						VRMWdb.setCombo(i,true,0);
-						VRMWdb.setCombo(i,false,0);
+					if(damageNum>1 && before<after){
+						Damage2.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage2.transform.position) * Quaternion.Euler (0, 180, 0);
+						TextMesh DamageText = Damage2.GetComponent<TextMesh> ();
+						DamageText.text = "<color=red><size=128>Combo</size></color>\n       <color=orange><size=128>"+(int)(after*100/before)+"%</size></color>";
+						Damage2.SetActive (true);
+						AudioClip audioClip = Resources.Load("Audio/SE/056-Right02", typeof(AudioClip)) as AudioClip;
+						AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
+						latestShowDamage = Time.time;
+					}
+					for(int i = 1;i<=3;i++){
+							VRMWdb.setCombo(i,true,0);
+							VRMWdb.setCombo(i,false,0);
+					}
 				}
 			}
 			

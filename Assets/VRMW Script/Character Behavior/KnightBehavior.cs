@@ -189,12 +189,14 @@ public class KnightBehavior : MonoBehaviour, ModelInterface  {
 
 		yield return new WaitForSeconds(0.1f);
 
-
 		if (user > 0) {
-			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", 1);
+			int atk=VRMWdb.getPlayerMonsterInfoInt(user,"Atk");
+			atk= (int)(atk * UnityEngine.Random.Range(80, 120)/100.0);
+			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", atk);
 		} else {
-
-			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", 1);
+			int atk=VRMWdb.getEnemyMonsterInfoInt("Atk");
+			atk= (int)(atk * UnityEngine.Random.Range(80, 120)/100.0);
+			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", atk);
 		}
 
 		yield return new WaitForSeconds(0.5f);
@@ -256,10 +258,13 @@ public class KnightBehavior : MonoBehaviour, ModelInterface  {
 
 
 		if (user > 0) {
-			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", 1);
+			int atk=VRMWdb.getPlayerMonsterInfoInt(user,"Skill");
+			atk= (int)(atk * UnityEngine.Random.Range(80, 120)/100.0);
+			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", atk);
 		} else {
-
-			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", 1);
+			int atk=VRMWdb.getEnemyMonsterInfoInt("Skill");
+			atk= (int)(atk * UnityEngine.Random.Range(80, 120)/100.0);
+			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", atk);
 		}
 
 		yield return new WaitForSeconds(0.5f);
@@ -270,10 +275,15 @@ public class KnightBehavior : MonoBehaviour, ModelInterface  {
 		anim.Play("Wait");
 
 		if (user > 0) {
-			VRMWdb.setEnemyInfo ("StartTime", (VRMWdb.currentTime() + 3000.0).ToString ());
+			double stunTime=VRMWdb.getPlayerMonsterInfoInt(user,"Skill");
+			stunTime= stunTime * UnityEngine.Random.Range(80, 120)/100.0;
+			stunTime = stunTime*20 + 1000;
+			VRMWdb.setEnemyInfo ("StartTime", (VRMWdb.currentTime() + stunTime).ToString ());
 		} else {
-
-			VRMWdb.setPlayerInfo (attackTarget, "StartTime", (VRMWdb.currentTime() + 3000.0).ToString ());
+			double stunTime=VRMWdb.getEnemyMonsterInfoInt("Skill");
+			stunTime= stunTime * UnityEngine.Random.Range(80, 120)/100.0;
+			stunTime = stunTime*20 + 1000;
+			VRMWdb.setPlayerInfo (attackTarget, "StartTime", (VRMWdb.currentTime() + stunTime).ToString ());
 		}
 
 		/////////////////////

@@ -191,10 +191,13 @@ public class MummyBehavior : MonoBehaviour, ModelInterface  {
 
 
 		if (user > 0) {
-			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", 1);
+			int atk=VRMWdb.getPlayerMonsterInfoInt(user,"Atk");
+			atk= (int)(atk * UnityEngine.Random.Range(80, 120)/100.0);
+			VRMWdb.setEnemyInfo ("Attacked/Player"+user+"/Damage", atk);
 		} else {
-
-			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", 1);
+			int atk=VRMWdb.getEnemyMonsterInfoInt("Atk");
+			atk= (int)(atk * UnityEngine.Random.Range(80, 120)/100.0);
+			VRMWdb.setPlayerInfo (attackTarget, "Attacked/Damage", atk);
 		}
 
 		yield return new WaitForSeconds(0.5f);
@@ -240,17 +243,22 @@ public class MummyBehavior : MonoBehaviour, ModelInterface  {
 		an.GetComponent<AnimationHandler>().Play();
 		
 		yield return new WaitForSeconds(0.5f);
-		
-		
+
+		isAction=false;
 		if(user>0){
-			isAction=false;
+			float defendTime=VRMWdb.getPlayerMonsterInfoInt(user,"Skill");
+			defendTime= defendTime * UnityEngine.Random.Range(80, 120)/100f;
+			defendTime = defendTime/20f;
 			for(int i=1;i<=3;i++){
 				if(VRMWdb.getPlayerInfoString(i,"State")=="dead")continue;
-				GameObject.Find("Player"+i).GetComponentInChildren<ModelInterface>().defend(i);
+				GameObject.Find("Player"+i).GetComponentInChildren<ModelInterface>().defend(i,defendTime);
 			}
 		}
 		else{
-			defend(user);
+			float defendTime=VRMWdb.getEnemyMonsterInfoInt("Skill");
+			defendTime= defendTime * UnityEngine.Random.Range(80, 120)/100f;
+			defendTime = defendTime/20f;
+			defend(user,defendTime);
 		}
 		/////////////////////
 

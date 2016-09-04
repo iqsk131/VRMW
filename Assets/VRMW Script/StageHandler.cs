@@ -132,6 +132,10 @@ namespace Vuforia
 					}
 
 					//Instantiate Boss
+					//Remove Old Moldel
+					if(transform.FindChild ("BattleStage").FindChild ("Enemy").FindChild("Model").childCount>0){
+						GameObject.Destroy(transform.FindChild ("BattleStage").FindChild ("Enemy").FindChild("Model").GetChild(0).gameObject);
+					}
 					int bossId = VRMWdb.getEnemyInfoInt("BID");
 					GameObject bassChar = GameObject.Instantiate(Resources.Load("Prefabs/Characters/"+VRMWdb.getMonsterInfoString(bossId,"PrefabsName",true))) as GameObject;
 					bassChar.transform.SetParent(transform.FindChild ("BattleStage").FindChild ("Enemy").FindChild("Model"),false);

@@ -58,7 +58,8 @@ namespace Vuforia
 					for(int i=1;i<=3;i++){
 						VRMWdb.setPlayerInfo(i,"ID",-1);
 					}
-					VRMWdb.setEnemyInfo("BID",-1);
+					int bossID = UnityEngine.Random.Range(3,6);
+					VRMWdb.setEnemyInfo("BID",bossID);
 					VRMWdb.setStage("Initial");
 				}
 				//Show Attack Model

@@ -128,11 +128,11 @@ namespace Vuforia
 						}
 					}
 
-					if(VRMWdb.getEnemyInfoInt("BID")==-1){
-						int bossID = UnityEngine.Random.Range(3,5);
+					/*if(VRMWdb.getEnemyInfoInt("BID")==-1){
+						int bossID = UnityEngine.Random.Range(3,6);
 						VRMWdb.setEnemyInfo("BID",bossID);
-					}
-
+					}*/
+					yield return new WaitForSeconds(1);
 					VRMWdb.setEnemyInfo("MaxHP",VRMWdb.getEnemyMonsterInfoInt("HP"));
 					VRMWdb.setEnemyInfo("ActiveTime",VRMWdb.getEnemyMonsterInfoInt("ActiveTime"));
 					VRMWdb.setEnemyInfo("HP",VRMWdb.getEnemyInfoInt("MaxHP"));
@@ -141,7 +141,7 @@ namespace Vuforia
 					VRMWdb.setEnemyInfo("Attacked/Player3/Damage",0);
 					VRMWdb.setEnemyInfo("StartTime",VRMWdb.currentTime ().ToString ());
 					VRMWdb.setEnemyInfo("State","idle");
-
+					yield return new WaitForSeconds(1);
 					//Change Stage to Battle
 					VRMWdb.setStage("Battle");
 				} else {

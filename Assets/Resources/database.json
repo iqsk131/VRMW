@@ -1,8 +1,8 @@
 {
   "Combo" : {
     "Player1" : {
-      "after" : 0.0,
-      "before" : 0.0
+      "after" : 346.0,
+      "before" : 228.0
     },
     "Player2" : {
       "after" : 0.0,
@@ -14,8 +14,8 @@
     }
   },
   "Enemy" : {
-    "ActionType" : "",
-    "ActiveTime" : 18.0,
+    "ActionType" : "Damaged",
+    "ActiveTime" : 15.0,
     "Attacked" : {
       "Heal" : 0.0,
       "Player1" : {
@@ -28,12 +28,12 @@
         "Damage" : 0.0
       }
     },
-    "BID" : 3.0,
-    "HP" : 764.0,
-    "MaxHP" : 180.0,
-    "StartTime" : "1472996749537.07",
-    "State" : "idle",
-    "Target" : 1.0
+    "BID" : 4.0,
+    "HP" : 0.0,
+    "MaxHP" : 250.0,
+    "StartTime" : "1473017003942.32",
+    "State" : "dead",
+    "Target" : 2.0
   },
   "Initialize" : "Trigger",
   "MonsterInfo" : {
@@ -120,30 +120,30 @@
   },
   "Player1" : {
     "ActionType" : "",
-    "ActiveTime" : 18.0,
+    "ActiveTime" : 10.0,
     "Attacked" : {
       "Damage" : 0.0,
       "Heal" : 0.0
     },
-    "HP" : 200,
+    "HP" : 150.0,
     "ID" : -1.0,
-    "MaxHP" : 180.0,
+    "MaxHP" : 150.0,
     "Position" : "Back",
-    "StartTime" : "1472996566629.46",
+    "StartTime" : "1473017012091.46",
     "State" : "idle"
   },
   "Player2" : {
     "ActionType" : "",
-    "ActiveTime" : 18.0,
+    "ActiveTime" : 10.0,
     "Attacked" : {
       "Damage" : 0.0,
-      "Heal" : 0.0
+      "Heal" : 44.0
     },
-    "HP" : 121.0,
+    "HP" : 150.0,
     "ID" : -1.0,
-    "MaxHP" : 180.0,
+    "MaxHP" : 150.0,
     "Position" : "Back",
-    "StartTime" : "1472996566139.3",
+    "StartTime" : "1473017011720.21",
     "State" : "idle"
   },
   "Player3" : {
@@ -151,14 +151,25 @@
     "ActiveTime" : 12.0,
     "Attacked" : {
       "Damage" : 0.0,
-      "Heal" : 0.0
+      "Heal" : 44.0
     },
-    "HP" : 984.0,
-    "ID" : -1.0,
+    "HP" : 200.0,
+    "ID" : -1,
     "MaxHP" : 200.0,
     "Position" : "Back",
-    "StartTime" : "1472996516293.95",
-    "State" : "idle"
+    "StartTime" : "1473011657624.84",
+    "State" : "dead"
+  },
+  "Score" : {
+    "ActionUsed" : 14.0,
+    "Aid" : 34.0,
+    "Combo" : 2.0,
+    "Damage" : 286.0,
+    "DamageReceive" : 0.0,
+    "Hero" : 0.0,
+    "HighDamage" : 0,
+    "HighScore" : 14075.0,
+    "PerfectGuard" : 0.0
   },
   "Stage" : "Initial"
 }

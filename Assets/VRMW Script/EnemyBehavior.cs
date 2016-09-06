@@ -310,19 +310,16 @@ public class EnemyBehavior : MonoBehaviour
 					if (playAnim == "Damaged") {
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().damaged(0);
-						VRMWdb.setEnemyInfo ("ActionType", "");
 					}
 
 					if (playAnim == "Defend") {
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().defend(0);
-						VRMWdb.setEnemyInfo ("ActionType", "");
 					}
 
 					if (playAnim == "Heal") {
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().heal(0);
-						VRMWdb.setEnemyInfo ("ActionType", "");
 					}
 					
 					if (playAnim == "Attack") {
@@ -343,7 +340,6 @@ public class EnemyBehavior : MonoBehaviour
 						   && VRMWdb.getPlayerInfoString (2, "State") != "action" 
 						   && VRMWdb.getPlayerInfoString (3, "State") != "action"){
 							transform.FindChild ("Model").GetComponentInChildren<ModelInterface>().attack(targetEnemy.transform.FindChild ("Model"),0,targetPlayer);
-							VRMWdb.setEnemyInfo ("ActionType", "");
 						}
 					}
 
@@ -365,7 +361,6 @@ public class EnemyBehavior : MonoBehaviour
 						   && VRMWdb.getPlayerInfoString (2, "State") != "action" 
 						   && VRMWdb.getPlayerInfoString (3, "State") != "action"){
 							transform.FindChild ("Model").GetComponentInChildren<ModelInterface>().skill(targetEnemy.transform.FindChild ("Model"),0,targetPlayer);
-							VRMWdb.setEnemyInfo ("ActionType", "");
 						}
 					}
 				}

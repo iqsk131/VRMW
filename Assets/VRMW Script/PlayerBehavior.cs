@@ -154,35 +154,30 @@ public abstract class PlayerBehavior : MonoBehaviour {
 					if (playAnim == "Damaged") {
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().damaged(playerNum);
-						VRMWdb.setPlayerInfo (playerNum, "ActionType", "");
 					}
 					
 					if (playAnim == "Attack") {
 						VRMWdb.addScore("ActionUsed",1);
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().attack (enemy.transform.FindChild ("Model"),playerNum,0);
-						VRMWdb.setPlayerInfo (playerNum, "ActionType", "");
 					}
 
 					if (playAnim == "Defend") {
 						VRMWdb.addScore("ActionUsed",1);
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().defend(playerNum);
-						VRMWdb.setPlayerInfo (playerNum, "ActionType", "");
 					}
 
 					if (playAnim == "Heal") {
 						VRMWdb.addScore("ActionUsed",2);
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().heal(playerNum);
-						VRMWdb.setPlayerInfo (playerNum, "ActionType", "");
 					}
 
 					if (playAnim == "Skill") {
 						VRMWdb.addScore("ActionUsed",2);
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().skill (enemy.transform.FindChild ("Model"),playerNum,0);
-						VRMWdb.setPlayerInfo (playerNum, "ActionType", "");
 					}
 				}
 				

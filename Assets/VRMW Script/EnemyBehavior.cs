@@ -212,7 +212,7 @@ public class EnemyBehavior : MonoBehaviour
 				}
 				else{
 					int baseDef=VRMWdb.getEnemyMonsterInfoInt("Def");
-					baseDef = (int)(baseDef * Random.Range(80, 120)/100.0);
+					//baseDef = (int)(baseDef * Random.Range(80, 120)/100.0);
 					//Update DamageText
 					if (VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage") != 0) {
 						Damage1.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage1.transform.position) * Quaternion.Euler (0, 180, 0);

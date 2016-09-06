@@ -117,7 +117,7 @@ public abstract class PlayerBehavior : MonoBehaviour {
 				else{
 					int baseAtk=VRMWdb.getPlayerInfoInt (playerNum,"Attacked/Damage");
 					int baseDef=VRMWdb.getPlayerMonsterInfoInt (playerNum,"Def");
-					baseDef = (int)(baseDef * Random.Range(80, 120)/100.0);
+					//baseDef = (int)(baseDef * Random.Range(80, 120)/100.0);
 					int damage= VRMWdb.CalcDamage(baseAtk,baseDef);
 
 					Damage.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage.transform.position) * Quaternion.Euler (0, 180, 0);

@@ -31,7 +31,7 @@ public class EnemyBehavior : MonoBehaviour
 
 	//private float localStartTime;
 	//private double globalStartTime=double.Parse(VRMWdb.getEnemyInfoString("StartTime"));
-	//private string playAnim="";
+	private string playAnim="";
 	private float latestShowDamage;
 	private int targetPlayer;
 	public GameObject targetEnemy;
@@ -50,7 +50,7 @@ public class EnemyBehavior : MonoBehaviour
 		//localStartTime = Time.time - (float)(VRMWdb.currentTime() - globalStartTime)/1000;
 
 		//Initial current action
-		//playAnim = "";
+		playAnim = "";
 		stillPlaying = false;
 		latestShowDamage = Time.time - 2;
 		targetPlayer = 1;
@@ -81,24 +81,24 @@ public class EnemyBehavior : MonoBehaviour
 				bar.Value = (float)(VRMWdb.currentTime() - double.Parse(VRMWdb.getEnemyInfoString("StartTime")))/1000f*100.0f / VRMWdb.getEnemyInfoFloat("ActiveTime");
 			}
 
-			//If Active time circle full, and player are idle or ready, Attack player
-			if ((VRMWdb.currentTime() - double.Parse(VRMWdb.getEnemyInfoString("StartTime")))/1000.0 >= VRMWdb.getEnemyInfoFloat("ActiveTime")
-			    && !stillPlaying){
+			//Random Target and Action
+			if ((VRMWdb.currentTime() - double.Parse(VRMWdb.getEnemyInfoString("StartTime")))/1000.0 >= VRMWdb.getEnemyInfoFloat("ActiveTime") - 2f
+				&& VRMWdb.getEnemyInfoString("ActionType") == ""){
 				//TO-DO enemy behavior
 
 				//Front Player
 				bool AnyFront = false;
 				for(int i=1;i<=3;i++)
 					if(VRMWdb.getPlayerInfoString(i, "Position") != "Back" 
-					   && VRMWdb.getPlayerInfoString(i, "State") != "dead")AnyFront = true;
+						&& VRMWdb.getPlayerInfoString(i, "State") != "dead")AnyFront = true;
 
 				targetPlayer = Random.Range (1, 4);
 				if (targetPlayer != 1 && targetPlayer != 2)targetPlayer = 3;
 				while(VRMWdb.getPlayerInfoString (targetPlayer, "State") == "dead" 
-				      || (AnyFront && VRMWdb.getPlayerInfoString(targetPlayer, "Position") == "Back")){
+					|| (AnyFront && VRMWdb.getPlayerInfoString(targetPlayer, "Position") == "Back")){
 					targetPlayer = targetPlayer %3 +1;
 				}
-				
+
 				VRMWdb.setEnemyInfo ("Target", targetPlayer);
 
 				int randomAction = Random.Range (0, 10);
@@ -297,6 +297,7 @@ public class EnemyBehavior : MonoBehaviour
 			if (stillPlaying && VRMWdb.getEnemyInfoString ("State") == "idle") {
 				stillPlaying = false;
 				VRMWdb.setEnemyInfo ("ActionType", "");
+				playAnim="";
 			}
 			
 			//Do some animations only if Enemey is idle
@@ -304,27 +305,27 @@ public class EnemyBehavior : MonoBehaviour
 			if (VRMWdb.getEnemyInfoString("State")=="idle" && !stillPlaying) {
 				
 				//Play Misc Animation if it has
-				if (VRMWdb.getEnemyInfoString("ActionType")!="") {
+				if (playAnim!="") {
 					
-					if (VRMWdb.getEnemyInfoString("ActionType") == "Damaged") {
+					if (playAnim == "Damaged") {
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().damaged(0);
 						VRMWdb.setEnemyInfo ("ActionType", "");
 					}
 
-					if (VRMWdb.getEnemyInfoString("ActionType") == "Defend") {
+					if (playAnim == "Defend") {
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().defend(0);
 						VRMWdb.setEnemyInfo ("ActionType", "");
 					}
 
-					if (VRMWdb.getEnemyInfoString("ActionType") == "Heal") {
+					if (playAnim == "Heal") {
 						stillPlaying = true;
 						transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().heal(0);
 						VRMWdb.setEnemyInfo ("ActionType", "");
 					}
 					
-					if (VRMWdb.getEnemyInfoString("ActionType") == "Attack") {
+					if (playAnim == "Attack") {
 						stillPlaying = true;
 
 						targetPlayer=VRMWdb.getEnemyInfoInt ("Target");
@@ -346,7 +347,7 @@ public class EnemyBehavior : MonoBehaviour
 						}
 					}
 
-					if (VRMWdb.getEnemyInfoString("ActionType") == "Skill") {
+					if (playAnim == "Skill") {
 						stillPlaying = true;
 						
 						targetPlayer=VRMWdb.getEnemyInfoInt ("Target");
@@ -367,6 +368,12 @@ public class EnemyBehavior : MonoBehaviour
 							VRMWdb.setEnemyInfo ("ActionType", "");
 						}
 					}
+				}
+
+				//If Active time circle full, and player are idle or ready, Attack player
+				if ((VRMWdb.currentTime() - double.Parse(VRMWdb.getEnemyInfoString("StartTime")))/1000.0 >= VRMWdb.getEnemyInfoFloat("ActiveTime")
+					&& !stillPlaying){
+					playAnim=VRMWdb.getEnemyInfoString("ActionType");
 				}
 			}
 			////////////////

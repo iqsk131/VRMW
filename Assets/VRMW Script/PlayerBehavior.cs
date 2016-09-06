@@ -146,9 +146,7 @@ public abstract class PlayerBehavior : MonoBehaviour {
 			
 			//Do some animations only if Player is idle or ready
 			//Also do when Player is stuck at action
-			if (VRMWdb.getPlayerInfoString(playerNum,"State")=="idle" 
-			    || VRMWdb.getPlayerInfoString(playerNum,"State")=="ready"  
-			    || (VRMWdb.getPlayerInfoString(playerNum,"State")=="action" && !stillPlaying)) {
+			if ( (VRMWdb.getPlayerInfoString(playerNum,"State")=="idle" || VRMWdb.getPlayerInfoString(playerNum,"State")=="ready") && !stillPlaying) {
 				
 				//Play Animation if it has
 				if (playAnim!="") {

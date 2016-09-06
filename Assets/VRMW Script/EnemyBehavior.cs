@@ -301,7 +301,7 @@ public class EnemyBehavior : MonoBehaviour
 			
 			//Do some animations only if Enemey is idle
 			//Also do when Enemy is stuck at action
-			if (VRMWdb.getEnemyInfoString("State")=="idle" || (VRMWdb.getEnemyInfoString("State")=="action" && !stillPlaying)) {
+			if (VRMWdb.getEnemyInfoString("State")=="idle" && !stillPlaying) {
 				
 				//Play Misc Animation if it has
 				if (VRMWdb.getEnemyInfoString("ActionType")!="") {

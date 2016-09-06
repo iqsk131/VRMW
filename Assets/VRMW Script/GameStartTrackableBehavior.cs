@@ -130,7 +130,7 @@ namespace Vuforia
 						else{
 							VRMWdb.setPlayerInfo(i,"MaxHP",VRMWdb.getPlayerMonsterInfoInt(i,"HP"));
 							VRMWdb.setPlayerInfo(i,"ActiveTime",VRMWdb.getPlayerMonsterInfoInt(i,"ActiveTime"));
-							VRMWdb.setPlayerInfo(i,"HP",VRMWdb.getPlayerInfoInt(i,"MaxHP"));
+							VRMWdb.setPlayerInfo(i,"HP",VRMWdb.getPlayerMonsterInfoInt(i,"HP"));
 							VRMWdb.setPlayerInfo(i,"Attacked/Damage",0);
 							VRMWdb.setPlayerInfo(i,"StartTime",VRMWdb.currentTime ().ToString ());
 							VRMWdb.setPlayerInfo(i,"State","idle");
@@ -145,7 +145,7 @@ namespace Vuforia
 					yield return new WaitForSeconds(1);
 					VRMWdb.setEnemyInfo("MaxHP",VRMWdb.getEnemyMonsterInfoInt("HP"));
 					VRMWdb.setEnemyInfo("ActiveTime",VRMWdb.getEnemyMonsterInfoInt("ActiveTime"));
-					VRMWdb.setEnemyInfo("HP",VRMWdb.getEnemyInfoInt("MaxHP"));
+					VRMWdb.setEnemyInfo("HP",VRMWdb.getEnemyMonsterInfoInt("HP"));
 					VRMWdb.setEnemyInfo("Attacked/Player1/Damage",0);
 					VRMWdb.setEnemyInfo("Attacked/Player2/Damage",0);
 					VRMWdb.setEnemyInfo("Attacked/Player3/Damage",0);

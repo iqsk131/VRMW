@@ -152,8 +152,8 @@ public class MummyBehavior : MonoBehaviour, ModelInterface  {
 			if(VRMWdb.getEnemyInfoInt("HP")<=0)
 				VRMWdb.setEnemyInfo ("State", "dead");
 			else{
-				VRMWdb.setEnemyInfo ("State", currentState);
-				VRMWdb.setEnemyInfo ("ActionType", currentAction);
+				VRMWdb.setEnemyInfo ("State", "idle");
+				VRMWdb.setEnemyInfo ("ActionType", "");
 			}
 		}
 		yield return 0;

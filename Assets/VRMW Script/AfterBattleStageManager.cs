@@ -103,19 +103,7 @@ public class AfterBattleStageManager : MonoBehaviour {
 
 		Score.text += "\nHero\t";
 		tmpText = Score.text;
-		score=VRMWdb.getScore("Hero")*300;
-		totalScore+=score;
-		for(int i=0;i<=score;i+=100){
-			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
-			Score.text = tmpText + "<color=yellow>" + i + "</color>";
-			yield return new WaitForSeconds(0.001f);
-		}
-		Score.text = tmpText + "<color=yellow>" + score + "</color>";
-		yield return new WaitForSeconds(1f);
-
-		Score.text += "\nCombo\t";
-		tmpText = Score.text;
-		score=VRMWdb.getScore("Combo")*500;
+		score=VRMWdb.getScore("Hero")*5;
 		totalScore+=score;
 		for(int i=0;i<=score;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);

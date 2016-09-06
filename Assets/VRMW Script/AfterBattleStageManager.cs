@@ -29,10 +29,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 		AudioClip audioClip = Resources.Load("Audio/SE/001-System01", typeof(AudioClip)) as AudioClip;
 		for(int i=0;i<3;i++){
 			if(PlayersModel[i].transform.childCount>0)
-				GameObject.Destroy(PlayersModel[i].transform.GetChild(0));
+				GameObject.Destroy(PlayersModel[i].transform.GetChild(0).gameObject);
 		}
 		if(EnemyModel.transform.childCount>0)
-			GameObject.Destroy(EnemyModel.transform.GetChild(0));
+			GameObject.Destroy(EnemyModel.transform.GetChild(0).gameObject);
 
 		// Show Win - Lose
 		if(VRMWdb.getEnemyInfoString("State")=="dead"){
@@ -193,8 +193,9 @@ public class AfterBattleStageManager : MonoBehaviour {
 		yield return new WaitForSeconds(2f);
 		//////////////////////////////////
 		Score.text += "\nTotal Score\t";
-		yield return new WaitForSeconds(2f);
+		yield return new WaitForSeconds(1f);
 		tmpText = Score.text;
+		totalScore = Math.Max(0,totalScore);
 		for(int i=0;i<=totalScore;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
 			Score.text = tmpText + "<color=yellow>" + i + "</color>";

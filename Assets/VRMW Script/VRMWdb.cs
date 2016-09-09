@@ -122,9 +122,9 @@ public class VRMWdb : MonoBehaviour {
 	public static int getCombo(int user,bool isBefore){
 		try{
 			if(isBefore)
-				return Int32.Parse(gameDB.Child ("Combo/Player"+user+"/before").StringValue);
+				return (int)float.Parse(gameDB.Child ("Combo/Player"+user+"/before").StringValue);
 			else
-				return Int32.Parse(gameDB.Child ("Combo/Player"+user+"/after").StringValue);
+				return (int)float.Parse(gameDB.Child ("Combo/Player"+user+"/after").StringValue);
 		}
 		catch(Exception e){
 			return 0;
@@ -144,7 +144,7 @@ public class VRMWdb : MonoBehaviour {
 
 	public static int getScore(string field){
 		try{
-			return Int32.Parse(gameDB.Child ("Score/"+field).StringValue);
+			return (int)float.Parse(gameDB.Child ("Score/"+field).StringValue);
 		}
 		catch(Exception e){
 			return 0;
@@ -183,7 +183,7 @@ public class VRMWdb : MonoBehaviour {
 
 	public static int getPlayerInfoInt(int player,string field){
 		try{
-			return Int32.Parse(gameDB.Child ("Player"+player).Child(field).StringValue);
+			return (int)float.Parse(gameDB.Child ("Player"+player).Child(field).StringValue);
 		}
 		catch{
 			return 0;
@@ -215,7 +215,7 @@ public class VRMWdb : MonoBehaviour {
 	}
 	public static string getPlayerMonsterInfoString(int player,string field){
 		try{
-			return getMonsterInfoString(Int32.Parse(gameDB.Child ("Player"+player).Child("ID").StringValue),field);
+			return getMonsterInfoString((int)float.Parse(gameDB.Child ("Player"+player).Child("ID").StringValue),field);
 		}
 		catch(Exception e){
 			return "Error: " + e.ToString();
@@ -224,7 +224,7 @@ public class VRMWdb : MonoBehaviour {
 	
 	public static int getPlayerMonsterInfoInt(int player,string field){
 		try{
-			return getMonsterInfoInt(Int32.Parse(gameDB.Child ("Player"+player).Child("ID").StringValue),field);
+			return getMonsterInfoInt((int)float.Parse(gameDB.Child ("Player"+player).Child("ID").StringValue),field);
 		}
 		catch{
 			return 0;
@@ -233,7 +233,7 @@ public class VRMWdb : MonoBehaviour {
 	
 	public static float getPlayerMonsterInfoFloat(int player,string field){
 		try{
-			return getMonsterInfoFloat(Int32.Parse(gameDB.Child ("Player"+player).Child("ID").StringValue),field);
+			return getMonsterInfoFloat((int)float.Parse(gameDB.Child ("Player"+player).Child("ID").StringValue),field);
 		}
 		catch{
 			return 0;
@@ -257,7 +257,7 @@ public class VRMWdb : MonoBehaviour {
 
 	public static int getEnemyInfoInt(string field){
 		try{
-			return Int32.Parse(gameDB.Child ("Enemy").Child(field).StringValue);
+			return (int)float.Parse(gameDB.Child ("Enemy").Child(field).StringValue);
 		}
 		catch{
 			return 0;
@@ -290,7 +290,7 @@ public class VRMWdb : MonoBehaviour {
 
 	public static string getEnemyMonsterInfoString(string field){
 		try{
-			return getMonsterInfoString(Int32.Parse(gameDB.Child ("Enemy").Child("BID").StringValue),field,true);
+			return getMonsterInfoString((int)float.Parse(gameDB.Child ("Enemy").Child("BID").StringValue),field,true);
 		}
 		catch(Exception e){
 			return "Error: " + e.ToString();
@@ -299,7 +299,7 @@ public class VRMWdb : MonoBehaviour {
 	
 	public static int getEnemyMonsterInfoInt(string field){
 		try{
-			return getMonsterInfoInt(Int32.Parse(gameDB.Child ("Enemy").Child("BID").StringValue),field,true);
+			return getMonsterInfoInt((int)float.Parse(gameDB.Child ("Enemy").Child("BID").StringValue),field,true);
 		}
 		catch{
 			return 0;
@@ -308,7 +308,7 @@ public class VRMWdb : MonoBehaviour {
 	
 	public static float getEnemyMonsterInfoFloat(string field){
 		try{
-			return getMonsterInfoFloat(Int32.Parse(gameDB.Child ("Enemy").Child("BID").StringValue),field,true);
+			return getMonsterInfoFloat((int)float.Parse(gameDB.Child ("Enemy").Child("BID").StringValue),field,true);
 		}
 		catch{
 			return 0;
@@ -334,7 +334,7 @@ public class VRMWdb : MonoBehaviour {
 		string mid = "id0" + id;
 		if(isBoss) mid = "b"+mid;
 		try{
-			return Int32.Parse( gameDB.Child ("MonsterInfo").Child(mid).Child(field).StringValue);
+			return (int)float.Parse( gameDB.Child ("MonsterInfo").Child(mid).Child(field).StringValue);
 		}
 		catch(Exception e){
 			return 0;

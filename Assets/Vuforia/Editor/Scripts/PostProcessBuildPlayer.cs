@@ -1,5 +1,5 @@
 /*==============================================================================
-Copyright (c) 2015 PTC Inc. All Rights Reserved. Confidential and Proprietary - 
+Copyright (c) 2015-2016 PTC Inc. All Rights Reserved. Confidential and Proprietary - 
 Protected under copyright and other laws.
 Vuforia is a trademark of PTC Inc., registered in the United States and other 
 countries.   
@@ -35,9 +35,9 @@ namespace Vuforia.EditorClasses
                 FileRefId = fileRefId;
             }
 
-            public string Name;
-            public string Id;
-            public string FileRefId;
+            public readonly string Name;
+            public readonly string Id;
+            public readonly string FileRefId;
         }
 
         private class ResFile : Framework
@@ -48,7 +48,7 @@ namespace Vuforia.EditorClasses
                 LastKnownType = lastKnownType;
             }
 
-            public string LastKnownType;
+            public readonly string LastKnownType;
         }
 
         #endregion // NESTED
@@ -77,9 +77,12 @@ namespace Vuforia.EditorClasses
         private const string QCARDIR_ID = "CC9FCA1D1445D76E004F4DC3";
         private const string QCARDIR_FILEREFID = "CC9FCA171445D76E004F4DC3";
 
+        private const string VUFORIADIR_ID = "8C4ECDDD1C5F637A0070D641";
+        private const string VUFORIADIR_FILEREFID = "8C4ECDDC1C5F637A0070D641";
+
 
         // List of all the frameworks to be added to the project
-        private static Framework[] _frameworks = new[]
+        private static readonly Framework[] _frameworks = new[]
         {
             new Framework("AVFoundation.framework", AVFOUNDATION_ID, AVFOUNDATION_FILEREFID),
             new Framework("CoreMedia.framework", COREMEDIA_ID, COREMEDIA_FILEREFID),
@@ -87,9 +90,10 @@ namespace Vuforia.EditorClasses
             new Framework("Security.framework", SECURITY_ID, SECURITY_FILEREFID),
         };
 
-        private static ResFile[] _resFiles = new[]
+        private static readonly ResFile[] _resFiles = new[]
         {
             new ResFile("QCAR", QCARDIR_ID, QCARDIR_FILEREFID, "folder"), 
+            new ResFile("Vuforia", VUFORIADIR_ID, VUFORIADIR_FILEREFID, "folder"), 
         };
 
         #endregion // PRIVATE_MEMBER_VARIABLES
@@ -196,7 +200,7 @@ namespace Vuforia.EditorClasses
 
 
             // Work out which of the resfiles exist and remove them if they don't, this
-            // is because if using frame markers there may not be a qcar-resources.dat
+            // There may not be a qcar resource folder if no targets are used
             var newResFiles = new List<ResFile>();
             foreach (var rf in resFiles)
                 if (Directory.Exists(Path.Combine(xCodeProjFileName, "../Data/Raw/" + rf.Name)))
@@ -240,6 +244,14 @@ namespace Vuforia.EditorClasses
             for (int i = 0; i < lines.Length; i++)
             {
                 var line = lines[i];
+
+
+                // Disable BITCODE
+                if (line.TrimStart().StartsWith("ENABLE_BITCODE"))
+                {
+                    line = line.Replace("YES", "NO");
+                }
+
                 pbxproj.WriteLine(line);
 
                 // Each section starts with a comment such as
@@ -344,16 +356,16 @@ namespace Vuforia.EditorClasses
         [PostProcessBuildAttribute(1)]
         public static void OnPostprocessBuild(BuildTarget target, string pathToBuiltProject)
         {
-#if (UNITY_5_3 || UNITY_5_2)
+#if UNITY_5_0
+            if (target == BuildTarget.iPhone)
+#else // UNITY_5_1 or above
             if (target == BuildTarget.iOS)
-#else
-            if(target == BuildTarget.iOS)
 #endif
             {
                 var xCodeProjFullPath = Path.Combine(pathToBuiltProject, "Unity-iPhone.xcodeproj");
 
-				Debug.Log("xCode Project " + xCodeProjFullPath);
-				ProcessPbxProj(xCodeProjFullPath, _frameworks, _resFiles);
+                Debug.Log("xCode Project " + xCodeProjFullPath);
+                ProcessPbxProj(xCodeProjFullPath, _frameworks, _resFiles);
             }
         }
     }

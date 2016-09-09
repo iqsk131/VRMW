@@ -17,8 +17,10 @@ public class CharacterSelectionBehavior : MonoBehaviour {
 			yield return Timing.WaitForSeconds(0.1f);
 			if (!VRMWdb.isInitiated)
 				continue;
+
 			if(VRMWdb.getPlayerInfoInt(PlayerId,"ID")!=-1){
 				if(this.transform.FindChild("Model").childCount == 0){
+					Debug.Log("Load: Prefabs/Characters/"+VRMWdb.getPlayerMonsterInfoString(PlayerId,"PrefabsName"));
 					GameObject playerChar = GameObject.Instantiate(Resources.Load("Prefabs/Characters/"+VRMWdb.getPlayerMonsterInfoString(PlayerId,"PrefabsName"))) as GameObject;
 					playerChar.transform.SetParent(transform.FindChild("Model"),false);
 					CharacterScanner.SetActive(false);

@@ -1,7 +1,9 @@
 /*==============================================================================
+Copyright (c) 2016 PTC Inc. All Rights Reserved.
+
 Copyright (c) 2010-2014 Qualcomm Connected Experiences, Inc.
 All Rights Reserved.
-Confidential and Proprietary - Qualcomm Connected Experiences, Inc.
+Confidential and Proprietary - Protected under copyright and other laws.
 ==============================================================================*/
 
 using UnityEngine;
@@ -14,7 +16,7 @@ namespace Vuforia
     /// </summary>
     public class VuforiaBehaviour : VuforiaAbstractBehaviour
     {
-        protected void Awake()
+        protected override void Awake()
         {
             IUnityPlayer unityPlayer = new NullUnityPlayer();
 
@@ -25,10 +27,16 @@ namespace Vuforia
                 unityPlayer = new IOSUnityPlayer();
             else if (VuforiaRuntimeUtilities.IsPlayMode())
                 unityPlayer = new PlayModeUnityPlayer();
+            else if (VuforiaRuntimeUtilities.IsWSARuntime())
+            {
+                unityPlayer = new WSAUnityPlayer();
+            }
 
             SetUnityPlayerImplementation(unityPlayer);
 
             gameObject.AddComponent<ComponentFactoryStarterBehaviour>();
+
+            base.Awake();
         }
 
         private static VuforiaBehaviour mVuforiaBehaviour= null;

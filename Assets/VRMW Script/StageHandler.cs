@@ -238,6 +238,7 @@ namespace Vuforia
 			}
 			
 			Timing.RunCoroutine(updateStage());
+			Debug.Log("Trackable " + mTrackableBehaviour.TrackableName + " found");
 		}
 
 
@@ -263,6 +264,7 @@ namespace Vuforia
 				component.enabled = false;
 			}
 
+			Debug.Log("Trackable " + mTrackableBehaviour.TrackableName + " lost");
 		}
 
 		#endregion // PRIVATE_METHODS

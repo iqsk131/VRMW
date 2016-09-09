@@ -1,7 +1,7 @@
 /*==============================================================================
 Copyright (c) 2010-2014 Qualcomm Connected Experiences, Inc.
 All Rights Reserved.
-Confidential and Proprietary - Qualcomm Connected Experiences, Inc.
+Confidential and Proprietary - Protected under copyright and other laws.
 ==============================================================================*/
 
 using UnityEngine;
@@ -26,8 +26,6 @@ namespace Vuforia
     
         void Start()
         {
-
-			//CameraDevice.Instance.SetFocusMode (CameraDevice.FocusMode.FOCUS_MODE_CONTINUOUSAUTO);
             mTrackableBehaviour = GetComponent<TrackableBehaviour>();
             if (mTrackableBehaviour)
             {
@@ -56,7 +54,7 @@ namespace Vuforia
                 OnTrackingFound();
             }
             else
-            {
+			{
                 OnTrackingLost();
             }
         }
@@ -76,11 +74,7 @@ namespace Vuforia
             // Enable rendering:
             foreach (Renderer component in rendererComponents)
             {
-				if (component.name == "ImageTarget Inside") {
-
-				} else {
-					component.enabled = true;
-				}
+                component.enabled = true;
             }
 
             // Enable colliders:

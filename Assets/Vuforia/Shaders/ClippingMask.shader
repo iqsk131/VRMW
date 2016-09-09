@@ -1,13 +1,10 @@
-//Copyright (c) 2010-2014 Qualcomm Connected Experiences, Inc.
-//All Rights Reserved.
-//Confidential and Proprietary - Qualcomm Connected Experiences, Inc.
 Shader "ClippingMask" {
    
     SubShader {
-        // Render the mask after regular geometry, but before masked geometry and
-        // transparent things.
+        // Render the mask after regular geometry and transparent things but 
+        // but before any other overlays
        
-        Tags {"Queue" = "Geometry-10" }
+        Tags {"Queue" = "Overlay-10" }
        
         // Turn off lighting, because it's expensive and the thing is supposed to be
         // invisible anyway.
@@ -17,15 +14,14 @@ Shader "ClippingMask" {
         // Draw into the depth buffer in the usual way.  This is probably the default,
         // but it doesn't hurt to be explicit.
 
-        ZTest LEqual
+        ZTest Always
         ZWrite On
 
-        // Don't draw anything into the RGBA channels. This is an undocumented
-        // argument to ColorMask which lets us avoid writing to anything except
-        // the depth buffer.
+        // Draw black background into the RGBA channel
+		Color (0,0,0,0)
+        ColorMask RGBA
 
-        ColorMask 0
-		
+		// compare stencil buffer		
 		Stencil {
 			Ref 0
 			Comp Equal

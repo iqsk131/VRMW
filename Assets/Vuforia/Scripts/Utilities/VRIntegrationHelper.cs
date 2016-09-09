@@ -1,5 +1,5 @@
 /*===============================================================================
-Copyright (c) 2015 PTC Inc. All Rights Reserved. Confidential and Proprietary - 
+Copyright (c) 2015-2016 PTC Inc. All Rights Reserved. Confidential and Proprietary - 
 Protected under copyright and other laws.
 Vuforia is a trademark of PTC Inc., registered in the United States and other 
 countries.   
@@ -43,8 +43,8 @@ public class VRIntegrationHelper : MonoBehaviour
 
     void OnVuforiaStarted()
     {
-        mLeftCamera = VuforiaBehaviour.Instance.PrimaryCamera;
-        mRightCamera = VuforiaBehaviour.Instance.SecondaryCamera;
+        mLeftCamera = DigitalEyewearBehaviour.Instance.PrimaryCamera;
+        mRightCamera = DigitalEyewearBehaviour.Instance.SecondaryCamera;
 
         mLeftExcessAreaBehaviour = mLeftCamera.GetComponent<HideExcessAreaAbstractBehaviour>();
         mRightExcessAreaBehaviour = mRightCamera.GetComponent<HideExcessAreaAbstractBehaviour>();
@@ -58,8 +58,8 @@ public class VRIntegrationHelper : MonoBehaviour
             if (mLeftCameraDataAcquired && mRightCameraDataAcquired)
             {
                 // make sure the central anchor point is set to the latest head tracking pose:
-                VuforiaBehaviour.Instance.CentralAnchorPoint.localRotation = mLeftCamera.transform.localRotation;
-                VuforiaBehaviour.Instance.CentralAnchorPoint.localPosition = mLeftCamera.transform.localPosition;
+                DigitalEyewearBehaviour.Instance.CentralAnchorPoint.localRotation = mLeftCamera.transform.localRotation;
+                DigitalEyewearBehaviour.Instance.CentralAnchorPoint.localPosition = mLeftCamera.transform.localPosition;
 
                 // temporarily set the primary and secondary cameras to their offset position and set the pixelrect they will have for rendering
                 Vector3 localPosLeftCam = mLeftCamera.transform.localPosition;
@@ -75,10 +75,10 @@ public class VRIntegrationHelper : MonoBehaviour
                 mRightCamera.pixelRect = mRightCameraPixelRect;
 
                 BackgroundPlaneBehaviour bgPlane = mLeftCamera.GetComponentInChildren<BackgroundPlaneBehaviour>();
-                bgPlane.BackgroundOffset = mLeftCamera.transform.position - VuforiaBehaviour.Instance.CentralAnchorPoint.position;
+                bgPlane.BackgroundOffset = mLeftCamera.transform.position - DigitalEyewearBehaviour.Instance.CentralAnchorPoint.position;
 
-                mLeftExcessAreaBehaviour.PlaneOffset = mLeftCamera.transform.position - VuforiaBehaviour.Instance.CentralAnchorPoint.position;
-                mRightExcessAreaBehaviour.PlaneOffset = mRightCamera.transform.position - VuforiaBehaviour.Instance.CentralAnchorPoint.position;
+                mLeftExcessAreaBehaviour.PlaneOffset = mLeftCamera.transform.position - DigitalEyewearBehaviour.Instance.CentralAnchorPoint.position;
+                mRightExcessAreaBehaviour.PlaneOffset = mRightCamera.transform.position - DigitalEyewearBehaviour.Instance.CentralAnchorPoint.position;
 
                 if (TrackableParent != null)
                     TrackableParent.localPosition = Vector3.zero;
@@ -93,7 +93,7 @@ public class VRIntegrationHelper : MonoBehaviour
                 VuforiaBehaviour.Instance.ApplyCorrectedProjectionMatrix(mLeftCameraMatrixOriginal, true);
                 VuforiaBehaviour.Instance.ApplyCorrectedProjectionMatrix(mRightCameraMatrixOriginal, false);
 
-#if UNITY_5_3
+#if !(UNITY_5_2 || UNITY_5_1 || UNITY_5_0) // UNITY_5_3 and above
 
                 // read back the projection matrices set by Vuforia and set them to the stereo cameras
                 // not sure if the matrices would automatically propagate between the left and right, so setting it explicitly twice
@@ -119,16 +119,23 @@ public class VRIntegrationHelper : MonoBehaviour
         // so we use this to acquire this data.
         if (IsLeft && !mLeftCameraDataAcquired)
         {
-            mLeftCameraMatrixOriginal = mLeftCamera.projectionMatrix;
-            mLeftCameraPixelRect = mLeftCamera.pixelRect;
-            mLeftCameraDataAcquired = true;
+            // at start matrix can be undefined
+            if (!VuforiaRuntimeUtilities.MatrixIsNaN(mLeftCamera.projectionMatrix))
+            {
+                mLeftCameraMatrixOriginal = mLeftCamera.projectionMatrix;
+                mLeftCameraPixelRect = mLeftCamera.pixelRect;
+                mLeftCameraDataAcquired = true;
+            }
         }
         else if (!mRightCameraDataAcquired)
         {
-            mRightCameraMatrixOriginal = mRightCamera.projectionMatrix;
-            mRightCameraPixelRect = mRightCamera.pixelRect;
-            mRightCameraDataAcquired = true;
-
+            // at start matrix can be undefined
+            if (!VuforiaRuntimeUtilities.MatrixIsNaN(mRightCamera.projectionMatrix))
+            {
+                mRightCameraMatrixOriginal = mRightCamera.projectionMatrix;
+                mRightCameraPixelRect = mRightCamera.pixelRect;
+                mRightCameraDataAcquired = true;
+            }
         }
     }
 }

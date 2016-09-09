@@ -1,6 +1,6 @@
 //Copyright (c) 2014 Qualcomm Connected Experiences, Inc.
 //All Rights Reserved.
-//Confidential and Proprietary - Qualcomm Connected Experiences, Inc.
+//Confidential and Proprietary - Protected under copyright and other laws.
 Shader "Custom/VideoBackground" {
     Properties {
         _MainTex ("Base (RGB)", 2D) = "white" {}
@@ -13,7 +13,7 @@ Shader "Custom/VideoBackground" {
             Lighting Off
 			
 			Stencil {
-                Ref 1
+                Ref 250
                 Comp Always
                 Pass Replace
             }

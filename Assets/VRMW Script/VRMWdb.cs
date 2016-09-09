@@ -20,7 +20,7 @@ public class VRMWdb : MonoBehaviour {
 	{
 		isInitiated = false;
 		firebase = Firebase.CreateNew ("https://sweltering-heat-6741.firebaseio.com");
-		firebase.ValueUpdated += (object sender, ChangedEventArgs e) => {
+		firebase.ValueUpdated += (object sender, FirebaseChangedEventArgs e) => {
 
 			bool isStageChange = false;
 			if(gameDB!=null && gameDB.Child ("Stage").StringValue != e.DataSnapshot.Child ("Stage").StringValue){

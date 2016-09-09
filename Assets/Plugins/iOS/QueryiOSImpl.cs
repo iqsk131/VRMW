@@ -1,4 +1,19 @@
-﻿using UnityEngine;
+/*
+Copyright 2015 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+using UnityEngine;
 using System.Collections;
 using System;
 using System.Runtime.InteropServices;
@@ -9,7 +24,7 @@ using System.Threading;
 #if UNITY_IOS
 public class QueryiOSImpl : IQuery {
 	IntPtr nativeReference;
-	EventHandler<ChangedEventArgs> valueUpdatedEvent, childAddedEvent, childRemovedEvent, childChangedEvent, childMovedEvent;
+	EventHandler<FirebaseChangedEventArgs> valueUpdatedEvent, childAddedEvent, childRemovedEvent, childChangedEvent, childMovedEvent;
 	bool subscribedValueChange = false, subscribedChildAdded = false, subscribedChildRemoved = false,
 			subscribedChildChanged = false, subscribedChildMoved = false;
 	
@@ -34,7 +49,6 @@ public class QueryiOSImpl : IQuery {
 			lock(_sync) {
 				global_table.Remove (nativeReference);
 			}
-			_FirebaseRemoveObservers(nativeReference);
 		}
 	}
 
@@ -86,12 +100,9 @@ public class QueryiOSImpl : IQuery {
 
 	[DllImport("__Internal")]
 	private static extern void _FirebaseObserveChildMoved (IntPtr firebase, onValueChangedEventHandler onChanged, IntPtr referenceId);
-
-	[DllImport("__Internal")]
-	private static extern void _FirebaseRemoveObservers (IntPtr firebase);
-
+	
 	#region IQuery implementation
-	public event EventHandler<ChangedEventArgs> ValueUpdated {
+	public event EventHandler<FirebaseChangedEventArgs> ValueUpdated {
 		add {
 			valueUpdatedEvent += value;
 			
@@ -106,7 +117,7 @@ public class QueryiOSImpl : IQuery {
 		}
 	}
 
-	public event EventHandler<ChangedEventArgs> ChildAdded {
+	public event EventHandler<FirebaseChangedEventArgs> ChildAdded {
 		add {
 			childAddedEvent += value;
 			
@@ -120,7 +131,7 @@ public class QueryiOSImpl : IQuery {
 		}
 	}
 
-	public event EventHandler<ChangedEventArgs> ChildRemoved {
+	public event EventHandler<FirebaseChangedEventArgs> ChildRemoved {
 		add {
 			childRemovedEvent += value;
 			
@@ -134,7 +145,7 @@ public class QueryiOSImpl : IQuery {
 		}
 	}
 
-	public event EventHandler<ChangedEventArgs> ChildChanged {
+	public event EventHandler<FirebaseChangedEventArgs> ChildChanged {
 		add {
 			childChangedEvent += value;
 			
@@ -148,7 +159,7 @@ public class QueryiOSImpl : IQuery {
 		}
 	}
 
-	public event EventHandler<ChangedEventArgs> ChildMoved {
+	public event EventHandler<FirebaseChangedEventArgs> ChildMoved {
 		add {
 			childMovedEvent += value;
 			
@@ -162,7 +173,7 @@ public class QueryiOSImpl : IQuery {
 		}
 	}
 
-	public event System.EventHandler<ErrorEventArgs> Error;
+	public event System.EventHandler<FirebaseErrorEventArgs> Error;
 	#endregion
 
 	[MonoPInvokeCallbackAttribute(typeof(onValueChangedEventHandler))]
@@ -175,10 +186,10 @@ public class QueryiOSImpl : IQuery {
 			Debug.Log ("unable to locate target for value callback!");
 			return;
 		}
-		EventHandler<ChangedEventArgs> handler = target.valueUpdatedEvent;
+		EventHandler<FirebaseChangedEventArgs> handler = target.valueUpdatedEvent;
 		if (handler != null)
 		{
-			handler(target, new ChangedEventArgs() { DataSnapshot = new DataSnapshotiOSImpl(snapshot) });
+			handler(target, new FirebaseChangedEventArgs() { DataSnapshot = new DataSnapshotiOSImpl(snapshot) });
 		}
 	}
 
@@ -192,10 +203,10 @@ public class QueryiOSImpl : IQuery {
 			Debug.Log ("unable to locate target for child callback!");
 			return;
 		}
-		EventHandler<ChangedEventArgs> handler = target.childAddedEvent;
+		EventHandler<FirebaseChangedEventArgs> handler = target.childAddedEvent;
 		if (handler != null)
 		{
-			handler(target, new ChangedEventArgs() { DataSnapshot = new DataSnapshotiOSImpl(snapshot) });
+			handler(target, new FirebaseChangedEventArgs() { DataSnapshot = new DataSnapshotiOSImpl(snapshot) });
 		}
 	}
 
@@ -209,10 +220,10 @@ public class QueryiOSImpl : IQuery {
 			Debug.Log ("unable to locate target for child callback!");
 			return;
 		}
-		EventHandler<ChangedEventArgs> handler = target.childRemovedEvent;
+		EventHandler<FirebaseChangedEventArgs> handler = target.childRemovedEvent;
 		if (handler != null)
 		{
-			handler(target, new ChangedEventArgs() { DataSnapshot = new DataSnapshotiOSImpl(snapshot) });
+			handler(target, new FirebaseChangedEventArgs() { DataSnapshot = new DataSnapshotiOSImpl(snapshot) });
 		}
 	}
 
@@ -226,10 +237,10 @@ public class QueryiOSImpl : IQuery {
 			Debug.Log ("unable to locate target for child callback!");
 			return;
 		}
-		EventHandler<ChangedEventArgs> handler = target.childChangedEvent;
+		EventHandler<FirebaseChangedEventArgs> handler = target.childChangedEvent;
 		if (handler != null)
 		{
-			handler(target, new ChangedEventArgs() { DataSnapshot = new DataSnapshotiOSImpl(snapshot) });
+			handler(target, new FirebaseChangedEventArgs() { DataSnapshot = new DataSnapshotiOSImpl(snapshot) });
 		}
 	}
 
@@ -243,10 +254,10 @@ public class QueryiOSImpl : IQuery {
 			Debug.Log ("unable to locate target for child callback!");
 			return;
 		}
-		EventHandler<ChangedEventArgs> handler = target.childMovedEvent;
+		EventHandler<FirebaseChangedEventArgs> handler = target.childMovedEvent;
 		if (handler != null)
 		{
-			handler(target, new ChangedEventArgs() { DataSnapshot = new DataSnapshotiOSImpl(snapshot) });
+			handler(target, new FirebaseChangedEventArgs() { DataSnapshot = new DataSnapshotiOSImpl(snapshot) });
 		}
 	}
 	

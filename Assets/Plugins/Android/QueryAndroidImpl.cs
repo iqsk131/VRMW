@@ -1,11 +1,26 @@
-﻿using UnityEngine;
+﻿/*
+Copyright 2015 Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+using UnityEngine;
 using System.Collections;
 using System;
 
 #if UNITY_ANDROID
 internal class QueryAndroidImpl : IQuery {
 	AndroidJavaObject queryRef;
-	EventHandler<ChangedEventArgs> valueUpdatedEvent, childAddedEvent, 
+	EventHandler<FirebaseChangedEventArgs> valueUpdatedEvent, childAddedEvent, 
 									childRemovedEvent, childChangedEvent, childMovedEvent;
 	ValueEventListener valueupdateListener;
 	ChildEventListener childListener;
@@ -35,7 +50,7 @@ internal class QueryAndroidImpl : IQuery {
 		return objectclass;
 	}
 
-	public event EventHandler<ChangedEventArgs> ValueUpdated {
+	public event EventHandler<FirebaseChangedEventArgs> ValueUpdated {
 		add {
 			valueUpdatedEvent += value;
 			
@@ -50,14 +65,14 @@ internal class QueryAndroidImpl : IQuery {
 			
 			if (valueUpdatedEvent == null) {
 				
-				GetJavaObject().Call<AndroidJavaObject>("removeEventListener", valueupdateListener);
+				GetJavaObject().Call("removeEventListener", valueupdateListener);
 				valueupdateListener = null;
 			}
 			
 		}
 	}
 
-	public event EventHandler<ChangedEventArgs> ChildAdded {
+	public event EventHandler<FirebaseChangedEventArgs> ChildAdded {
 		add {
 			childAddedEvent += value;
 			
@@ -72,13 +87,13 @@ internal class QueryAndroidImpl : IQuery {
 			
 			if (childAddedEvent == null && childRemovedEvent == null
 			    && childChangedEvent == null && childMovedEvent == null) {
-				GetJavaObject().Call<AndroidJavaObject>("removeEventListener", childListener);
+				GetJavaObject().Call("removeEventListener", childListener);
 				childListener = null;
 			}
 		}
 	}
 
-	public event EventHandler<ChangedEventArgs> ChildRemoved {
+	public event EventHandler<FirebaseChangedEventArgs> ChildRemoved {
 		add {
 			childRemovedEvent += value;
 			
@@ -93,13 +108,13 @@ internal class QueryAndroidImpl : IQuery {
 			
 			if (childAddedEvent == null && childRemovedEvent == null
 			    && childChangedEvent == null && childMovedEvent == null) {
-				GetJavaObject().Call<AndroidJavaObject>("removeEventListener", childListener);
+				GetJavaObject().Call("removeEventListener", childListener);
 				childListener = null;
 			}
 		}
 	}
 
-	public event EventHandler<ChangedEventArgs> ChildChanged {
+	public event EventHandler<FirebaseChangedEventArgs> ChildChanged {
 		add {
 			childChangedEvent += value;
 			
@@ -114,13 +129,13 @@ internal class QueryAndroidImpl : IQuery {
 			
 			if (childAddedEvent == null && childRemovedEvent == null
 			    && childChangedEvent == null && childMovedEvent == null) {
-				GetJavaObject().Call<AndroidJavaObject>("removeEventListener", childListener);
+				GetJavaObject().Call("removeEventListener", childListener);
 				childListener = null;
 			}
 		}
 	}
 
-	public event EventHandler<ChangedEventArgs> ChildMoved {
+	public event EventHandler<FirebaseChangedEventArgs> ChildMoved {
 		add {
 			childMovedEvent += value;
 			
@@ -135,51 +150,51 @@ internal class QueryAndroidImpl : IQuery {
 			
 			if (childAddedEvent == null && childRemovedEvent == null
 			    && childChangedEvent == null && childMovedEvent == null) {
-				GetJavaObject().Call<AndroidJavaObject>("removeEventListener", childListener);
+				GetJavaObject().Call("removeEventListener", childListener);
 				childListener = null;
 			}
 		}
 	}
 
-	public event EventHandler<ErrorEventArgs> Error;
+	public event EventHandler<FirebaseErrorEventArgs> Error;
 	
 	void OnValueUpdated(DataSnapshotAndroidImpl snapshot) {
-		EventHandler<ChangedEventArgs> handler = valueUpdatedEvent;
+		EventHandler<FirebaseChangedEventArgs> handler = valueUpdatedEvent;
 		if (handler != null)
 		{
-			handler(this, new ChangedEventArgs() { DataSnapshot = snapshot });
+			handler(this, new FirebaseChangedEventArgs() { DataSnapshot = snapshot });
 		}
 	}
 
 	void OnChildAdded(DataSnapshotAndroidImpl snapshot) {
-		EventHandler<ChangedEventArgs> handler = childAddedEvent;
+		EventHandler<FirebaseChangedEventArgs> handler = childAddedEvent;
 		if (handler != null)
 		{
-			handler(this, new ChangedEventArgs() { DataSnapshot = snapshot });
+			handler(this, new FirebaseChangedEventArgs() { DataSnapshot = snapshot });
 		}
 	}
 
 	void OnChildRemoved(DataSnapshotAndroidImpl snapshot) {
-		EventHandler<ChangedEventArgs> handler = childRemovedEvent;
+		EventHandler<FirebaseChangedEventArgs> handler = childRemovedEvent;
 		if (handler != null)
 		{
-			handler(this, new ChangedEventArgs() { DataSnapshot = snapshot });
+			handler(this, new FirebaseChangedEventArgs() { DataSnapshot = snapshot });
 		}
 	}
 
 	void OnChildChanged(DataSnapshotAndroidImpl snapshot) {
-		EventHandler<ChangedEventArgs> handler = childChangedEvent;
+		EventHandler<FirebaseChangedEventArgs> handler = childChangedEvent;
 		if (handler != null)
 		{
-			handler(this, new ChangedEventArgs() { DataSnapshot = snapshot });
+			handler(this, new FirebaseChangedEventArgs() { DataSnapshot = snapshot });
 		}
 	}
 
 	void OnChildMoved(DataSnapshotAndroidImpl snapshot) {
-		EventHandler<ChangedEventArgs> handler = childMovedEvent;
+		EventHandler<FirebaseChangedEventArgs> handler = childMovedEvent;
 		if (handler != null)
 		{
-			handler(this, new ChangedEventArgs() { DataSnapshot = snapshot });
+			handler(this, new FirebaseChangedEventArgs() { DataSnapshot = snapshot });
 		}
 	}
 	
@@ -198,9 +213,9 @@ internal class QueryAndroidImpl : IQuery {
 		
 		void onCancelled(AndroidJavaObject error) {
 			FirebaseErrorAndroidImpl errorImpl = new FirebaseErrorAndroidImpl (error);
-			EventHandler<ErrorEventArgs> handler = parent.Error;
+			EventHandler<FirebaseErrorEventArgs> handler = parent.Error;
 			if (handler != null) {
-				handler(this, new ErrorEventArgs() { 
+				handler(this, new FirebaseErrorEventArgs() { 
 					Error = new FirebaseError(errorImpl.Code, errorImpl.Message,  errorImpl.Details)
 				});
 			}		
@@ -218,9 +233,9 @@ internal class QueryAndroidImpl : IQuery {
 
 		void onCancelled(AndroidJavaObject error) {
 			FirebaseErrorAndroidImpl errorImpl = new FirebaseErrorAndroidImpl (error);
-			EventHandler<ErrorEventArgs> handler = parent.Error;
+			EventHandler<FirebaseErrorEventArgs> handler = parent.Error;
 			if (handler != null) {
-				handler(this, new ErrorEventArgs() { Error = new FirebaseError(
+				handler(this, new FirebaseErrorEventArgs() { Error = new FirebaseError(
 					errorImpl.Code, errorImpl.Message, errorImpl.Details)});
 			}
 		}
@@ -237,12 +252,21 @@ internal class QueryAndroidImpl : IQuery {
 			parent.OnChildChanged (new DataSnapshotAndroidImpl (snapshot));
 		}
 
+		void onChildChanged(AndroidJavaObject snapshot, AndroidJavaObject previousChildName) {
+			parent.OnChildChanged (new DataSnapshotAndroidImpl (snapshot));
+		}
+
 		void onChildMoved(AndroidJavaObject snapshot, string previousChildName) {
 			parent.OnChildMoved (new DataSnapshotAndroidImpl (snapshot));
 		}
 
 		void onChildRemoved(AndroidJavaObject snapshot) {
 			parent.OnChildRemoved (new DataSnapshotAndroidImpl (snapshot));
+		}
+
+		bool equals (AndroidJavaObject other)
+		{
+			return other.Equals (this);
 		}
 	}
 }

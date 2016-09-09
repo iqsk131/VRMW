@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using ProgressBar;
+using System.Collections.Generic;
+using MovementEffects;
 
 public abstract class PlayerBehavior : MonoBehaviour {
 
@@ -17,9 +19,9 @@ public abstract class PlayerBehavior : MonoBehaviour {
 	protected Vector3 originalPosition;
 	
 
-	protected IEnumerator ActiveTime(){
+	protected IEnumerator<float> ActiveTime(){
 		while(true){
-			yield return new WaitForSeconds(0.1f);
+			yield return Timing.WaitForSeconds(0.1f);
 			if (!VRMWdb.isInitiated)
 				continue;
 			//Behavior Field
@@ -36,10 +38,10 @@ public abstract class PlayerBehavior : MonoBehaviour {
 			}
 			////////////////
 		}
-		yield return 0;
+		yield return 0f;
 	}
 	
-	protected IEnumerator UpdateHP(){
+	protected IEnumerator<float> UpdateHP(){
 		
 		if (!VRMWdb.isInitiated)
 			yield break;
@@ -47,12 +49,12 @@ public abstract class PlayerBehavior : MonoBehaviour {
 		TextMesh HPBarText = HPBar.GetComponent<TextMesh> ();
 		HPBarText.text = "" + VRMWdb.getPlayerInfoInt(playerNum,"HP");
 		
-		yield return 0;
+		yield return 0f;
 	}
 	
-	protected IEnumerator ActionBehavior(){
+	protected IEnumerator<float> ActionBehavior(){
 		while(true){
-			yield return new WaitForSeconds(0.1f);
+			yield return Timing.WaitForSeconds(0.1f);
 			if (!VRMWdb.isInitiated)
 				continue;
 			//Behavior Field
@@ -205,6 +207,6 @@ public abstract class PlayerBehavior : MonoBehaviour {
 			}
 			////////////////
 		}
-		yield return 0;
+		yield return 0f;
 	}
 }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using MovementEffects;
 //
 // ↑↓キーでループアニメーションを切り替えるスクリプト（ランダム切り替え付き）Ver.3
 // 2014/04/03 N.Kobayashi
@@ -9,12 +9,10 @@ using System.Collections.Generic;
 
 // Require these components when using this script
 using ProgressBar;
+using System;
 
 
 [RequireComponent(typeof(Animator))]
-
-
-
 public class EnemyBehavior : MonoBehaviour
 {
 
@@ -55,22 +53,24 @@ public class EnemyBehavior : MonoBehaviour
 		latestShowDamage = Time.time - 2;
 		targetPlayer = 1;
 
-		StartCoroutine(ActiveTime());
-		StartCoroutine(ActionBehavior());
-		StartCoroutine(UpdateHP());
+		Timing.RunCoroutine(ActiveTime());
+		Timing.RunCoroutine(ActionBehavior());
+		Timing.RunCoroutine(UpdateHP());
 		VRMWdb.OnEnemyHPChange += (bool st) => {
-			StartCoroutine(UpdateHP());
+			Timing.RunCoroutine(UpdateHP());
 		};
 
 	}
 
 
-	private IEnumerator ActiveTime(){
+	private IEnumerator<float> ActiveTime(){
 		while(true){
-			yield return new WaitForSeconds(0.1f);
+			yield return Timing.WaitForSeconds(0.1f);
 			if (!VRMWdb.isInitiated)
 				continue;
 			//Behavior Field
+
+			Debug.Log("Memory Used: "+ GC.GetTotalMemory(false));
 
 			HPBar.transform.rotation = Quaternion.LookRotation(Camera.current.transform.position - HPBar.transform.position) * Quaternion.Euler(0, 180, 0);
 
@@ -92,7 +92,7 @@ public class EnemyBehavior : MonoBehaviour
 					if(VRMWdb.getPlayerInfoString(i, "Position") != "Back" 
 						&& VRMWdb.getPlayerInfoString(i, "State") != "dead")AnyFront = true;
 
-				targetPlayer = Random.Range (1, 4);
+				targetPlayer = UnityEngine.Random.Range (1, 4);
 				if (targetPlayer != 1 && targetPlayer != 2)targetPlayer = 3;
 				while(VRMWdb.getPlayerInfoString (targetPlayer, "State") == "dead" 
 					|| (AnyFront && VRMWdb.getPlayerInfoString(targetPlayer, "Position") == "Back")){
@@ -101,7 +101,7 @@ public class EnemyBehavior : MonoBehaviour
 
 				VRMWdb.setEnemyInfo ("Target", targetPlayer);
 
-				int randomAction = Random.Range (0, 10);
+				int randomAction = UnityEngine.Random.Range (0, 10);
 				if(randomAction<5){
 					if(AnyFront)
 						VRMWdb.addScore("Hero",1);
@@ -117,25 +117,26 @@ public class EnemyBehavior : MonoBehaviour
 			}
 			////////////////
 		}
-		yield return 0;
+		yield return 0f;
 	}
 
-	private IEnumerator UpdateHP(){
+	private IEnumerator<float> UpdateHP(){
 		
 		if (!VRMWdb.isInitiated)
 			yield break;
 		TextMesh HPBarText = HPBar.GetComponent<TextMesh> ();
 		HPBarText.text = "" + VRMWdb.getEnemyInfoInt("HP");
 
-		yield return 0;
+		yield return 0f;
 	}
 
-	private IEnumerator ActionBehavior(){
+	private IEnumerator<float> ActionBehavior(){
 		while(true){
-			yield return new WaitForSeconds(0.1f);
+			yield return Timing.WaitForSeconds(0.1f);
 			if (!VRMWdb.isInitiated)
 				continue;
 			//Behavior Field
+
 
 			//If Player Dead
 			if (VRMWdb.getPlayerInfoString (1, "State") == "dead"
@@ -373,6 +374,6 @@ public class EnemyBehavior : MonoBehaviour
 			}
 			////////////////
 		}
-		yield return 0;
+		yield return 0f;
 	}
 }

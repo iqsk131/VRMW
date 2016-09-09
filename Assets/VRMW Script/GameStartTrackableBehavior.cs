@@ -8,6 +8,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Collections;
+using MovementEffects;
 
 
 namespace Vuforia
@@ -24,7 +25,7 @@ namespace Vuforia
 
 		private TrackableBehaviour mTrackableBehaviour;
 		private bool isTrack;
-		private bool isStartCoroutine=false;
+		private bool isTiming.RunCoroutine=false;
 		#endregion // PRIVATE_MEMBER_VARIABLES
 
 
@@ -75,7 +76,7 @@ namespace Vuforia
 			{
 				//Change Tracking state to true
 				isTrack=true;
-				StartCoroutine(StartBattle());
+				Timing.RunCoroutine(StartBattle());
 
 				//Show Attack Model
 				OnTrackingFound();
@@ -98,9 +99,9 @@ namespace Vuforia
 		#region PRIVATE_METHODS
 
 
-		private IEnumerator StartBattle(){
+		private IEnumerator<float> StartBattle(){
 			while(isTrack){
-				yield return new WaitForSeconds(0.1f);
+				yield return Timing.WaitForSeconds(0.1f);
 
 				//Don't Start update until VRMWdb is initiated
 				if (!VRMWdb.isInitiated)
@@ -142,7 +143,7 @@ namespace Vuforia
 						int bossID = UnityEngine.Random.Range(3,6);
 						VRMWdb.setEnemyInfo("BID",bossID);
 					}*/
-					yield return new WaitForSeconds(1);
+					yield return Timing.WaitForSeconds(1);
 					VRMWdb.setEnemyInfo("MaxHP",VRMWdb.getEnemyMonsterInfoInt("HP"));
 					VRMWdb.setEnemyInfo("ActiveTime",VRMWdb.getEnemyMonsterInfoInt("ActiveTime"));
 					VRMWdb.setEnemyInfo("HP",VRMWdb.getEnemyMonsterInfoInt("HP"));
@@ -151,7 +152,7 @@ namespace Vuforia
 					VRMWdb.setEnemyInfo("Attacked/Player3/Damage",0);
 					VRMWdb.setEnemyInfo("StartTime",VRMWdb.currentTime ().ToString ());
 					VRMWdb.setEnemyInfo("State","idle");
-					yield return new WaitForSeconds(1);
+					yield return Timing.WaitForSeconds(1);
 					//Change Stage to Battle
 					VRMWdb.setStage("Battle");
 				} else {
@@ -163,7 +164,7 @@ namespace Vuforia
 				}
 
 			}
-			yield return 0;
+			yield return 0f;
 		}
 
 		private void OnTrackingFound()

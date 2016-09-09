@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using MovementEffects;
 
 public class SuperSlashAnim : AnimationHandler {
 	
@@ -8,17 +10,17 @@ public class SuperSlashAnim : AnimationHandler {
 	[SerializeField] protected Image image;
 
 	public override void Play(){
-		StartCoroutine(PlayAnim());
+		Timing.RunCoroutine(PlayAnim());
 	}
 
-	private IEnumerator PlayAnim(){
+	private IEnumerator<float> PlayAnim(){
 		AudioClip audioClip = Resources.Load("Audio/SE/160-Skill04", typeof(AudioClip)) as AudioClip;
 		AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
 		//image.gameObject.SetActive(true);
 		foreach(Sprite s in frames){
 			image.transform.rotation = Quaternion.LookRotation(Camera.current.transform.position - image.transform.position) * Quaternion.Euler(0, 180, 0);
 			image.sprite=s;
-			yield return new WaitForSeconds(0.1f);
+			yield return Timing.WaitForSeconds(0.1f);
 		}
 		image.gameObject.SetActive(false);
 		GameObject.Destroy(this.gameObject);

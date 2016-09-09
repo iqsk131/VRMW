@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
+using MovementEffects;
 
 public class WitchBehavior : MonoBehaviour, ModelInterface  {
 
@@ -8,34 +10,34 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 	private bool isAction = false;
 
 	public void attack(Transform target, int user, int attackTarget){
-		StartCoroutine(startAttack(target,user,attackTarget));
+		Timing.RunCoroutine(startAttack(target,user,attackTarget));
 	}
 
 	public void skill(Transform target, int user, int attackTarget){
-		StartCoroutine(startSkill(target,user,attackTarget));
+		Timing.RunCoroutine(startSkill(target,user,attackTarget));
 	}
 
 	public void damaged(int user){
-		StartCoroutine(startDamaged(user));
+		Timing.RunCoroutine(startDamaged(user));
 	}
 
 	public void defend(int user){
-		StartCoroutine(startDefend(user,3f));
+		Timing.RunCoroutine(startDefend(user,3f));
 	}
 
 	public void defend(int user,float duration){
-		StartCoroutine(startDefend(user,duration));
+		Timing.RunCoroutine(startDefend(user,duration));
 	}
 
 	public void heal(int user){
-		StartCoroutine(startHeal(user));
+		Timing.RunCoroutine(startHeal(user));
 	}
 
 	public bool getDefendState(){
 		return defendState;
 	}
 
-	public IEnumerator startDefend(int user,float duration){
+	public IEnumerator<float> startDefend(int user,float duration){
 		if(isAction)yield break;
 		isAction = true;
 
@@ -49,7 +51,7 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 		}
 
 		defendState = true;
-		yield return new WaitForSeconds(0.2f);
+		yield return Timing.WaitForSeconds(0.2f);
 		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/ShieldAnim")) as GameObject;
 		an.transform.parent = this.transform;
 		an.transform.position = this.transform.position;
@@ -63,12 +65,12 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 			VRMWdb.setEnemyInfo ("StartTime", VRMWdb.currentTime ().ToString ());
 		}
 		isAction=false;
-		yield return new WaitForSeconds(duration);
+		yield return Timing.WaitForSeconds(duration);
 		defendState = false;
 
 	}
 
-	public IEnumerator startHeal(int user){
+	public IEnumerator<float> startHeal(int user){
 		if(isAction)yield break;
 		isAction = true;
 
@@ -81,12 +83,12 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 			VRMWdb.setEnemyInfo ("ActionType", "");
 		}
 
-		yield return new WaitForSeconds(0.1f);
+		yield return Timing.WaitForSeconds(0.1f);
 		GameObject an = GameObject.Instantiate(Resources.Load("Prefabs/Animations/HealAnim")) as GameObject;
 		an.transform.parent = this.transform;
 		an.transform.position = this.transform.position;
 		an.GetComponent<AnimationHandler>().Play();
-		yield return new WaitForSeconds(0.1f);
+		yield return Timing.WaitForSeconds(0.1f);
 		if (user > 0) {
 			VRMWdb.setPlayerInfo (user, "State", "idle");
 			VRMWdb.setPlayerInfo (user, "StartTime", VRMWdb.currentTime ().ToString ());
@@ -103,7 +105,7 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 		isAction=false;
 	}
 
-	public IEnumerator startDamaged(int user){
+	public IEnumerator<float> startDamaged(int user){
 		if(isAction)yield break;
 		isAction = true;
 		string currentState = "";
@@ -129,7 +131,7 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 				component.enabled = !component.enabled;
 			}
 			//wait for a bit
-			yield return new WaitForSeconds(0.1f);
+			yield return Timing.WaitForSeconds(0.1f);
 		}
 		
 		//make sure renderer is enabled when we exit
@@ -156,12 +158,12 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 				VRMWdb.setEnemyInfo ("ActionType", "");
 			}
 		}
-		yield return 0;
+		yield return 0f;
 		isAction=false;
 	}
 
 
-	private IEnumerator startAttack(Transform target,int user, int attackTarget){
+	private IEnumerator<float> startAttack(Transform target,int user, int attackTarget){
 		if(isAction)yield break;
 		isAction = true;
 
@@ -182,19 +184,19 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 		an.transform.position = this.transform.position;
 		an.GetComponent<AnimationHandler>().Play();
 
-		yield return new WaitForSeconds(0.5f);
+		yield return Timing.WaitForSeconds(0.5f);
 
 
 		//Play Attack animation
 		anim.Play ("Witch_Attack");
-		yield return new WaitForSeconds(0.2f);
+		yield return Timing.WaitForSeconds(0.2f);
 		GameObject an2 = GameObject.Instantiate(Resources.Load("Prefabs/Animations/ThunderAnim")) as GameObject;
 		an2.transform.parent = target;
 		an2.transform.position = target.position;
 		an2.GetComponent<AnimationHandler>().Play();
 
 
-		yield return new WaitForSeconds(0.1f);
+		yield return Timing.WaitForSeconds(0.1f);
 
 
 		if (user > 0) {
@@ -210,17 +212,17 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 				VRMWdb.setCombo(user,true,atk);
 				//Play Combo animation
 				anim.Play("Attack");
-				yield return new WaitForSeconds(0.2f);
+				yield return Timing.WaitForSeconds(0.2f);
 				GameObject an3 = GameObject.Instantiate(Resources.Load("Prefabs/Animations/ThunderAnim")) as GameObject;
 				an3.transform.parent = target;
 				an3.transform.position = target.position;
 				an3.GetComponent<AnimationHandler>().Play();
-				yield return new WaitForSeconds(0.1f);
+				yield return Timing.WaitForSeconds(0.1f);
 				an3 = GameObject.Instantiate(Resources.Load("Prefabs/Animations/ThunderAnim")) as GameObject;
 				an3.transform.parent = target;
 				an3.transform.position = target.position;
 				an3.GetComponent<AnimationHandler>().Play();
-				yield return new WaitForSeconds(0.1f);
+				yield return Timing.WaitForSeconds(0.1f);
 				//Extra Atk
 				atk= (int)(atk * UnityEngine.Random.Range(150, 200)/100.0);
 				VRMWdb.setCombo(user,false,atk);
@@ -247,7 +249,7 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 	}
 
 
-	private IEnumerator startSkill(Transform target,int user, int attackTarget){
+	private IEnumerator<float> startSkill(Transform target,int user, int attackTarget){
 		if(isAction)yield break;
 		isAction = true;
 		
@@ -267,7 +269,7 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 		an.transform.position = this.transform.position;
 		an.GetComponent<AnimationHandler>().Play();
 
-		yield return new WaitForSeconds(0.5f);
+		yield return Timing.WaitForSeconds(0.5f);
 		
 		
 		//Play Attack animation
@@ -283,7 +285,7 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 		}
 		else{
 			anim.Play ("Witch_Attack");
-			yield return new WaitForSeconds(0.2f);
+			yield return Timing.WaitForSeconds(0.2f);
 			GameObject an2 = GameObject.Instantiate(Resources.Load("Prefabs/Animations/SpeedUpAnim")) as GameObject;
 			an2.transform.parent = this.transform;
 			an2.transform.position = this.transform.position;
@@ -291,7 +293,7 @@ public class WitchBehavior : MonoBehaviour, ModelInterface  {
 		}
 		
 		
-		yield return new WaitForSeconds(0.1f);
+		yield return Timing.WaitForSeconds(0.1f);
 
 		if (user > 0) {
 			double speedUpTime=VRMWdb.getPlayerMonsterInfoInt(user,"Skill");

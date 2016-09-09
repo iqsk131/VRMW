@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using MovementEffects;
 
 //
 // ↑↓キーでループアニメーションを切り替えるスクリプト（ランダム切り替え付き）Ver.3
@@ -39,11 +40,11 @@ public class Player1Behavior : PlayerBehavior
 		stillPlaying = false;
 		latestShowDamage = Time.time - 2;
 
-		StartCoroutine(ActiveTime());
-		StartCoroutine(ActionBehavior());
-		StartCoroutine(UpdateHP());
+		Timing.RunCoroutine(ActiveTime());
+		Timing.RunCoroutine(ActionBehavior());
+		Timing.RunCoroutine(UpdateHP());
 		VRMWdb.OnPlayer1HPChange += (bool st) => {
-			StartCoroutine(UpdateHP());
+			Timing.RunCoroutine(UpdateHP());
 		};
 
 	}

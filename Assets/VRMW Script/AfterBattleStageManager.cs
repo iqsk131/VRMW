@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
+using MovementEffects;
 
 public class AfterBattleStageManager : MonoBehaviour {
 
@@ -13,15 +15,15 @@ public class AfterBattleStageManager : MonoBehaviour {
 	void OnEnable () {
 		ResertText.gameObject.SetActive(false);
 		Score.text="";
-		StartCoroutine(ScoreCalculation());
+		Timing.RunCoroutine(ScoreCalculation());
 	}
 
-	IEnumerator ScoreCalculation(){
+	IEnumerator<float> ScoreCalculation(){
 		Score.text = "Wait for Result..";
 
-		yield return new WaitForSeconds(5f);
+		yield return Timing.WaitForSeconds(5f);
 
-		while (!VRMWdb.isInitiated)yield return new WaitForSeconds(0.001f);
+		while (!VRMWdb.isInitiated)yield return Timing.WaitForSeconds(0.001f);
 
 		string tmpText="";
 		int score=0;
@@ -54,11 +56,11 @@ public class AfterBattleStageManager : MonoBehaviour {
 			AudioClip loseAudio = Resources.Load("Audio/SE/016-Shock01", typeof(AudioClip)) as AudioClip;
 			AudioSource.PlayClipAtPoint (loseAudio, Vector3.zero);
 		}
-		yield return new WaitForSeconds(5f);
+		yield return Timing.WaitForSeconds(5f);
 
 		// Show Score
 		Score.text = "Here is your score.";
-		yield return new WaitForSeconds(1f);
+		yield return Timing.WaitForSeconds(1f);
 
 		Score.text += "\nHP\t";
 		tmpText = Score.text;
@@ -72,10 +74,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 		for(int i=0;i<=score;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
 			Score.text = tmpText + "<color=yellow>" + i + "</color>";
-			yield return new WaitForSeconds(0.001f);
+			yield return Timing.WaitForSeconds(0.001f);
 		}
 		Score.text = tmpText + "<color=yellow>" + score + "</color>";
-		yield return new WaitForSeconds(1f);
+		yield return Timing.WaitForSeconds(1f);
 
 		Score.text += "\nDamage\t";
 		tmpText = Score.text;
@@ -84,10 +86,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 		for(int i=0;i<=score;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
 			Score.text = tmpText + "<color=yellow>" + i + "</color>";
-			yield return new WaitForSeconds(0.001f);
+			yield return Timing.WaitForSeconds(0.001f);
 		}
 		Score.text = tmpText + "<color=yellow>" + score + "</color>";
-		yield return new WaitForSeconds(1f);
+		yield return Timing.WaitForSeconds(1f);
 
 		Score.text += "\nCombo\t";
 		tmpText = Score.text;
@@ -96,10 +98,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 		for(int i=0;i<=score;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
 			Score.text = tmpText + "<color=yellow>" + i + "</color>";
-			yield return new WaitForSeconds(0.001f);
+			yield return Timing.WaitForSeconds(0.001f);
 		}
 		Score.text = tmpText + "<color=yellow>" + score + "</color>";
-		yield return new WaitForSeconds(1f);
+		yield return Timing.WaitForSeconds(1f);
 
 		Score.text += "\nHero\t";
 		tmpText = Score.text;
@@ -108,10 +110,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 		for(int i=0;i<=score;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
 			Score.text = tmpText + "<color=yellow>" + i + "</color>";
-			yield return new WaitForSeconds(0.001f);
+			yield return Timing.WaitForSeconds(0.001f);
 		}
 		Score.text = tmpText + "<color=yellow>" + score + "</color>";
-		yield return new WaitForSeconds(1f);
+		yield return Timing.WaitForSeconds(1f);
 
 		Score.text += "\nPerfect Guard\t";
 		tmpText = Score.text;
@@ -120,10 +122,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 		for(int i=0;i<=score;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
 			Score.text = tmpText + "<color=yellow>" + i + "</color>";
-			yield return new WaitForSeconds(0.001f);
+			yield return Timing.WaitForSeconds(0.001f);
 		}
 		Score.text = tmpText + "<color=yellow>" + score + "</color>";
-		yield return new WaitForSeconds(1f);
+		yield return Timing.WaitForSeconds(1f);
 
 		Score.text += "\nHigh Damage\t";
 		tmpText = Score.text;
@@ -132,10 +134,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 		for(int i=0;i<=score;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
 			Score.text = tmpText + "<color=yellow>" + i + "</color>";
-			yield return new WaitForSeconds(0.001f);
+			yield return Timing.WaitForSeconds(0.001f);
 		}
 		Score.text = tmpText + "<color=yellow>" + score + "</color>";
-		yield return new WaitForSeconds(1f);
+		yield return Timing.WaitForSeconds(1f);
 
 		Score.text += "\nAid\t";
 		tmpText = Score.text;
@@ -144,10 +146,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 		for(int i=0;i<=score;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
 			Score.text = tmpText + "<color=yellow>" + i + "</color>";
-			yield return new WaitForSeconds(0.001f);
+			yield return Timing.WaitForSeconds(0.001f);
 		}
 		Score.text = tmpText + "<color=yellow>" + score + "</color>";
-		yield return new WaitForSeconds(1f);
+		yield return Timing.WaitForSeconds(1f);
 
 		//Zone Panelty
 
@@ -158,10 +160,10 @@ public class AfterBattleStageManager : MonoBehaviour {
 		for(int i=0;i<=score;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
 			Score.text = tmpText + "<color=red>-" + i + "</color>";
-			yield return new WaitForSeconds(0.001f);
+			yield return Timing.WaitForSeconds(0.001f);
 		}
 		Score.text = tmpText + "<color=red>-" + score + "</color>";
-		yield return new WaitForSeconds(1f);
+		yield return Timing.WaitForSeconds(1f);
 
 		Score.text += "\nDamage Receive\t";
 		tmpText = Score.text;
@@ -170,34 +172,34 @@ public class AfterBattleStageManager : MonoBehaviour {
 		for(int i=0;i<=score;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
 			Score.text = tmpText + "<color=red>-" + i + "</color>";
-			yield return new WaitForSeconds(0.001f);
+			yield return Timing.WaitForSeconds(0.001f);
 		}
 		Score.text = tmpText + "<color=red>-" + score + "</color>";
-		yield return new WaitForSeconds(1f);
+		yield return Timing.WaitForSeconds(1f);
 
 
 		//////////////////////////////////
 		Score.text += "\n--------------------";
-		yield return new WaitForSeconds(2f);
+		yield return Timing.WaitForSeconds(2f);
 		//////////////////////////////////
 		Score.text += "\nTotal Score\t";
-		yield return new WaitForSeconds(1f);
+		yield return Timing.WaitForSeconds(1f);
 		tmpText = Score.text;
 		totalScore = Math.Max(0,totalScore);
 		for(int i=0;i<=totalScore;i+=100){
 			if(i%500==0)AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
 			Score.text = tmpText + "<color=yellow>" + i + "</color>";
-			yield return new WaitForSeconds(0.001f);
+			yield return Timing.WaitForSeconds(0.001f);
 		}
 		Score.text = tmpText + "<color=yellow>" + totalScore + "</color>";
-		yield return new WaitForSeconds(3f);
+		yield return Timing.WaitForSeconds(3f);
 
 		if(totalScore>VRMWdb.getScore("HighScore")){
 			AudioClip clapAudio = Resources.Load("Audio/SE/060-Cheer01", typeof(AudioClip)) as AudioClip;
 			AudioSource.PlayClipAtPoint (clapAudio, Vector3.zero);
 			Score.text += "\n<color=yellow>You get NEW HIGHSCORE!!</color>";
 			VRMWdb.setScore("HighScore",totalScore);
-			yield return new WaitForSeconds(3f);
+			yield return Timing.WaitForSeconds(3f);
 		}
 
 		ResertText.gameObject.SetActive(true);

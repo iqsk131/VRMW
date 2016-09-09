@@ -6,6 +6,8 @@ Confidential and Proprietary - Qualcomm Connected Experiences, Inc.
 
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using MovementEffects;
 
 namespace Vuforia
 {
@@ -38,13 +40,13 @@ namespace Vuforia
 				mTrackableBehaviour.RegisterTrackableEventHandler(this);
 			}
 			VRMWdb.OnStageChange += (bool st) => {
-				StartCoroutine(updateStage());
+				Timing.RunCoroutine(updateStage());
 			};
 		}
 
-		private IEnumerator updateStage(){
+		private IEnumerator<float> updateStage(){
 
-			while(!VRMWdb.isInitiated)yield return new WaitForSeconds(1f);
+			while(!VRMWdb.isInitiated)yield return Timing.WaitForSeconds(1f);
 
 			//If the currentStage is not initiate...
 			if (currentStage == "") {
@@ -168,7 +170,7 @@ namespace Vuforia
 				if (isTrack)
 					OnTrackingFound ();
 			}
-			yield return 0;
+			yield return 0f;
 		}
 	
 		#endregion // UNTIY_MONOBEHAVIOUR_METHODS
@@ -235,7 +237,7 @@ namespace Vuforia
 				component.enabled = true;
 			}
 			
-			StartCoroutine(updateStage());
+			Timing.RunCoroutine(updateStage());
 		}
 
 

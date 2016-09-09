@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using MovementEffects;
 
 public class CharacterSelectionBehavior : MonoBehaviour {
 
@@ -7,12 +9,12 @@ public class CharacterSelectionBehavior : MonoBehaviour {
 	public int PlayerId = 1;
 
 	void OnEnable () {
-		StartCoroutine(SelectCharacter());
+		Timing.RunCoroutine(SelectCharacter());
 	}
 	
-	IEnumerator SelectCharacter(){
+	IEnumerator<float> SelectCharacter(){
 		while(true){
-			yield return new WaitForSeconds(0.1f);
+			yield return Timing.WaitForSeconds(0.1f);
 			if (!VRMWdb.isInitiated)
 				continue;
 			if(VRMWdb.getPlayerInfoInt(PlayerId,"ID")!=-1){

@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using MovementEffects;
 
 public class ShieldAnim : AnimationHandler {
 	
@@ -9,22 +11,22 @@ public class ShieldAnim : AnimationHandler {
 
 	public override void Play(){
 		Play (5f);
-		//StartCoroutine(PlayAnim());
+		//Timing.RunCoroutine(PlayAnim());
 	}
 
 	public void Play(float duration){
-		StartCoroutine(PlayAnim(duration));
+		Timing.RunCoroutine(PlayAnim(duration));
 	}
 
-	private IEnumerator PlayAnim(float duration){
+	private IEnumerator<float> PlayAnim(float duration){
 		AudioClip audioClip = Resources.Load("Audio/SE/113-Remedy01", typeof(AudioClip)) as AudioClip;
 		AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
 		//image.gameObject.SetActive(true);
 		foreach(Sprite s in frames){
 			image.sprite=s;
-			yield return new WaitForSeconds(0.1f);
+			yield return Timing.WaitForSeconds(0.1f);
 		}
-		yield return new WaitForSeconds(duration);
+		yield return Timing.WaitForSeconds(duration);
 		image.gameObject.SetActive(false);
 		GameObject.Destroy(this.gameObject);
 		//image.gameObject.SetActive(false);

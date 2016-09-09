@@ -8,6 +8,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Collections;
+using MovementEffects;
 
 
 namespace Vuforia
@@ -90,7 +91,7 @@ namespace Vuforia
 			{
 				//Change Tracking state to true
 				isTrack = true;
-				StartCoroutine(StartAttack());
+				Timing.RunCoroutine(StartAttack());
 
 				//Show Attack Model
 				OnTrackingFound();
@@ -110,9 +111,9 @@ namespace Vuforia
 		}
 
 
-		private IEnumerator StartAttack(){
+		private IEnumerator<float> StartAttack(){
 			while(isTrack){
-				yield return new WaitForSeconds(0.1f);
+				yield return Timing.WaitForSeconds(0.1f);
 				if (!VRMWdb.isInitiated)
 					continue;
 				
@@ -169,7 +170,7 @@ namespace Vuforia
 				}
 
 			}
-			yield return 0;
+			yield return 0f;
 		}
 
 		#endregion // PUBLIC_METHODS

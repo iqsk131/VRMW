@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using MovementEffects;
 
 public class IntitialStageManager : MonoBehaviour {
 
@@ -8,12 +10,12 @@ public class IntitialStageManager : MonoBehaviour {
 	[SerializeField] private TextMesh HighScore;
 
 	void OnEnable () {
-		StartCoroutine(GameStartScan());
+		Timing.RunCoroutine(GameStartScan());
 	}
 
-	IEnumerator GameStartScan(){
+	IEnumerator<float> GameStartScan(){
 		while(true){
-			yield return new WaitForSeconds(0.1f);
+			yield return Timing.WaitForSeconds(0.1f);
 			if (!VRMWdb.isInitiated)
 				continue;
 			HighScore.text = "Current High Score: " + VRMWdb.getScore("HighScore");

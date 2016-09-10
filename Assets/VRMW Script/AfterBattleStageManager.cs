@@ -10,10 +10,14 @@ public class AfterBattleStageManager : MonoBehaviour {
 	[SerializeField] private TextMesh ResertText;
 	[SerializeField] private GameObject[] PlayersModel;
 	[SerializeField] private GameObject EnemyModel;
+	[SerializeField] private GameObject WinBackGround;
+	[SerializeField] private GameObject LossBackGround;
 
 
 	void OnEnable () {
 		ResertText.gameObject.SetActive(false);
+		WinBackGround.gameObject.SetActive(false);
+		LossBackGround.gameObject.SetActive(false);
 		Score.text="";
 		Timing.RunCoroutine(ScoreCalculation());
 	}
@@ -38,6 +42,7 @@ public class AfterBattleStageManager : MonoBehaviour {
 
 		// Show Win - Lose
 		if(VRMWdb.getEnemyInfoString("State")=="dead"){
+			WinBackGround.gameObject.SetActive(true);
 			Score.text = "<color=yellow>You Win!</color>";
 			for(int i=0;i<3;i++){
 				if(VRMWdb.getPlayerInfoInt(i+1,"ID")==-1)continue;
@@ -49,6 +54,7 @@ public class AfterBattleStageManager : MonoBehaviour {
 			AudioSource.PlayClipAtPoint (winAudio, Vector3.zero);
 		}
 		else{
+			LossBackGround.gameObject.SetActive(true);
 			Score.text = "<color=red>You Lose!</color>";
 			GameObject bossChar = GameObject.Instantiate(Resources.Load("Prefabs/Characters/"+VRMWdb.getEnemyMonsterInfoString("PrefabsName"))) as GameObject;
 			bossChar.transform.SetParent(EnemyModel.transform,false);

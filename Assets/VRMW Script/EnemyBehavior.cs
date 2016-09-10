@@ -56,8 +56,16 @@ public class EnemyBehavior : MonoBehaviour
 		Timing.RunCoroutine(ActiveTime());
 		Timing.RunCoroutine(ActionBehavior());
 		Timing.RunCoroutine(UpdateHP());
+		Timing.RunCoroutine(StateChange());
+		Timing.RunCoroutine(ShowDamage());
 		VRMWdb.OnEnemyHPChange += (bool st) => {
 			Timing.RunCoroutine(UpdateHP());
+		};
+		VRMWdb.OnStateChange += (bool st) => {
+			Timing.RunCoroutine(StateChange());
+		};
+		VRMWdb.OnEnemyDamage += (bool st) => {
+			Timing.RunCoroutine(ShowDamage());
 		};
 
 	}
@@ -69,8 +77,6 @@ public class EnemyBehavior : MonoBehaviour
 			if (!VRMWdb.isInitiated)
 				continue;
 			//Behavior Field
-
-			Debug.Log("Memory Used: "+ GC.GetTotalMemory(false));
 
 			HPBar.transform.rotation = Quaternion.LookRotation(Camera.current.transform.position - HPBar.transform.position) * Quaternion.Euler(0, 180, 0);
 
@@ -116,6 +122,7 @@ public class EnemyBehavior : MonoBehaviour
 				}
 			}
 			////////////////
+			yield return 0f;
 		}
 		yield return 0f;
 	}
@@ -130,177 +137,192 @@ public class EnemyBehavior : MonoBehaviour
 		yield return 0f;
 	}
 
+	private IEnumerator<float> StateChange(){
+
+		if (!VRMWdb.isInitiated)
+			yield break;
+
+		//If Player Dead
+		if (VRMWdb.getPlayerInfoString (1, "State") == "dead"
+			&& VRMWdb.getPlayerInfoString (2, "State") == "dead"
+			&& VRMWdb.getPlayerInfoString (3, "State") == "dead") {
+			VRMWdb.setStage ("AfterBattle");
+			yield break;
+		}
+
+		//Change State
+		if (VRMWdb.getEnemyInfoString ("State") == "dead" || VRMWdb.getEnemyInfoInt ("HP") <= 0) {
+			if (VRMWdb.getEnemyInfoString ( "State") != "dead")
+				VRMWdb.setEnemyInfo ("State", "dead");  
+			if (VRMWdb.getPlayerInfoString (1, "State") != "action"
+				&& VRMWdb.getPlayerInfoString (2, "State") != "action"
+				&& VRMWdb.getPlayerInfoString (3, "State") != "action") {
+				VRMWdb.setStage ("AfterBattle");
+				yield break;
+			}
+		}
+
+		yield return 0f;
+	}
+
+	private IEnumerator<float> ShowDamage(){
+
+		if (!VRMWdb.isInitiated)
+			yield break;
+
+		bool isBlock = false;
+
+		//Heal
+		if (VRMWdb.getEnemyInfoInt ("Attacked/Heal") != 0) {
+			Damage2.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage2.transform.position) * Quaternion.Euler (0, 180, 0);
+			TextMesh DamageText = Damage2.GetComponent<TextMesh> ();
+			DamageText.text = "+" + VRMWdb.getEnemyInfoInt ("Attacked/Heal");
+			Damage2.SetActive (true);
+			latestShowDamage = Time.time;
+
+			VRMWdb.setEnemyInfo ("HP",Mathf.Min(VRMWdb.getEnemyInfoInt("MaxHP"), 
+				VRMWdb.getEnemyInfoInt ("HP") + VRMWdb.getEnemyInfoInt ("Attacked/Heal")));
+			VRMWdb.setEnemyInfo ("Attacked/Heal", 0);
+			isBlock=true;
+		}
+
+		//Check if Enemey got damaged or not
+		if (VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage") != 0
+			|| VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage") != 0
+			|| VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage") != 0) {
+
+			if(transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().getDefendState()){
+				if (VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage") != 0) {
+					Damage1.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage1.transform.position) * Quaternion.Euler (0, 180, 0);
+					TextMesh DamageText = Damage1.GetComponent<TextMesh> ();
+					DamageText.text = "Block!";
+					Damage1.SetActive (true);
+				}
+
+				if (VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage") != 0) {
+					Damage2.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage2.transform.position) * Quaternion.Euler (0, 180, 0);
+					TextMesh DamageText = Damage2.GetComponent<TextMesh> ();
+					DamageText.text = "-" + VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage");
+					DamageText.text = "Block!";
+					Damage2.SetActive (true);
+				}
+
+				if (VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage") != 0) {
+					Damage3.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage3.transform.position) * Quaternion.Euler (0, 180, 0);
+					TextMesh DamageText = Damage3.GetComponent<TextMesh> ();
+					DamageText.text = "Block!";
+					Damage3.SetActive (true);
+				}
+
+				latestShowDamage = Time.time;
+				AudioClip audioClip = Resources.Load("Audio/SE/040-Knock01", typeof(AudioClip)) as AudioClip;
+				AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
+				VRMWdb.setEnemyInfo ("Attacked/Player1/Damage", 0);
+				VRMWdb.setEnemyInfo ("Attacked/Player2/Damage", 0);
+				VRMWdb.setEnemyInfo ("Attacked/Player3/Damage", 0);
+				isBlock=true;
+			}
+			else{
+				int baseDef=VRMWdb.getEnemyMonsterInfoInt("Def");
+				//baseDef = (int)(baseDef * Random.Range(80, 120)/100.0);
+				//Update DamageText
+				if (VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage") != 0) {
+					Damage1.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage1.transform.position) * Quaternion.Euler (0, 180, 0);
+					TextMesh DamageText = Damage1.GetComponent<TextMesh> ();
+					DamageText.text = "-" +  VRMWdb.CalcDamage(VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage"),baseDef);
+					Damage1.SetActive (true);
+				}
+
+				if (VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage") != 0) {
+					Damage2.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage2.transform.position) * Quaternion.Euler (0, 180, 0);
+					TextMesh DamageText = Damage2.GetComponent<TextMesh> ();
+					DamageText.text = "-" +  VRMWdb.CalcDamage(VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage"),baseDef);
+					Damage2.SetActive (true);
+				}
+
+				if (VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage") != 0) {
+					Damage3.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage3.transform.position) * Quaternion.Euler (0, 180, 0);
+					TextMesh DamageText = Damage3.GetComponent<TextMesh> ();
+					DamageText.text = "-" +  VRMWdb.CalcDamage(VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage"),baseDef);
+					Damage3.SetActive (true);
+				}
+
+				latestShowDamage = Time.time;
+
+
+				int baseAtk=VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage")+VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage")+VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage");
+				int damage= VRMWdb.CalcDamage(baseAtk,baseDef);
+
+				if(damage>80)VRMWdb.addScore("HighDamage",damage-80);
+				VRMWdb.addScore("Damage",damage);
+
+				VRMWdb.setEnemyInfo ("HP", Mathf.Max(VRMWdb.getEnemyInfoInt ("HP") - damage,0));
+
+				VRMWdb.setEnemyInfo ("ActionType", "Damaged");
+				VRMWdb.setEnemyInfo ("Attacked/Player1/Damage", 0);
+				VRMWdb.setEnemyInfo ("Attacked/Player2/Damage", 0);
+				VRMWdb.setEnemyInfo ("Attacked/Player3/Damage", 0);
+			}
+		}
+
+		yield return Timing.WaitForSeconds(2f);
+
+		int damageNum=0;
+		if(Damage1.gameObject.activeSelf)damageNum++;
+		if(Damage2.gameObject.activeSelf)damageNum++;
+		if(Damage3.gameObject.activeSelf)damageNum++;
+
+		Damage1.SetActive (false);
+		Damage2.SetActive (false);
+		Damage3.SetActive (false);
+
+		//Combo
+		if(!isBlock){
+			int before = 0;
+			int after = 0;
+			for(int i = 1;i<=3;i++){
+				if(VRMWdb.getCombo(i,true)<VRMWdb.getCombo(i,false)){
+					if(VRMWdb.getCombo(i,true)==0)
+						before += VRMWdb.getPlayerMonsterInfoInt(i,"Atk");
+					else
+						before += VRMWdb.getCombo(i,true);
+					after += VRMWdb.getCombo(i,false);
+				}
+			}
+			if(damageNum>1 && before<after){
+				VRMWdb.addScore("Combo",damageNum);
+				Damage2.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage2.transform.position) * Quaternion.Euler (0, 180, 0);
+				TextMesh DamageText = Damage2.GetComponent<TextMesh> ();
+				DamageText.text = "<color=red><size=128>Combo</size></color>\n       <color=orange><size=128>"+(int)(after*100/before)+"%</size></color>";
+				Damage2.SetActive (true);
+				AudioClip audioClip = Resources.Load("Audio/SE/056-Right02", typeof(AudioClip)) as AudioClip;
+				AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
+				latestShowDamage = Time.time;
+			}
+			for(int i = 1;i<=3;i++){
+				VRMWdb.setCombo(i,true,0);
+				VRMWdb.setCombo(i,false,0);
+			}
+		}
+
+		yield return 0f;
+	}
+
 	private IEnumerator<float> ActionBehavior(){
 		while(true){
-			yield return Timing.WaitForSeconds(0.1f);
+			GC.Collect();
+			yield return Timing.WaitForSeconds(0.3f);
 			if (!VRMWdb.isInitiated)
 				continue;
 			//Behavior Field
 
-
-			//If Player Dead
-			if (VRMWdb.getPlayerInfoString (1, "State") == "dead"
-			    && VRMWdb.getPlayerInfoString (2, "State") == "dead"
-			    && VRMWdb.getPlayerInfoString (3, "State") == "dead") {
-				VRMWdb.setStage ("AfterBattle");
-				yield break;
-			}
-
-			//Change State
-			if (VRMWdb.getEnemyInfoString ("State") == "dead" || VRMWdb.getEnemyInfoInt ("HP") <= 0) {
-				if (VRMWdb.getEnemyInfoString ( "State") != "dead")
-					VRMWdb.setEnemyInfo ("State", "dead");  
-				if (VRMWdb.getPlayerInfoString (1, "State") != "action"
-				    && VRMWdb.getPlayerInfoString (2, "State") != "action"
-				    && VRMWdb.getPlayerInfoString (3, "State") != "action") {
-					VRMWdb.setStage ("AfterBattle");
-					yield break;
-				}
-			}
-
-			
-			bool isBlock = false;
-
-			//Heal
-			if (VRMWdb.getEnemyInfoInt ("Attacked/Heal") != 0) {
-				Damage2.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage2.transform.position) * Quaternion.Euler (0, 180, 0);
-				TextMesh DamageText = Damage2.GetComponent<TextMesh> ();
-				DamageText.text = "+" + VRMWdb.getEnemyInfoInt ("Attacked/Heal");
-				Damage2.SetActive (true);
-				latestShowDamage = Time.time;
-				
-				VRMWdb.setEnemyInfo ("HP",Mathf.Min(VRMWdb.getEnemyInfoInt("MaxHP"), 
-				                                    VRMWdb.getEnemyInfoInt ("HP") + VRMWdb.getEnemyInfoInt ("Attacked/Heal")));
-				VRMWdb.setEnemyInfo ("Attacked/Heal", 0);
-				isBlock=true;
-			}
-			
-			//Check if Enemey got damaged or not
-			if (VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage") != 0
-			    || VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage") != 0
-			    || VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage") != 0) {
-
-				if(transform.FindChild ("Model").GetComponentInChildren<ModelInterface> ().getDefendState()){
-					if (VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage") != 0) {
-						Damage1.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage1.transform.position) * Quaternion.Euler (0, 180, 0);
-						TextMesh DamageText = Damage1.GetComponent<TextMesh> ();
-						DamageText.text = "Block!";
-						Damage1.SetActive (true);
-					}
-					
-					if (VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage") != 0) {
-						Damage2.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage2.transform.position) * Quaternion.Euler (0, 180, 0);
-						TextMesh DamageText = Damage2.GetComponent<TextMesh> ();
-						DamageText.text = "-" + VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage");
-						DamageText.text = "Block!";
-						Damage2.SetActive (true);
-					}
-					
-					if (VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage") != 0) {
-						Damage3.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage3.transform.position) * Quaternion.Euler (0, 180, 0);
-						TextMesh DamageText = Damage3.GetComponent<TextMesh> ();
-						DamageText.text = "Block!";
-						Damage3.SetActive (true);
-					}
-					
-					latestShowDamage = Time.time;
-					AudioClip audioClip = Resources.Load("Audio/SE/040-Knock01", typeof(AudioClip)) as AudioClip;
-					AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
-					VRMWdb.setEnemyInfo ("Attacked/Player1/Damage", 0);
-					VRMWdb.setEnemyInfo ("Attacked/Player2/Damage", 0);
-					VRMWdb.setEnemyInfo ("Attacked/Player3/Damage", 0);
-					isBlock=true;
-				}
-				else{
-					int baseDef=VRMWdb.getEnemyMonsterInfoInt("Def");
-					//baseDef = (int)(baseDef * Random.Range(80, 120)/100.0);
-					//Update DamageText
-					if (VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage") != 0) {
-						Damage1.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage1.transform.position) * Quaternion.Euler (0, 180, 0);
-						TextMesh DamageText = Damage1.GetComponent<TextMesh> ();
-						DamageText.text = "-" +  VRMWdb.CalcDamage(VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage"),baseDef);
-						Damage1.SetActive (true);
-					}
-					
-					if (VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage") != 0) {
-						Damage2.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage2.transform.position) * Quaternion.Euler (0, 180, 0);
-						TextMesh DamageText = Damage2.GetComponent<TextMesh> ();
-						DamageText.text = "-" +  VRMWdb.CalcDamage(VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage"),baseDef);
-						Damage2.SetActive (true);
-					}
-					
-					if (VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage") != 0) {
-						Damage3.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage3.transform.position) * Quaternion.Euler (0, 180, 0);
-						TextMesh DamageText = Damage3.GetComponent<TextMesh> ();
-						DamageText.text = "-" +  VRMWdb.CalcDamage(VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage"),baseDef);
-						Damage3.SetActive (true);
-					}
-
-					latestShowDamage = Time.time;
-
-
-					int baseAtk=VRMWdb.getEnemyInfoInt ("Attacked/Player1/Damage")+VRMWdb.getEnemyInfoInt ("Attacked/Player2/Damage")+VRMWdb.getEnemyInfoInt ("Attacked/Player3/Damage");
-					int damage= VRMWdb.CalcDamage(baseAtk,baseDef);
-
-					if(damage>80)VRMWdb.addScore("HighDamage",damage-80);
-					VRMWdb.addScore("Damage",damage);
-
-					VRMWdb.setEnemyInfo ("HP", Mathf.Max(VRMWdb.getEnemyInfoInt ("HP") - damage,0));
-					
-					VRMWdb.setEnemyInfo ("ActionType", "Damaged");
-					VRMWdb.setEnemyInfo ("Attacked/Player1/Damage", 0);
-					VRMWdb.setEnemyInfo ("Attacked/Player2/Damage", 0);
-					VRMWdb.setEnemyInfo ("Attacked/Player3/Damage", 0);
-				}
-			}
-			if (Time.time - latestShowDamage > 2) {
-				
-				int damageNum=0;
-				if(Damage1.gameObject.activeSelf)damageNum++;
-				if(Damage2.gameObject.activeSelf)damageNum++;
-				if(Damage3.gameObject.activeSelf)damageNum++;
-
-				Damage1.SetActive (false);
-				Damage2.SetActive (false);
-				Damage3.SetActive (false);
-
-				//Combo
-				if(!isBlock){
-					int before = 0;
-					int after = 0;
-					for(int i = 1;i<=3;i++){
-						if(VRMWdb.getCombo(i,true)<VRMWdb.getCombo(i,false)){
-							if(VRMWdb.getCombo(i,true)==0)
-								before += VRMWdb.getPlayerMonsterInfoInt(i,"Atk");
-							else
-								before += VRMWdb.getCombo(i,true);
-							after += VRMWdb.getCombo(i,false);
-						}
-					}
-					if(damageNum>1 && before<after){
-						VRMWdb.addScore("Combo",damageNum);
-						Damage2.transform.rotation = Quaternion.LookRotation (Camera.current.transform.position - Damage2.transform.position) * Quaternion.Euler (0, 180, 0);
-						TextMesh DamageText = Damage2.GetComponent<TextMesh> ();
-						DamageText.text = "<color=red><size=128>Combo</size></color>\n       <color=orange><size=128>"+(int)(after*100/before)+"%</size></color>";
-						Damage2.SetActive (true);
-						AudioClip audioClip = Resources.Load("Audio/SE/056-Right02", typeof(AudioClip)) as AudioClip;
-						AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
-						latestShowDamage = Time.time;
-					}
-					for(int i = 1;i<=3;i++){
-							VRMWdb.setCombo(i,true,0);
-							VRMWdb.setCombo(i,false,0);
-					}
-				}
-			}
-			
 			//Check if animation end or not
 			if (stillPlaying && VRMWdb.getEnemyInfoString ("State") == "idle") {
 				stillPlaying = false;
 				VRMWdb.setEnemyInfo ("ActionType", "");
 				playAnim="";
 			}
-			
+
 			//Do some animations only if Enemey is idle
 			//Also do when Enemy is stuck at action
 			if (VRMWdb.getEnemyInfoString("State")=="idle" && !stillPlaying) {
@@ -373,6 +395,8 @@ public class EnemyBehavior : MonoBehaviour
 				}
 			}
 			////////////////
+			/// 
+			yield return 0f;
 		}
 		yield return 0f;
 	}

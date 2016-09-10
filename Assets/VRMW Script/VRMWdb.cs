@@ -11,10 +11,18 @@ public class VRMWdb : MonoBehaviour {
 
 	
 	public static event Action<bool> OnStageChange = _ => {};
+	public static event Action<bool> OnStateChange = _ => {};
 	public static event Action<bool> OnEnemyHPChange = _ => {};
+	public static event Action<bool> OnEnemyDamage = _ => {};
 	public static event Action<bool> OnPlayer1HPChange = _ => {};
 	public static event Action<bool> OnPlayer2HPChange = _ => {};
 	public static event Action<bool> OnPlayer3HPChange = _ => {};
+	public static event Action<bool> OnPlayer1Switch = _ => {};
+	public static event Action<bool> OnPlayer2Switch = _ => {};
+	public static event Action<bool> OnPlayer3Switch = _ => {};
+	public static event Action<bool> OnPlayer1Damage = _ => {};
+	public static event Action<bool> OnPlayer2Damage = _ => {};
+	public static event Action<bool> OnPlayer3Damage = _ => {};
 
 	void Start ()
 	{
@@ -43,6 +51,61 @@ public class VRMWdb : MonoBehaviour {
 				isPlayer3HPChange=true;
 			}
 
+			bool isPlayer1Switch = false;
+			if(gameDB!=null && gameDB.Child ("Player1/Position").StringValue != e.DataSnapshot.Child ("Player1/Position").StringValue){
+				isPlayer1Switch=true;
+			}
+			bool isPlayer2Switch = false;
+			if(gameDB!=null && gameDB.Child ("Player2/Position").StringValue != e.DataSnapshot.Child ("Player2/Position").StringValue){
+				isPlayer2Switch=true;
+			}
+			bool isPlayer3Switch = false;
+			if(gameDB!=null && gameDB.Child ("Player3/Position").StringValue != e.DataSnapshot.Child ("Player3/Position").StringValue){
+				isPlayer3Switch=true;
+			}
+
+			bool isPlayer1Damage = false;
+			if(gameDB!=null && (
+				gameDB.Child ("Player1/Attacked/Damage").StringValue != e.DataSnapshot.Child ("Player1/Attacked/Damage").StringValue ||
+				gameDB.Child ("Player1/Attacked/Heal").StringValue != e.DataSnapshot.Child ("Player1/Attacked/Heal").StringValue
+			)){
+				isPlayer1Damage=true;
+			}
+			bool isPlayer2Damage = false;
+			if(gameDB!=null && (
+				gameDB.Child ("Player2/Attacked/Damage").StringValue != e.DataSnapshot.Child ("Player2/Attacked/Damage").StringValue ||
+				gameDB.Child ("Player2/Attacked/Heal").StringValue != e.DataSnapshot.Child ("Player2/Attacked/Heal").StringValue
+			)){
+				isPlayer2Damage=true;
+			}
+			bool isPlayer3Damage = false;
+			if(gameDB!=null && (
+				gameDB.Child ("Player3/Attacked/Damage").StringValue != e.DataSnapshot.Child ("Player3/Attacked/Damage").StringValue ||
+				gameDB.Child ("Player3/Attacked/Heal").StringValue != e.DataSnapshot.Child ("Player3/Attacked/Heal").StringValue
+			)){
+				isPlayer3Damage=true;
+			}
+
+			bool isStateChange = false;
+			if(gameDB!=null && (
+				gameDB.Child ("Enemy/State").StringValue != e.DataSnapshot.Child ("Enemy/State").StringValue ||
+				gameDB.Child ("Player1/State").StringValue != e.DataSnapshot.Child ("Player1/State").StringValue ||
+				gameDB.Child ("Player2/State").StringValue != e.DataSnapshot.Child ("Player2/State").StringValue ||
+				gameDB.Child ("Player3/State").StringValue != e.DataSnapshot.Child ("Player3/State").StringValue
+			)){
+				isStateChange=true;
+			}
+
+			bool isEnemyDamage = false;
+			if(gameDB!=null && (
+				gameDB.Child ("Enemy/Attacked/Heal").StringValue != e.DataSnapshot.Child ("Enemy/Attacked/Heal").StringValue ||
+				gameDB.Child ("Enemy/Attacked/Player1/Damage").StringValue != e.DataSnapshot.Child ("Enemy/Attacked/Player1/Damage").StringValue ||
+				gameDB.Child ("Enemy/Attacked/Player2/Damage").StringValue != e.DataSnapshot.Child ("Enemy/Attacked/Player2/Damage").StringValue ||
+				gameDB.Child ("Enemy/Attacked/Player3/Damage").StringValue != e.DataSnapshot.Child ("Enemy/Attacked/Player3/Damage").StringValue 
+			)){
+				isEnemyDamage=true;
+			}
+
 			gameDB = e.DataSnapshot;
 			isInitiated=true;
 
@@ -50,8 +113,15 @@ public class VRMWdb : MonoBehaviour {
 				OnStageChange(true);
 			}
 
+			if(isStateChange){
+				OnStateChange(true);
+			}
+
 			if(isEnemyHPChange){
 				OnEnemyHPChange(true);
+			}
+			if(isEnemyDamage){
+				OnEnemyDamage(true);
 			}
 
 			if(isPlayer1HPChange){
@@ -62,6 +132,24 @@ public class VRMWdb : MonoBehaviour {
 			}
 			if(isPlayer3HPChange){
 				OnPlayer3HPChange(true);
+			}
+			if(isPlayer1Switch){
+				OnPlayer1Switch(true);
+			}
+			if(isPlayer2Switch){
+				OnPlayer2Switch(true);
+			}
+			if(isPlayer3Switch){
+				OnPlayer3Switch(true);
+			}
+			if(isPlayer1Damage){
+				OnPlayer1Damage(true);
+			}
+			if(isPlayer2Damage){
+				OnPlayer2Damage(true);
+			}
+			if(isPlayer3Damage){
+				OnPlayer3Damage(true);
 			}
 
 		};

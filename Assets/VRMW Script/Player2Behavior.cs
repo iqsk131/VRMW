@@ -43,8 +43,20 @@ public class Player2Behavior : PlayerBehavior
 		Timing.RunCoroutine(ActiveTime());
 		Timing.RunCoroutine(ActionBehavior());
 		Timing.RunCoroutine(UpdateHP());
+		Timing.RunCoroutine(StateChange());
+		Timing.RunCoroutine(SwitchPosition());
+		Timing.RunCoroutine(ShowDamage());
 		VRMWdb.OnPlayer2HPChange += (bool st) => {
 			Timing.RunCoroutine(UpdateHP());
+		};
+		VRMWdb.OnStateChange += (bool st) => {
+			Timing.RunCoroutine(StateChange());
+		};
+		VRMWdb.OnPlayer2Switch += (bool st) => {
+			Timing.RunCoroutine(SwitchPosition());
+		};
+		VRMWdb.OnPlayer2Damage += (bool st) => {
+			Timing.RunCoroutine(ShowDamage());
 		};
 		
 	}

@@ -43,8 +43,20 @@ public class Player3Behavior : PlayerBehavior
 		Timing.RunCoroutine(ActiveTime());
 		Timing.RunCoroutine(ActionBehavior());
 		Timing.RunCoroutine(UpdateHP());
+		Timing.RunCoroutine(StateChange());
+		Timing.RunCoroutine(SwitchPosition());
+		Timing.RunCoroutine(ShowDamage());
 		VRMWdb.OnPlayer3HPChange += (bool st) => {
 			Timing.RunCoroutine(UpdateHP());
+		};
+		VRMWdb.OnStateChange += (bool st) => {
+			Timing.RunCoroutine(StateChange());
+		};
+		VRMWdb.OnPlayer3Switch += (bool st) => {
+			Timing.RunCoroutine(SwitchPosition());
+		};
+		VRMWdb.OnPlayer3Damage += (bool st) => {
+			Timing.RunCoroutine(ShowDamage());
 		};
 		
 	}

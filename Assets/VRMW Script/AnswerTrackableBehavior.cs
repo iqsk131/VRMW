@@ -16,10 +16,11 @@ namespace Vuforia
 	/// <summary>
 	/// A custom handler that implements the ITrackableEventHandler interface.
 	/// </summary>
-	public class GameStartTrackableBehavior : MonoBehaviour,
+	public class AnswerTrackableBehavior : MonoBehaviour,
 	ITrackableEventHandler
 	{
-		public GameObject actionScanner;
+		[SerializeField] private GameObject YesObject;
+		[SerializeField] private GameObject NoObject;
 
 		#region PRIVATE_MEMBER_VARIABLES
 
@@ -53,8 +54,13 @@ namespace Vuforia
 		/// <summary>
 		/// Calcualte Distance from this card to Action Scanner
 		/// </summary>
-		public float calcDistance(){
-			Vector3 focusPos = actionScanner.transform.position;
+		public float calcYesDistance(){
+			Vector3 focusPos = YesObject.transform.position;
+			Vector3 thisPos = this.transform.position;
+			return Mathf.Sqrt((focusPos.x-thisPos.x)*(focusPos.x-thisPos.x) + (focusPos.y-thisPos.y)*(focusPos.y-thisPos.y)  + (focusPos.z-thisPos.z)*(focusPos.z-thisPos.z));
+		}
+		public float calcNoDistance(){
+			Vector3 focusPos = NoObject.transform.position;
 			Vector3 thisPos = this.transform.position;
 			return Mathf.Sqrt((focusPos.x-thisPos.x)*(focusPos.x-thisPos.x) + (focusPos.y-thisPos.y)*(focusPos.y-thisPos.y)  + (focusPos.z-thisPos.z)*(focusPos.z-thisPos.z));
 		}
@@ -75,7 +81,7 @@ namespace Vuforia
 			{
 				//Change Tracking state to true
 				isTrack=true;
-				Timing.RunCoroutine(StartBattle());
+				Timing.RunCoroutine(AnswerQuestion());
 
 				//Show Attack Model
 				OnTrackingFound();
@@ -98,7 +104,7 @@ namespace Vuforia
 		#region PRIVATE_METHODS
 
 
-		private IEnumerator<float> StartBattle(){
+		private IEnumerator<float> AnswerQuestion(){
 			while(isTrack){
 				yield return Timing.WaitForSeconds(0.1f);
 
@@ -107,53 +113,16 @@ namespace Vuforia
 					continue ;
 
 				//If distance to action scanner less than 700, do trigger
-				if (calcDistance() < 700) {
+				if (calcYesDistance() < 700) {
 
 					//Hide Attack Model on the card
 					OnTrackingLost ();
+					VRMWdb.SetQuestionUserAnswer("Yes");
+				} else if (calcNoDistance() < 700) {
 
-					//Reset Score
-					VRMWdb.setScore("ActionUsed",0);
-					VRMWdb.setScore("Aid",0);
-					VRMWdb.setScore("Combo",0);
-					VRMWdb.setScore("DamageReceive",0);
-					VRMWdb.setScore("Damage",0);
-					VRMWdb.setScore("Hero",0);
-					VRMWdb.setScore("HighDamage",0);
-					VRMWdb.setScore("PerfectGuard",0);
-
-					//Initial Battle Stage
-					for(int i=1;i<=3;i++){
-						if(VRMWdb.getPlayerInfoInt(i,"ID")==-1){
-							VRMWdb.setPlayerInfo(i,"State","dead");
-						}
-						else{
-							VRMWdb.setPlayerInfo(i,"MaxHP",VRMWdb.getPlayerMonsterInfoInt(i,"HP"));
-							VRMWdb.setPlayerInfo(i,"ActiveTime",VRMWdb.getPlayerMonsterInfoInt(i,"ActiveTime"));
-							VRMWdb.setPlayerInfo(i,"HP",VRMWdb.getPlayerMonsterInfoInt(i,"HP"));
-							VRMWdb.setPlayerInfo(i,"Attacked/Damage",0);
-							VRMWdb.setPlayerInfo(i,"StartTime",VRMWdb.currentTime ().ToString ());
-							VRMWdb.setPlayerInfo(i,"State","idle");
-							VRMWdb.setPlayerInfo(i,"Position","Back");
-						}
-					}
-
-					/*if(VRMWdb.getEnemyInfoInt("BID")==-1){
-						int bossID = UnityEngine.Random.Range(3,6);
-						VRMWdb.setEnemyInfo("BID",bossID);
-					}*/
-					yield return Timing.WaitForSeconds(1);
-					VRMWdb.setEnemyInfo("MaxHP",VRMWdb.getEnemyMonsterInfoInt("HP"));
-					VRMWdb.setEnemyInfo("ActiveTime",VRMWdb.getEnemyMonsterInfoInt("ActiveTime"));
-					VRMWdb.setEnemyInfo("HP",VRMWdb.getEnemyMonsterInfoInt("HP"));
-					VRMWdb.setEnemyInfo("Attacked/Player1/Damage",0);
-					VRMWdb.setEnemyInfo("Attacked/Player2/Damage",0);
-					VRMWdb.setEnemyInfo("Attacked/Player3/Damage",0);
-					VRMWdb.setEnemyInfo("StartTime",VRMWdb.currentTime ().ToString ());
-					VRMWdb.setEnemyInfo("State","idle");
-					yield return Timing.WaitForSeconds(1);
-					//Change Stage to Battle
-					VRMWdb.setStage("Battle");
+					//Hide Attack Model on the card
+					OnTrackingLost ();
+					VRMWdb.SetQuestionUserAnswer("No");
 				} else {
 					//If distance is more than 700,
 					

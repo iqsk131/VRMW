@@ -15,6 +15,7 @@ public class VRMWdb : MonoBehaviour {
 	public static event Action<bool> OnPlayer1HPChange = _ => {};
 	public static event Action<bool> OnPlayer2HPChange = _ => {};
 	public static event Action<bool> OnPlayer3HPChange = _ => {};
+	public static event Action<bool> OnQuizStart = _ => {};
 
 	void Start ()
 	{
@@ -43,11 +44,20 @@ public class VRMWdb : MonoBehaviour {
 				isPlayer3HPChange=true;
 			}
 
+			bool isQuizStart = false;
+			if(gameDB!=null && gameDB.Child ("Quiz/CurrentQuiz").StringValue != e.DataSnapshot.Child ("Quiz/CurrentQuiz").StringValue){
+				isQuizStart=true;
+			}
+
 			gameDB = e.DataSnapshot;
 			isInitiated=true;
 
 			if(isStageChange){
 				OnStageChange(true);
+			}
+
+			if(isQuizStart){
+				OnQuizStart(true);
 			}
 
 			if(isEnemyHPChange){
@@ -162,6 +172,128 @@ public class VRMWdb : MonoBehaviour {
 	public static void addScore(string field, int value){
 		try{
 			firebase.Child ("Score/"+field).SetValue(getScore(field)+value);
+		}
+		catch(Exception e){
+		}
+	}
+	////////////////////////////////////////////////////////
+	public static int GetQuestionID(){
+		try{
+			return (int)float.Parse(gameDB.Child ("Quiz/CurrentQuiz").StringValue);
+		}
+		catch(Exception e){
+			return 0;
+		}
+	}
+
+	public static void SetQuestionID(int id){
+		try{
+			firebase.Child ("Quiz/CurrentQuiz").SetValue(id);
+		}
+		catch(Exception e){
+		}
+	}
+
+	public static int GetQuestionNum(){
+		try{
+			return (int)float.Parse(gameDB.Child ("Quiz/QuizNum").StringValue);
+		}
+		catch(Exception e){
+			return 0;
+		}
+	}
+
+	public static int GetQuestionRate(){
+		try{
+			return (int)float.Parse(gameDB.Child ("Quiz/Rate").StringValue);
+		}
+		catch(Exception e){
+			return 0;
+		}
+	}
+
+
+	public static double GetQuestionStartTime(){
+		try{
+			return double.Parse(gameDB.Child ("Quiz/StartTime").StringValue);
+		}
+		catch(Exception e){
+			return 0.0;
+		}
+	}
+
+	public static void SetQuestionStartTime(string time){
+		try{
+			firebase.Child("Quiz/StartTime").SetValue(time);
+		}
+		catch(Exception e){
+		}
+	}
+
+	public static string GetQuestionName(){
+		try{
+			string SID="";
+			if(GetQuestionID()<10)SID+="0";
+			SID += ""+GetQuestionID();
+			if(GetQuestionID()==0) return "";
+			return gameDB.Child ("Quiz/Q"+SID+"/Question").StringValue;
+		}
+		catch(Exception e){
+			return "";
+		}
+	}
+
+	public static float GetQuestionDuration(){
+		try{
+			string SID="";
+			if(GetQuestionID()<10)SID+="0";
+			SID += ""+GetQuestionID();
+			if(GetQuestionID()==0) return 0f;
+			return float.Parse(gameDB.Child ("Quiz/Q"+SID+"/Duration").StringValue);
+		}
+		catch(Exception e){
+			return 0f;
+		}
+	}
+
+	public static string GetQuestionAnswer(){
+		try{
+			string SID="";
+			if(GetQuestionID()<10)SID+="0";
+			SID += ""+GetQuestionID();
+			if(GetQuestionID()==0) return "";
+			return gameDB.Child ("Quiz/Q"+SID+"/Answer").StringValue;
+		}
+		catch(Exception e){
+			return "";
+		}
+	}
+
+	public static int GetQuestionReward(){
+		try{
+			string SID="";
+			if(GetQuestionID()<10)SID+="0";
+			SID += ""+GetQuestionID();
+			if(GetQuestionID()==0) return 0;
+			return (int)float.Parse(gameDB.Child ("Quiz/Q"+SID+"/Reward").StringValue);
+		}
+		catch(Exception e){
+			return 0;
+		}
+	}
+
+	public static string GetQuestionUserAnswer(){
+		try{
+			return gameDB.Child ("Quiz/Answer").StringValue;
+		}
+		catch(Exception e){
+			return "";
+		}
+	}
+
+	public static void SetQuestionUserAnswer(string ans){
+		try{
+			firebase.Child ("Quiz/Answer").SetValue(ans);
 		}
 		catch(Exception e){
 		}

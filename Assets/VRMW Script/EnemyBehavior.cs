@@ -70,8 +70,6 @@ public class EnemyBehavior : MonoBehaviour
 				continue;
 			//Behavior Field
 
-			Debug.Log("Memory Used: "+ GC.GetTotalMemory(false));
-
 			HPBar.transform.rotation = Quaternion.LookRotation(Camera.current.transform.position - HPBar.transform.position) * Quaternion.Euler(0, 180, 0);
 
 			ProgressRadialBehaviour bar = activeTimeBar.GetComponent<ProgressRadialBehaviour>();
@@ -299,6 +297,12 @@ public class EnemyBehavior : MonoBehaviour
 				stillPlaying = false;
 				VRMWdb.setEnemyInfo ("ActionType", "");
 				playAnim="";
+
+				//Random to Appear Question
+				if(UnityEngine.Random.Range (0, 100)<VRMWdb.GetQuestionRate() && VRMWdb.GetQuestionID()==0){
+					int quizNum = UnityEngine.Random.Range (1, VRMWdb.GetQuestionNum()+1);
+					VRMWdb.SetQuestionID(quizNum);
+				}
 			}
 			
 			//Do some animations only if Enemey is idle

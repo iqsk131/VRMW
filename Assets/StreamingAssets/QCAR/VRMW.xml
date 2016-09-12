@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
   <Tracking>
+    <ImageTarget name="VRMW_Yes" size="1701.000000 1276.000000" />
+    <ImageTarget name="VRMW_No" size="1701.000000 1276.000000" />
     <ImageTarget name="VRMW_Character_Dragon" size="170.000000 254.950027" />
     <ImageTarget name="VRMW_Character_ChibiMummy" size="170.000000 254.950027" />
     <ImageTarget name="VRMW_Character_Slime" size="170.000000 254.950027" />

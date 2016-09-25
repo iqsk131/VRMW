@@ -14,6 +14,10 @@ public class IntitialStageManager : MonoBehaviour {
 		Timing.RunCoroutine(GameStartScan());
 	}
 
+	void OnDisable () {
+		Video.VideoPlayer.Stop();
+	}
+
 	IEnumerator<float> GameStartScan(){
 		while(true){
 			yield return Timing.WaitForSeconds(0.1f);

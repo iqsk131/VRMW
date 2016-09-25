@@ -8,6 +8,7 @@ public class IntitialStageManager : MonoBehaviour {
 	[SerializeField] private GameObject GameStartScanner;
 	[SerializeField] private TextMesh Guide;
 	[SerializeField] private TextMesh HighScore;
+	[SerializeField] private VideoPlaybackBehaviour Video;
 
 	void OnEnable () {
 		Timing.RunCoroutine(GameStartScan());
@@ -18,6 +19,12 @@ public class IntitialStageManager : MonoBehaviour {
 			yield return Timing.WaitForSeconds(0.1f);
 			if (!VRMWdb.isInitiated)
 				continue;
+
+			if(Video.VideoPlayer.GetStatus() == VideoPlayerHelper.MediaState.READY){
+				Debug.Log("PLAY Intro");
+				Video.VideoPlayer.Play(false,0.0f);
+			}
+
 			HighScore.text = "Current High Score: " + VRMWdb.getScore("HighScore");
 			bool isAnyChar = false;
 			for(int i = 1 ; i<= 3 ; i++){

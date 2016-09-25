@@ -54,7 +54,7 @@ namespace Vuforia
                 OnTrackingFound();
             }
             else
-			{
+            {
                 OnTrackingLost();
             }
         }

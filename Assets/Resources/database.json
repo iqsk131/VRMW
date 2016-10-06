@@ -1,21 +1,21 @@
 {
   "Combo" : {
     "Player1" : {
-      "after" : 346.0,
-      "before" : 228.0
+      "after" : 0.0,
+      "before" : 0.0
     },
     "Player2" : {
       "after" : 0.0,
       "before" : 0.0
     },
     "Player3" : {
-      "after" : 0,
-      "before" : 0
+      "after" : 0.0,
+      "before" : 0.0
     }
   },
   "Enemy" : {
-    "ActionType" : "Damaged",
-    "ActiveTime" : 15.0,
+    "ActionType" : "",
+    "ActiveTime" : 7.0,
     "Attacked" : {
       "Heal" : 0.0,
       "Player1" : {
@@ -28,52 +28,52 @@
         "Damage" : 0.0
       }
     },
-    "BID" : 4.0,
-    "HP" : 0.0,
-    "MaxHP" : 250.0,
-    "StartTime" : "1473017003942.32",
-    "State" : "dead",
+    "BID" : 3.0,
+    "HP" : 929.0,
+    "MaxHP" : 1100.0,
+    "StartTime" : "1474945205333.04",
+    "State" : "idle",
     "Target" : 2.0
   },
-  "Initialize" : "Trigger",
+  "Initialize" : "1475746964427.7",
   "MonsterInfo" : {
     "bid01" : {
-      "ActiveTime" : 12,
+      "ActiveTime" : 9,
       "Atk" : 120,
       "Def" : 200,
-      "HP" : 200,
+      "HP" : 1200,
       "PrefabsName" : "KnightBoss",
       "Skill" : 100
     },
     "bid02" : {
-      "ActiveTime" : 8,
+      "ActiveTime" : 5,
       "Atk" : 150,
       "Def" : 100,
-      "HP" : 100,
+      "HP" : 1000,
       "PrefabsName" : "WitchBoss",
       "Skill" : 150
     },
     "bid03" : {
-      "ActiveTime" : 10,
+      "ActiveTime" : 7,
       "Atk" : 150,
       "Def" : 120,
-      "HP" : 150,
+      "HP" : 1100,
       "PrefabsName" : "SlimeBoss",
       "Skill" : 200
     },
     "bid04" : {
-      "ActiveTime" : 18,
-      "Atk" : 200,
+      "ActiveTime" : 15,
+      "Atk" : 270,
       "Def" : 150,
-      "HP" : 180,
+      "HP" : 1140,
       "PrefabsName" : "DragonBoss",
       "Skill" : 200
     },
     "bid05" : {
-      "ActiveTime" : 15,
-      "Atk" : 180,
+      "ActiveTime" : 12,
+      "Atk" : 250,
       "Def" : 150,
-      "HP" : 250,
+      "HP" : 1350,
       "PrefabsName" : "MummyBoss",
       "Skill" : 100
     },
@@ -81,7 +81,7 @@
       "ActiveTime" : 12,
       "Atk" : 120,
       "Def" : 200,
-      "HP" : 200,
+      "HP" : 400,
       "PrefabsName" : "Knight",
       "Skill" : 100
     },
@@ -89,7 +89,7 @@
       "ActiveTime" : 8,
       "Atk" : 150,
       "Def" : 100,
-      "HP" : 100,
+      "HP" : 300,
       "PrefabsName" : "Witch",
       "Skill" : 150
     },
@@ -97,7 +97,7 @@
       "ActiveTime" : 10,
       "Atk" : 150,
       "Def" : 120,
-      "HP" : 150,
+      "HP" : 350,
       "PrefabsName" : "Slime",
       "Skill" : 200
     },
@@ -105,7 +105,7 @@
       "ActiveTime" : 18,
       "Atk" : 200,
       "Def" : 150,
-      "HP" : 180,
+      "HP" : 400,
       "PrefabsName" : "Dragon",
       "Skill" : 200
     },
@@ -113,62 +113,75 @@
       "ActiveTime" : 15,
       "Atk" : 180,
       "Def" : 150,
-      "HP" : 250,
+      "HP" : 450,
       "PrefabsName" : "Mummy",
       "Skill" : 100
     }
   },
   "Player1" : {
     "ActionType" : "",
-    "ActiveTime" : 10.0,
+    "ActiveTime" : 12.0,
     "Attacked" : {
       "Damage" : 0.0,
       "Heal" : 0.0
     },
-    "HP" : 150.0,
+    "HP" : 400.0,
     "ID" : -1.0,
-    "MaxHP" : 150.0,
+    "MaxHP" : 400.0,
     "Position" : "Back",
-    "StartTime" : "1473017012091.46",
+    "StartTime" : "1474945204333.91",
     "State" : "idle"
   },
   "Player2" : {
     "ActionType" : "",
-    "ActiveTime" : 10.0,
+    "ActiveTime" : 12.0,
     "Attacked" : {
       "Damage" : 0.0,
-      "Heal" : 44.0
+      "Heal" : 0.0
     },
-    "HP" : 150.0,
+    "HP" : 400.0,
     "ID" : -1.0,
-    "MaxHP" : 150.0,
+    "MaxHP" : 400.0,
     "Position" : "Back",
-    "StartTime" : "1473017011720.21",
+    "StartTime" : "1474944855878.54",
     "State" : "idle"
   },
   "Player3" : {
     "ActionType" : "",
-    "ActiveTime" : 12.0,
+    "ActiveTime" : 8.0,
     "Attacked" : {
       "Damage" : 0.0,
-      "Heal" : 44.0
+      "Heal" : 0.0
     },
-    "HP" : 200.0,
-    "ID" : -1,
-    "MaxHP" : 200.0,
+    "HP" : 264.0,
+    "ID" : -1.0,
+    "MaxHP" : 300.0,
     "Position" : "Back",
-    "StartTime" : "1473011657624.84",
-    "State" : "dead"
+    "StartTime" : "1474944818954.43",
+    "State" : "action"
+  },
+  "Quiz" : {
+    "Answer" : "",
+    "CurrentQuiz" : 0.0,
+    "Q01" : {
+      "Answer" : "Yes",
+      "Duration" : 30,
+      "Question" : "1 + 1 = 2 ??",
+      "Reward" : 100
+    },
+    "QuizNum" : 1,
+    "Rate" : 0,
+    "StartTime" : "0.0"
   },
   "Score" : {
-    "ActionUsed" : 14.0,
-    "Aid" : 34.0,
-    "Combo" : 2.0,
-    "Damage" : 286.0,
-    "DamageReceive" : 0.0,
+    "ActionUsed" : 18.0,
+    "Aid" : 0.0,
+    "Combo" : 0.0,
+    "Damage" : 171.0,
+    "DamageReceive" : 72.0,
     "Hero" : 0.0,
-    "HighDamage" : 0,
-    "HighScore" : 14075.0,
+    "HighDamage" : 0.0,
+    "HighScore" : 0,
     "PerfectGuard" : 0.0
   },
   "Stage" : "Initial"

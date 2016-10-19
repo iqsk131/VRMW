@@ -136,6 +136,8 @@ namespace Vuforia
 							VRMWdb.setPlayerInfo(1,"Position","Front");
 						else
 							VRMWdb.setPlayerInfo(1,"Position","Back");
+						//Delay After use Switch
+						yield return Timing.WaitForSeconds(5f);
 					}
 				} else if (calcDistance2() < 700) {
 					
@@ -150,6 +152,8 @@ namespace Vuforia
 							VRMWdb.setPlayerInfo(2,"Position","Front");
 						else
 							VRMWdb.setPlayerInfo(2,"Position","Back");
+						//Delay After use Switch
+						yield return Timing.WaitForSeconds(5f);
 					}
 				} else if (calcDistance3() < 700) {
 					
@@ -164,6 +168,8 @@ namespace Vuforia
 							VRMWdb.setPlayerInfo(3,"Position","Front");
 						else
 							VRMWdb.setPlayerInfo(3,"Position","Back");
+						//Delay After use Switch
+						yield return Timing.WaitForSeconds(5f);
 					}
 				} else {
 					//If distance is more than 700,

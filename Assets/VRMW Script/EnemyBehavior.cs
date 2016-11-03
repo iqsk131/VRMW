@@ -80,7 +80,7 @@ public class EnemyBehavior : MonoBehaviour
 			}
 
 			//Random Target and Action
-			if ((VRMWdb.currentTime() - double.Parse(VRMWdb.getEnemyInfoString("StartTime")))/1000.0 >= VRMWdb.getEnemyInfoFloat("ActiveTime") - 2f
+			if ((VRMWdb.currentTime() - double.Parse(VRMWdb.getEnemyInfoString("StartTime")))/1000.0 >= VRMWdb.getEnemyInfoFloat("ActiveTime") - 3f
 				&& VRMWdb.getEnemyInfoString("ActionType") == ""){
 				//TO-DO enemy behavior
 
@@ -99,18 +99,61 @@ public class EnemyBehavior : MonoBehaviour
 
 				VRMWdb.setEnemyInfo ("Target", targetPlayer);
 
-				int randomAction = UnityEngine.Random.Range (0, 10);
-				if(randomAction<5){
+				int bid = VRMWdb.getEnemyInfoInt ("BID");
+
+				//For slime, use skill when high chance to use skill when hp low
+				if(bid==3 && UnityEngine.Random.Range (0, 100)>(VRMWdb.getEnemyInfoInt ("HP")*100/VRMWdb.getEnemyInfoInt ("MaxHP")) && VRMWdb.getEnemyInfoString ("ActionType")==""){
+					if(AnyFront)
+						VRMWdb.addScore("Hero",1);
+					VRMWdb.setEnemyInfo ("ActionType", "Skill");
+				}
+
+				//For dragon, use skill when target has low hp
+				if(bid==4 && VRMWdb.getPlayerInfoInt(targetPlayer,"HP")<=200 && VRMWdb.getEnemyInfoString ("ActionType")==""){
+					if(AnyFront)
+						VRMWdb.addScore("Hero",1);
+					VRMWdb.setEnemyInfo ("ActionType", "Skill");
+				}
+
+				//There are players that will attack boss, use defend
+				int numPlayerAttack=0;
+				for(int i=1;i<=3;i++){
+					if(VRMWdb.getPlayerInfoString(i,"ActionType") == "Attack" || VRMWdb.getPlayerInfoString(i,"ActionType") == "Skill"){
+						numPlayerAttack++;
+					}
+				}
+				int randomAction = UnityEngine.Random.Range (0, 100);
+				if(randomAction<numPlayerAttack*60 && VRMWdb.getEnemyInfoString ("ActionType")==""){
+					if(bid==5)
+						VRMWdb.setEnemyInfo ("ActionType", "Skill");
+					else
+						VRMWdb.setEnemyInfo ("ActionType", "Defend");
+				}
+
+				//If target not use defend, Attack
+				if(VRMWdb.getPlayerInfoString(targetPlayer, "ActionType")!="Defend" && VRMWdb.getEnemyInfoString ("ActionType")==""){
 					if(AnyFront)
 						VRMWdb.addScore("Hero",1);
 					VRMWdb.setEnemyInfo ("ActionType", "Attack");
+					if(UnityEngine.Random.Range (0, 100)>50 && (bid==3 || bid==4) ){
+						VRMWdb.setEnemyInfo ("ActionType", "Skill");
+					}
 				}
-				else if(randomAction<8)
-					VRMWdb.setEnemyInfo ("ActionType", "Defend");
-				else{
-					VRMWdb.setEnemyInfo ("ActionType", "Skill");
-					if(AnyFront)
-						VRMWdb.addScore("Hero",1);
+
+				if(VRMWdb.getEnemyInfoString ("ActionType")==""){
+					randomAction = UnityEngine.Random.Range (0, 10);
+					if(randomAction<5){
+						if(AnyFront)
+							VRMWdb.addScore("Hero",1);
+						VRMWdb.setEnemyInfo ("ActionType", "Attack");
+					}
+					else if(randomAction<8)
+						VRMWdb.setEnemyInfo ("ActionType", "Defend");
+					else{
+						VRMWdb.setEnemyInfo ("ActionType", "Skill");
+						if(AnyFront)
+							VRMWdb.addScore("Hero",1);
+					}
 				}
 			}
 			////////////////

@@ -16,6 +16,8 @@ using System;
 public class EnemyBehavior : MonoBehaviour
 {
 
+	[SerializeField] GameObject[] targetPoint;
+
 	public GameObject activeTimeBar;
 	public GameObject HPBar;
 	public GameObject Damage1;
@@ -51,7 +53,7 @@ public class EnemyBehavior : MonoBehaviour
 		playAnim = "";
 		stillPlaying = false;
 		latestShowDamage = Time.time - 2;
-		targetPlayer = 1;
+		targetPlayer = 0;
 
 		Timing.RunCoroutine(ActiveTime());
 		Timing.RunCoroutine(ActionBehavior());
@@ -80,7 +82,8 @@ public class EnemyBehavior : MonoBehaviour
 			}
 
 			//Random Target and Action
-			if ((VRMWdb.currentTime() - double.Parse(VRMWdb.getEnemyInfoString("StartTime")))/1000.0 >= VRMWdb.getEnemyInfoFloat("ActiveTime") - 3f
+			if ((VRMWdb.currentTime() - double.Parse(VRMWdb.getEnemyInfoString("StartTime")))/1000.0 >= VRMWdb.getEnemyInfoFloat("ActiveTime") - 5f
+				&& !stillPlaying
 				&& VRMWdb.getEnemyInfoString("ActionType") == ""){
 				//TO-DO enemy behavior
 
@@ -98,6 +101,13 @@ public class EnemyBehavior : MonoBehaviour
 				}
 
 				VRMWdb.setEnemyInfo ("Target", targetPlayer);
+
+				yield return Timing.WaitForSeconds(0.1f);
+
+				targetPlayer = VRMWdb.getEnemyInfoInt("Target");
+
+				for(int i = 1 ; i <= 3 ; i++ ) targetPoint[i].SetActive(false);
+				if(targetPlayer>=1 && targetPlayer<=3)targetPoint[targetPlayer].SetActive(true);
 
 				int bid = VRMWdb.getEnemyInfoInt ("BID");
 
@@ -340,6 +350,7 @@ public class EnemyBehavior : MonoBehaviour
 				stillPlaying = false;
 				VRMWdb.setEnemyInfo ("ActionType", "");
 				playAnim="";
+				for(int i = 1 ; i <= 3 ; i++ ) targetPoint[i].SetActive(false);
 
 				//Random to Appear Question
 				if(UnityEngine.Random.Range (0, 100)<VRMWdb.GetQuestionRate() && VRMWdb.GetQuestionID()==0){
